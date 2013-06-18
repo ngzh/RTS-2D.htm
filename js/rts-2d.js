@@ -1,21 +1,24 @@
 function build_robot(){
     if(money[0] >= 100){
         money[0] -= 100;
+
         p0_units.push([
-            p0_buildings[0][0] + p0_buildings[0][2] / 2,
-            p0_buildings[0][1] + p0_buildings[0][3] / 2,
-            0,
-            p0_buildings[0][6] != null ? p0_buildings[0][6] : p0_buildings[0][0],
-            p0_buildings[0][7] != null ? p0_buildings[0][7] : p0_buildings[0][1],
-            0,
-            100
+            p0_buildings[0][0] + p0_buildings[0][2] / 2,/* x */
+            p0_buildings[0][1] + p0_buildings[0][3] / 2,/* y */
+            0,/* selected? */
+            p0_buildings[0][6] != null ? p0_buildings[0][6] : p0_buildings[0][0],/* destination x */
+            p0_buildings[0][7] != null ? p0_buildings[0][7] : p0_buildings[0][1],/* destination y */
+            0,/* weapon reload */
+            100/* health */
         ])
     }
 }
 
 function draw(){
     if(money_timer > 99){
-        money_timer = 0
+        money_timer = 0;
+        money[0] += 1;
+        money[1] += 1
     }else{
         money_timer += 1
     }
@@ -60,6 +63,7 @@ function draw(){
     i = world_static.length - 1;
     if(i >= 0){
         do{
+            /* if static world object is on screen, draw it */
             if(world_static[i][0] + world_static[i][2] + j > 0
              && world_static[i][0] + j < width
              && world_static[i][1] + world_static[i][3] + q > 0
@@ -83,13 +87,12 @@ function draw(){
             if(money[1] >= 100){
                 money[1] -= 100;
                 p1_units.push([
-                    p1_buildings[0][0] + p1_buildings[0][2] / 2,
-                    p1_buildings[0][1] + p1_buildings[0][3] / 2,
-                    0,
-                    random_number(1600) - 800,
-                    random_number(1600) - 800,
-                    0,
-                    100
+                    p1_buildings[0][0] + p1_buildings[0][2] / 2,/* x */
+                    p1_buildings[0][1] + p1_buildings[0][3] / 2,/* y */
+                    random_number(1600) - 800,/* destination x */
+                    random_number(1600) - 800,/* destination y */
+                    0,/* weapon reload */
+                    100/* health */
                 ])
             }
 
@@ -97,11 +100,8 @@ function draw(){
             ai_build_robot += 1
         }
 
-        if(money_timer == 0){
-            money[1] += 1
-        }
-
         do{
+            /* if building is on screen, draw it */
             if(p1_buildings[i][0] + p1_buildings[i][2] + j > 0
              && p1_buildings[i][0] + j < width
              && p1_buildings[i][1] + p1_buildings[i][3] + q > 0
@@ -127,11 +127,8 @@ function draw(){
     buffer.strokeStyle = '#ddd';
     i = p0_buildings.length - 1;
     if(i >= 0){
-        if(money_timer == 0){
-            money[0] += 1
-        }
-
         do{
+            /* if building is on screen, draw it */
             if(p0_buildings[i][0] + p0_buildings[i][2] + j > 0
              && p0_buildings[i][0] + j < width
              && p0_buildings[i][1] + p0_buildings[i][3] + q > 0
@@ -157,15 +154,18 @@ function draw(){
     i = p1_units.length - 1;
     if(i >= 0){
         do{
-            if(p1_units[i][5] > 0){
-                p1_units[i][5] -= 1
+            /* if reloading, decrease reload */
+            if(p1_units[i][4] > 0){
+                p1_units[i][4] -= 1
+
+            /* else look for nearby p0 units to fire at */
             }else{
                 q = 1;
                 j = p0_units.length - 1;
                 if(j >= 0){
                     do{
                         if(Math.sqrt(Math.pow(p1_units[i][1] - p0_units[j][1], 2) + Math.pow(p1_units[i][0] - p0_units[j][0], 2)) < 240){
-                            p1_units[i][5] = 75;
+                            p1_units[i][4] = 75;
                             bullets.push([
                                 p1_units[i][0],
                                 p1_units[i][1],
@@ -179,12 +179,13 @@ function draw(){
                     }while(j--)
                 }
 
+                /* if no units in range, look for buildings to fire at */
                 if(q){
                     j = p0_buildings.length - 1;
                     if(j >= 0){
                         do{
                             if(Math.sqrt(Math.pow(p1_units[i][1] - p0_buildings[j][1], 2) + Math.pow(p1_units[i][0] - p0_buildings[j][0], 2)) < 240){
-                                p1_units[i][5] = 75;
+                                p1_units[i][4] = 75;
                                 bullets.push([
                                     p1_units[i][0],
                                     p1_units[i][1],
@@ -199,31 +200,33 @@ function draw(){
                 }
             }
 
+            /* movement "ai", pick new destination once destionation is reached */
             if(p1_units[i][0] != p1_units[i][2] || p1_units[i][1] != p1_units[i][3]){
                 j = m(
                     p1_units[i][0],
                     p1_units[i][1],
-                    p1_units[i][3],
-                    p1_units[i][4]
+                    p1_units[i][2],
+                    p1_units[i][3]
                 );
 
-                if(p1_units[i][0] != p1_units[i][3]){
-                    p1_units[i][0] += (p1_units[i][0] > p1_units[i][3] ? -j[0] : j[0]) * .7
+                if(p1_units[i][0] != p1_units[i][2]){
+                    p1_units[i][0] += (p1_units[i][0] > p1_units[i][2] ? -j[0] : j[0]) * .7
                 }
 
-                if(p1_units[i][1] != p1_units[i][4]){
-                    p1_units[i][1] += (p1_units[i][1] > p1_units[i][4] ? -j[1] : j[1]) * .7
+                if(p1_units[i][1] != p1_units[i][3]){
+                    p1_units[i][1] += (p1_units[i][1] > p1_units[i][3] ? -j[1] : j[1]) * .7
                 }
 
-                if(p1_units[i][0] > p1_units[i][3] - 5
-                 && p1_units[i][0] < p1_units[i][3] + 5
-                 && p1_units[i][1] > p1_units[i][4] - 5
-                 && p1_units[i][1] < p1_units[i][4] + 5){
-                    p1_units[i][3] = random_number(1600) - 800;
-                    p1_units[i][4] = random_number(1600) - 800
+                if(p1_units[i][0] > p1_units[i][2] - 5
+                 && p1_units[i][0] < p1_units[i][2] + 5
+                 && p1_units[i][1] > p1_units[i][3] - 5
+                 && p1_units[i][1] < p1_units[i][3] + 5){
+                    p1_units[i][2] = random_number(1600) - 800;
+                    p1_units[i][3] = random_number(1600) - 800
                 }
             }
 
+            /* if unit is on screen, draw it */
             if(p1_units[i][0] + 15 + x + camera_x > 0
              && p1_units[i][0] - 15 + x + camera_x < width
              && p1_units[i][1] + 15 + y + camera_y > 0
@@ -239,7 +242,7 @@ function draw(){
                 buffer.fillRect(
                     p1_units[i][0] - 15,
                     p1_units[i][1] - 25,
-                    30 * (p1_units[i][6] / 100),
+                    30 * (p1_units[i][5] / 100),
                     5
                 )
             }
@@ -249,8 +252,11 @@ function draw(){
     i = p0_units.length - 1;
     if(i >= 0){
         do{
+            /* if reloading, decrease reload */
             if(p0_units[i][5] > 0){
                 p0_units[i][5] -= 1
+
+            /* else look for nearby p1 units to fire at */
             }else{
                 q = 1;
                 j = p1_units.length - 1;
@@ -271,6 +277,7 @@ function draw(){
                     }while(j--)
                 }
 
+                /* if no units in range, look for buildings to fire at */
                 if(q){
                     j = p1_buildings.length - 1;
                     if(j >= 0){
@@ -291,6 +298,7 @@ function draw(){
                 }
             }
 
+            /* if unit is on screen, draw it */
             if(p0_units[i][0] + 15 + x + camera_x > 0
              && p0_units[i][0] - 15 + x + camera_x < width
              && p0_units[i][1] + 15 + y + camera_y > 0
@@ -312,8 +320,10 @@ function draw(){
             }
         }while(i--);
 
+        /* new loop so all destination lines and range circles  are drawn over units */
         i = p0_units.length - 1;
         do{
+            /* draw destination line */
             if(p0_units[i][0] != p0_units[i][3] || p0_units[i][1] != p0_units[i][4]){
                 j=m(
                     p0_units[i][0],
@@ -345,6 +355,7 @@ function draw(){
                 }
             }
 
+            /* draw range circle */
             if(p0_units[i][2]){
                 buffer.beginPath();
                 buffer.arc(
@@ -364,6 +375,7 @@ function draw(){
     i = p0_buildings.length - 1;
     if(i >= 0){
         do{
+            /* draw building destionation lines above units */
             if(p0_buildings[i][5] && p0_buildings[i][6] != null){
                 buffer.beginPath();
                 buffer.moveTo(
@@ -383,21 +395,25 @@ function draw(){
     i = bullets.length - 1;
     if(i >= 0){
         do{
-            j=m(
+            /* calculate bullet movement */
+            j = m(
                 bullets[i][0],
                 bullets[i][1],
                 bullets[i][2],
                 bullets[i][3]
             );
 
+            /* move bullet x */
             if(bullets[i][0] != bullets[i][2]){
                 bullets[i][0] += 10 * (bullets[i][0] > bullets[i][2] ? -j[0] : j[0])
             }
 
+            /* move bullet y */
             if(bullets[i][1] != bullets[i][3]){
                 bullets[i][1] += 10 * (bullets[i][1] > bullets[i][3] ? -j[1] : j[1])
             }
 
+            /* if bullet reaches destination, check for collisions */
             if(bullets[i][0] > bullets[i][2] - 10
              && bullets[i][0] < bullets[i][2] + 10
              && bullets[i][1] > bullets[i][3] - 10
@@ -442,8 +458,8 @@ function draw(){
                              && bullets[i][0] < p1_units[j][0] + 15
                              && bullets[i][1] > p1_units[j][1] - 15
                              && bullets[i][1] < p1_units[j][1] + 15){
-                                p1_units[j][6] -= 25;
-                                if(p1_units[j][6] <= 0){
+                                p1_units[j][5] -= 25;
+                                if(p1_units[j][5] <= 0){
                                     p1_units.splice(j, 1)
                                 }
                                 break
@@ -472,6 +488,7 @@ function draw(){
         }while(i--)
     }
 
+    /* draw bullets */
     buffer.fillStyle = '#666';
     i = bullets.length - 1;
     if(i >= 0){
@@ -490,6 +507,7 @@ function draw(){
         -camera_y - y
     );
 
+    /* draw selection box */
     if(mouse_hold == 1){
         buffer.beginPath();
         buffer.rect(
@@ -502,6 +520,7 @@ function draw(){
         buffer.stroke()
     }
 
+    /* draw minimap frame */
     buffer.fillStyle = '#222';
     buffer.fillRect(
         0,
@@ -510,6 +529,7 @@ function draw(){
         205
     );
 
+    /* draw robot buliding UI button */
     if(p0_buildings.length > 0){
         buffer.fillRect(
             205,
@@ -519,6 +539,7 @@ function draw(){
         )
     }
 
+    /* draw robot building UI button background */
     buffer.fillStyle = '#111';
     buffer.fillRect(
         0,
@@ -527,6 +548,7 @@ function draw(){
         200
     );
 
+    /* draw robot building UI button text */
     buffer.font = '27pt sans-serif';
     buffer.textAlign = 'center';
     buffer.textBaseline = 'middle';
@@ -545,6 +567,7 @@ function draw(){
         )
     }
 
+    /* draw p0 money */
     buffer.fillStyle = '#fff';
     buffer.fillText(
         '$' + money[0],
@@ -552,6 +575,7 @@ function draw(){
         height - 223
     );
 
+    /* draw minimap background */
     buffer.fillStyle = world_static[0][4];
     buffer.fillRect(
         0,
@@ -560,6 +584,7 @@ function draw(){
         200
     );
 
+    /* draw p1 buildings on minimap */
     i = p1_buildings.length - 1;
     if(i >= 0){
         buffer.fillStyle = '#600';
@@ -573,6 +598,7 @@ function draw(){
         }while(i--)
     }
 
+    /* draw p1 units on minimap */
     i = p1_units.length - 1;
     if(i >= 0){
         buffer.fillStyle = '#p0_buildings0';
@@ -586,9 +612,19 @@ function draw(){
         }while(i--)
     }
 
+    /* draw p0 buildings on minimap */
     i = p0_buildings.length - 1;
     if(i >= 0){
         do{
+            buffer.fillStyle = p0_buildings[i][5] ? '#1f1' : '#060';
+            buffer.fillRect(
+                100 + p0_buildings[i][0] / 8,
+                height - 100 + p0_buildings[i][1] / 8,
+                12.5,
+                12.5
+            );
+
+            /* if buliding is selected and has a destionation, draw destionation line */
             if(p0_buildings[i][5] && p0_buildings[i][6] != null){
                 buffer.beginPath();
                 buffer.moveTo(
@@ -602,16 +638,10 @@ function draw(){
                 buffer.closePath();
                 buffer.stroke()
             }
-            buffer.fillStyle = p0_buildings[i][5] ? '#1f1' : '#060';
-            buffer.fillRect(
-                100 + p0_buildings[i][0] / 8,
-                height - 100 + p0_buildings[i][1] / 8,
-                12.5,
-                12.5
-            )
         }while(i--)
     }
 
+    /* draw p0 units on minimap*/
     i = p0_units.length - 1;
     if(i >= 0){
         do{
@@ -622,7 +652,11 @@ function draw(){
                 3.125,
                 3.125
             );
+
+            /* if unit is selected */
             if(p0_units[i][2]){
+
+                /* if unit has a destionation it has not yet reached, draw destionation line */
                 if(p0_units[i][0] != p0_units[i][3] || p0_units[i][1] != p0_units[i][4]){
                     buffer.beginPath();
                     buffer.moveTo(
@@ -636,6 +670,8 @@ function draw(){
                     buffer.closePath();
                     buffer.stroke()
                 }
+
+                /* draw range circle */
                 buffer.beginPath();
                 buffer.arc(
                     100 + p0_units[i][0] / 8,
@@ -651,6 +687,7 @@ function draw(){
         }while(i--)
     }
 
+    /* draw selection box on minimap */
     if(mouse_hold == 1){
         buffer.beginPath();
         buffer.rect(
@@ -663,6 +700,7 @@ function draw(){
         buffer.stroke()
     }
 
+    /* draw camera boundaries on minimap */
     buffer.beginPath();
     buffer.rect(
         100 - x / 8 - camera_x / 8,
@@ -673,6 +711,7 @@ function draw(){
     buffer.closePath();
     buffer.stroke();
 
+    /* draw win/lose text if win/lose conditions met */
     if((p0_buildings.length < 1 && p0_units.length < 1)
      || (p1_buildings.length < 1 && p1_units.length < 1)){
         if(p0_buildings.length < 1){
@@ -802,9 +841,9 @@ function save(){
     i = 2;
     do{
         j = [
-            'si',
-            'sc',
-            'sv'
+            'ms-per-frame',
+            'scroll-speed',
+            'audio-volume'
         ][i];
         if(isNaN(get(j).value) || get(j).value == [25,10,1][i] || get(j).value < [1,1,0][i]){
             ls.removeItem('rts-2d' + i);
@@ -816,15 +855,15 @@ function save(){
         }
     }while(i--);
 
-    if(get('kc').value == 'WASD'){
+    if(get('camera-keys').value == 'WASD'){
         ls.removeItem('rts-2d3');
         settings[3] = 'WASD'
     }else{
-        settings[3] = get('kc').value;
+        settings[3] = get('camera-keys').value;
         ls.setItem('rts-2d3', settings[3])
     }
 
-    settings[4] = get('cl').checked;
+    settings[4] = get('clear').checked;
     if(settings[4]){
         ls.removeItem('rts-2d4')
     }else{
@@ -923,30 +962,31 @@ function setmode(newmode){
         j = random_number(2);
         p0_buildings=[
             [
-                i ? -775 : 675,
-                j ? 675 : -775,
-                100,
-                100,
-                1000,
-                0,
-                i ? -600 : 600,
-                j ? 725 : -725
+                i ? -775 : 675,/* x */
+                j ? 675 : -775,/* y */
+                100,/* width */
+                100,/* height */
+                1000,/* health */
+                0,/* selected */
+                i ? -600 : 600,/* destination x */
+                j ? 725 : -725/* destination y */
             ]
         ];
         p1_buildings=[
             [
-                i ? 675 : -775,
-                j ? -775 : 675,
-                100,
-                100,
-                1000
+                i ? 675 : -775,/* x */
+                j ? -775 : 675,/* y */
+                100,/* width */
+                100,/* height */
+                1000/* health */
             ]
         ];
         p0_units = [];
         p1_units = [];
 
-        camera_x = i ? 725 : -725;
-        camera_y = j ? -725 : 725;
+        /* set camera position to building location */
+        camera_x = p0_buildings[0][0] + 50;
+        camera_y = p0_buildings[0][1] + 50;
 
         buffer = get('buffer').getContext('2d');
         canvas = get('canvas').getContext('2d');
@@ -957,11 +997,12 @@ function setmode(newmode){
     }else{
         buffer = 0;
         canvas = 0;
-        get('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><a href=/><b>RTS-2D</b></a></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div><hr><div class=c><input id=sc size=1 type=text value='
-            + settings[1] + '>Scroll Speed</div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=kc maxlength=4 size=3 type=text value='
-            + settings[3] + '>Camera ↑←↓→<br><input disabled size=3 style=border:0 type=text value=ESC>Main Menu</div><hr><div class=c><input id=sv max=1 min=0 step=.01 type=range value='
+
+        get('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><a href=/><b>RTS-2D</b></a></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div><hr><div class=c><input id=scroll-speed size=1 type=text value='
+            + settings[1] + '>Scroll Speed</div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 size=3 type=text value='
+            + settings[3] + '>Camera ↑←↓→<br><input disabled size=3 style=border:0 type=text value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[2] + '>Audio<br><label><input '
-            + (settings[4] ? 'checked ' : '') + 'id=cl type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'cl\').checked=get(\'sv\').value=1;get(\'kc\').value=\'WASD\';get(\'sc\').value=10;get(\'si\').value=25;su();setmode(0)}">Reset Settings</a><br><a onclick="get(\'hz\').style.display=get(\'hz\').style.display==\'none\'?\'inline\':\'none\'">Hack</a><span id=hz style=display:none><br><br><input id=si size=1 type=text value='
+            + (settings[4] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'camera-keys\').value=\'WASD\';get(\'scroll-speed\').value=10;get(\'ms-per-frame\').value=25;save();setmode(0)}">Reset Settings</a><br><a onclick="get(\'hack-span\').style.display=get(\'hack-span\').style.display==\'none\'?\'inline\':\'none\'">Hack</a><span id=hack-span style=display:none><br><br><input id=ms-per-frame size=1 type=text value='
             + settings[0] + '>ms/Frame</span></div></div>'
     }
 }
