@@ -167,11 +167,11 @@ function draw(){
                         if(Math.sqrt(Math.pow(p1_units[i][1] - p0_units[j][1], 2) + Math.pow(p1_units[i][0] - p0_units[j][0], 2)) < 240){
                             p1_units[i][4] = 75;
                             bullets.push([
-                                p1_units[i][0],
-                                p1_units[i][1],
-                                p0_units[j][0],
-                                p0_units[j][1],
-                                1
+                                p1_units[i][0],/* x */
+                                p1_units[i][1],/* y */
+                                p0_units[j][0],/* destination x */
+                                p0_units[j][1],/* destination y */
+                                1/* player */
                             ]);
                             q = 0;
                             break
@@ -187,11 +187,11 @@ function draw(){
                             if(Math.sqrt(Math.pow(p1_units[i][1] - p0_buildings[j][1], 2) + Math.pow(p1_units[i][0] - p0_buildings[j][0], 2)) < 240){
                                 p1_units[i][4] = 75;
                                 bullets.push([
-                                    p1_units[i][0],
-                                    p1_units[i][1],
-                                    p0_buildings[j][0] + 50,
-                                    p0_buildings[j][1] + 50,
-                                    1
+                                    p1_units[i][0],/* x */
+                                    p1_units[i][1],/* y */
+                                    p0_buildings[j][0] + 50,/* destination x */
+                                    p0_buildings[j][1] + 50,/* destination y */
+                                    1/* player */
                                 ]);
                                 break
                             }
@@ -200,7 +200,7 @@ function draw(){
                 }
             }
 
-            /* movement "ai", pick new destination once destionation is reached */
+            /* movement "ai", pick new destination once destination is reached */
             if(p1_units[i][0] != p1_units[i][2] || p1_units[i][1] != p1_units[i][3]){
                 j = m(
                     p1_units[i][0],
@@ -265,11 +265,11 @@ function draw(){
                         if(Math.sqrt(Math.pow(p0_units[i][1] - p1_units[j][1], 2) + Math.pow(p0_units[i][0] - p1_units[j][0], 2)) < 240){
                             p0_units[i][5] = 75;
                             bullets.push([
-                                p0_units[i][0],
-                                p0_units[i][1],
-                                p1_units[j][0],
-                                p1_units[j][1],
-                                0
+                                p0_units[i][0],/* x */
+                                p0_units[i][1],/* y */
+                                p1_units[j][0],/* destination x */
+                                p1_units[j][1],/* destination y */
+                                0/* player */
                             ]);
                             q = 0;
                             break
@@ -285,11 +285,11 @@ function draw(){
                             if(Math.sqrt(Math.pow(p0_units[i][1] - (p1_buildings[j][1] + 50), 2) + Math.pow(p0_units[i][0] - (p1_buildings[j][0] + 50), 2)) < 240){
                                 p0_units[i][5] = 75;
                                 bullets.push([
-                                    p0_units[i][0],
-                                    p0_units[i][1],
-                                    p1_buildings[j][0] + 50,
-                                    p1_buildings[j][1] + 50,
-                                    0
+                                    p0_units[i][0],/* x */
+                                    p0_units[i][1],/* y */
+                                    p1_buildings[j][0] + 50,/* destination x */
+                                    p1_buildings[j][1] + 50,/* destination y */
+                                    0/* player */
                                 ]);
                                 break
                             }
@@ -375,7 +375,7 @@ function draw(){
     i = p0_buildings.length - 1;
     if(i >= 0){
         do{
-            /* draw building destionation lines above units */
+            /* draw building destination lines above units */
             if(p0_buildings[i][5] && p0_buildings[i][6] != null){
                 buffer.beginPath();
                 buffer.moveTo(
@@ -624,7 +624,7 @@ function draw(){
                 12.5
             );
 
-            /* if buliding is selected and has a destionation, draw destionation line */
+            /* if buliding is selected and has a destination, draw destination line */
             if(p0_buildings[i][5] && p0_buildings[i][6] != null){
                 buffer.beginPath();
                 buffer.moveTo(
@@ -656,7 +656,7 @@ function draw(){
             /* if unit is selected */
             if(p0_units[i][2]){
 
-                /* if unit has a destionation it has not yet reached, draw destionation line */
+                /* if unit has a destination it has not yet reached, draw destination line */
                 if(p0_units[i][0] != p0_units[i][3] || p0_units[i][1] != p0_units[i][4]){
                     buffer.beginPath();
                     buffer.moveTo(
@@ -985,8 +985,8 @@ function setmode(newmode){
         p1_units = [];
 
         /* set camera position to building location */
-        camera_x = p0_buildings[0][0] + 50;
-        camera_y = p0_buildings[0][1] + 50;
+        camera_x = -p0_buildings[0][0] - 50;
+        camera_y = -p0_buildings[0][1] - 50;
 
         buffer = get('buffer').getContext('2d');
         canvas = get('canvas').getContext('2d');
@@ -998,7 +998,7 @@ function setmode(newmode){
         buffer = 0;
         canvas = 0;
 
-        get('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><a href=/><b>RTS-2D</b></a></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div><hr><div class=c><input id=scroll-speed size=1 type=text value='
+        get('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>RTS-2D</b></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div><hr><div class=c><input id=scroll-speed size=1 type=text value='
             + settings[1] + '>Scroll Speed</div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 size=3 type=text value='
             + settings[3] + '>Camera ↑←↓→<br><input disabled size=3 style=border:0 type=text value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[2] + '>Audio<br><label><input '
