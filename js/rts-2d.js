@@ -10,7 +10,7 @@ function build_robot(){
             p0_buildings[0][7] != null ? p0_buildings[0][7] : p0_buildings[0][1],/* destination y */
             0,/* weapon reload */
             100/* health */
-        ])
+        ]);
     }
 }
 
@@ -18,30 +18,30 @@ function draw(){
     if(money_timer > 99){
         money_timer = 0;
         money[0] += 1;
-        money[1] += 1
+        money[1] += 1;
     }else{
-        money_timer += 1
+        money_timer += 1;
     }
 
     if(key_down && camera_y > -800){
         camera_y -= settings[1];
-        mouse_lock_y -= settings[1]
+        mouse_lock_y -= settings[1];
     }
     if(key_left && camera_x < 800){
         camera_x += settings[1];
-        mouse_lock_x += settings[1]
+        mouse_lock_x += settings[1];
     }
     if(key_right && camera_x > -800){
         camera_x -= settings[1];
-        mouse_lock_x -= settings[1]
+        mouse_lock_x -= settings[1];
     }
     if(key_up && camera_y < 800){
         camera_y += settings[1];
-        mouse_lock_y += settings[1]
+        mouse_lock_y += settings[1];
     }
 
     if(mouse_hold == 1){
-        select()
+        select();
     }
 
     if(settings[4]){/*clear?*/
@@ -50,7 +50,7 @@ function draw(){
             0,
             width,
             height
-        )
+        );
     }
 
     j = x + camera_x;
@@ -74,9 +74,9 @@ function draw(){
                     world_static[i][1],
                     world_static[i][2],
                     world_static[i][3]
-                )
+                );
             }
-        }while(i--)
+        }while(i--);
     }
 
     i = p1_buildings.length - 1;
@@ -93,11 +93,11 @@ function draw(){
                     random_number(1600) - 800,/* destination y */
                     0,/* weapon reload */
                     100/* health */
-                ])
+                ]);
             }
 
         }else{
-            ai_build_robot += 1
+            ai_build_robot += 1;
         }
 
         do{
@@ -119,7 +119,7 @@ function draw(){
                     p1_buildings[i][1] - 10,
                     p1_buildings[i][2] * (p1_buildings[i][4] / 1000),
                     5
-                )
+                );
             }
         }while(i--);
     }
@@ -146,9 +146,9 @@ function draw(){
                     p0_buildings[i][1] - 10,
                     p0_buildings[i][2] * (p0_buildings[i][4] / 1000),
                     5
-                )
+                );
             }
-        }while(i--)
+        }while(i--);
     }
 
     i = p1_units.length - 1;
@@ -156,7 +156,7 @@ function draw(){
         do{
             /* if reloading, decrease reload */
             if(p1_units[i][4] > 0){
-                p1_units[i][4] -= 1
+                p1_units[i][4] -= 1;
 
             /* else look for nearby p0 units to fire at */
             }else{
@@ -174,9 +174,9 @@ function draw(){
                                 1/* player */
                             ]);
                             q = 0;
-                            break
+                            break;
                         }
-                    }while(j--)
+                    }while(j--);
                 }
 
                 /* if no units in range, look for buildings to fire at */
@@ -193,9 +193,9 @@ function draw(){
                                     p0_buildings[j][1] + 50,/* destination y */
                                     1/* player */
                                 ]);
-                                break
+                                break;
                             }
-                        }while(j--)
+                        }while(j--);
                     }
                 }
             }
@@ -210,11 +210,11 @@ function draw(){
                 );
 
                 if(p1_units[i][0] != p1_units[i][2]){
-                    p1_units[i][0] += (p1_units[i][0] > p1_units[i][2] ? -j[0] : j[0]) * .7
+                    p1_units[i][0] += (p1_units[i][0] > p1_units[i][2] ? -j[0] : j[0]) * .7;
                 }
 
                 if(p1_units[i][1] != p1_units[i][3]){
-                    p1_units[i][1] += (p1_units[i][1] > p1_units[i][3] ? -j[1] : j[1]) * .7
+                    p1_units[i][1] += (p1_units[i][1] > p1_units[i][3] ? -j[1] : j[1]) * .7;
                 }
 
                 if(p1_units[i][0] > p1_units[i][2] - 5
@@ -222,7 +222,7 @@ function draw(){
                  && p1_units[i][1] > p1_units[i][3] - 5
                  && p1_units[i][1] < p1_units[i][3] + 5){
                     p1_units[i][2] = random_number(1600) - 800;
-                    p1_units[i][3] = random_number(1600) - 800
+                    p1_units[i][3] = random_number(1600) - 800;
                 }
             }
 
@@ -244,9 +244,9 @@ function draw(){
                     p1_units[i][1] - 25,
                     30 * (p1_units[i][5] / 100),
                     5
-                )
+                );
             }
-        }while(i--)
+        }while(i--);
     }
 
     i = p0_units.length - 1;
@@ -254,7 +254,7 @@ function draw(){
         do{
             /* if reloading, decrease reload */
             if(p0_units[i][5] > 0){
-                p0_units[i][5] -= 1
+                p0_units[i][5] -= 1;
 
             /* else look for nearby p1 units to fire at */
             }else{
@@ -272,9 +272,9 @@ function draw(){
                                 0/* player */
                             ]);
                             q = 0;
-                            break
+                            break;
                         }
-                    }while(j--)
+                    }while(j--);
                 }
 
                 /* if no units in range, look for buildings to fire at */
@@ -291,9 +291,9 @@ function draw(){
                                     p1_buildings[j][1] + 50,/* destination y */
                                     0/* player */
                                 ]);
-                                break
+                                break;
                             }
-                        }while(j--)
+                        }while(j--);
                     }
                 }
             }
@@ -316,7 +316,7 @@ function draw(){
                     p0_units[i][1] - 25,
                     30 * (p0_units[i][6] / 100),
                     5
-                )
+                );
             }
         }while(i--);
 
@@ -333,11 +333,11 @@ function draw(){
                 );
 
                 if(p0_units[i][0] != p0_units[i][3]){
-                    p0_units[i][0] += (p0_units[i][0] > p0_units[i][3] ? -j[0] : j[0]) * .7
+                    p0_units[i][0] += (p0_units[i][0] > p0_units[i][3] ? -j[0] : j[0]) * .7;
                 }
 
                 if(p0_units[i][1] != p0_units[i][4]){
-                    p0_units[i][1] += (p0_units[i][1] > p0_units[i][4] ? -j[1] : j[1]) * .7
+                    p0_units[i][1] += (p0_units[i][1] > p0_units[i][4] ? -j[1] : j[1]) * .7;
                 }
 
                 if(p0_units[i][2]){
@@ -351,7 +351,7 @@ function draw(){
                         p0_units[i][4]
                     );
                     buffer.closePath();
-                    buffer.stroke()
+                    buffer.stroke();
                 }
             }
 
@@ -367,9 +367,9 @@ function draw(){
                     false
                 );
                 buffer.closePath();
-                buffer.stroke()
+                buffer.stroke();
             }
-        }while(i--)
+        }while(i--);
     }
 
     i = p0_buildings.length - 1;
@@ -387,9 +387,9 @@ function draw(){
                     p0_buildings[i][7]
                 );
                 buffer.closePath();
-                buffer.stroke()
+                buffer.stroke();
             }
-        }while(i--)
+        }while(i--);
     }
 
     i = bullets.length - 1;
@@ -405,12 +405,12 @@ function draw(){
 
             /* move bullet x */
             if(bullets[i][0] != bullets[i][2]){
-                bullets[i][0] += 10 * (bullets[i][0] > bullets[i][2] ? -j[0] : j[0])
+                bullets[i][0] += 10 * (bullets[i][0] > bullets[i][2] ? -j[0] : j[0]);
             }
 
             /* move bullet y */
             if(bullets[i][1] != bullets[i][3]){
-                bullets[i][1] += 10 * (bullets[i][1] > bullets[i][3] ? -j[1] : j[1])
+                bullets[i][1] += 10 * (bullets[i][1] > bullets[i][3] ? -j[1] : j[1]);
             }
 
             /* if bullet reaches destination, check for collisions */
@@ -428,11 +428,11 @@ function draw(){
                              && bullets[i][1] < p0_units[j][1] + 15){
                                 p0_units[j][6] -= 25;
                                 if(p0_units[j][6] <= 0){
-                                    p0_units.splice(j, 1)
+                                    p0_units.splice(j, 1);
                                 }
-                                break
+                                break;
                             }
-                        }while(j--)
+                        }while(j--);
                     }
 
                     j = p0_buildings.length - 1;
@@ -444,11 +444,11 @@ function draw(){
                              && bullets[i][1] < p0_buildings[j][1] + 100){
                                 p0_buildings[j][4] -= 25;
                                 if(p0_buildings[j][4] <= 0){
-                                    p0_buildings.splice(j, 1)
+                                    p0_buildings.splice(j, 1);
                                 }
-                                break
+                                break;
                             }
-                        }while(j--)
+                        }while(j--);
                     }
                 }else{
                     j = p1_units.length - 1;
@@ -460,11 +460,11 @@ function draw(){
                              && bullets[i][1] < p1_units[j][1] + 15){
                                 p1_units[j][5] -= 25;
                                 if(p1_units[j][5] <= 0){
-                                    p1_units.splice(j, 1)
+                                    p1_units.splice(j, 1);
                                 }
-                                break
+                                break;
                             }
-                        }while(j--)
+                        }while(j--);
                     }
 
                     j = p1_buildings.length - 1;
@@ -476,16 +476,16 @@ function draw(){
                              && bullets[i][1] < p1_buildings[j][1] + 100){
                                 p1_buildings[j][4] -= 25;
                                 if(p1_buildings[j][4] <= 0){
-                                    p1_buildings.splice(j, 1)
+                                    p1_buildings.splice(j, 1);
                                 }
-                                break
+                                break;
                             }
-                        }while(j--)
+                        }while(j--);
                     }
                 }
-                bullets.splice(i, 1)
+                bullets.splice(i, 1);
             }
-        }while(i--)
+        }while(i--);
     }
 
     /* draw bullets */
@@ -498,8 +498,8 @@ function draw(){
                 bullets[i][1] - 5,
                 10,
                 10
-            )
-        }while(i--)
+            );
+        }while(i--);
     }
 
     buffer.translate(
@@ -517,7 +517,7 @@ function draw(){
             mouse_y - mouse_lock_y
         );
         buffer.closePath();
-        buffer.stroke()
+        buffer.stroke();
     }
 
     /* draw minimap frame */
@@ -536,7 +536,7 @@ function draw(){
             height - 70,
             70,
             70
-        )
+        );
     }
 
     /* draw robot building UI button background */
@@ -564,7 +564,7 @@ function draw(){
             'R',
             237,
             height - 32
-        )
+        );
     }
 
     /* draw p0 money */
@@ -594,8 +594,8 @@ function draw(){
                 height - 100 + p1_buildings[i][1] / 8,
                 12.5,
                 12.5
-            )
-        }while(i--)
+            );
+        }while(i--);
     }
 
     /* draw p1 units on minimap */
@@ -608,8 +608,8 @@ function draw(){
                 height - 100 + (p1_units[i][1] - 15) / 8,
                 3.125,
                 3.125
-            )
-        }while(i--)
+            );
+        }while(i--);
     }
 
     /* draw p0 buildings on minimap */
@@ -636,9 +636,9 @@ function draw(){
                     height - 100 + p0_buildings[i][7] / 8
                 );
                 buffer.closePath();
-                buffer.stroke()
+                buffer.stroke();
             }
-        }while(i--)
+        }while(i--);
     }
 
     /* draw p0 units on minimap*/
@@ -668,7 +668,7 @@ function draw(){
                         height - 100 + p0_units[i][4] / 8
                     );
                     buffer.closePath();
-                    buffer.stroke()
+                    buffer.stroke();
                 }
 
                 /* draw range circle */
@@ -682,9 +682,9 @@ function draw(){
                     false
                 );
                 buffer.closePath();
-                buffer.stroke()
+                buffer.stroke();
             }
-        }while(i--)
+        }while(i--);
     }
 
     /* draw selection box on minimap */
@@ -697,7 +697,7 @@ function draw(){
             (mouse_y - mouse_lock_y) / 8
         );
         buffer.closePath();
-        buffer.stroke()
+        buffer.stroke();
     }
 
     /* draw camera boundaries on minimap */
@@ -734,7 +734,7 @@ function draw(){
             'ESC = Main Menu',
             x,
             y / 2 + 50
-        )
+        );
     }
 
     if(settings[4]){/*clear?*/
@@ -743,28 +743,29 @@ function draw(){
             0,
             width,
             height
-        )
+        );
     }
     canvas.drawImage(
         get('buffer'),
         0,
         0
-    )
+    );
 }
 
 function get(i){
-    return document.getElementById(i)
+    return document.getElementById(i);
 }
 
 function m(x0, y0, x1, y1){
     var j0 = Math.abs(x0 - x1),
     j1 = Math.abs(y0 - y1);
+
     if(j0 > j1){
-        return[1, j1 / j0]
+        return[1, j1 / j0];
     }else if(j1 > j0){
-        return[j0 / j1, 1]
+        return[j0 / j1, 1];
     }else{
-        return[.5, .5]
+        return[.5, .5];
     }
 }
 
@@ -777,21 +778,22 @@ function setdestination(j){
                     p0_units[i][3] = j ? 8 * (mouse_x - 100) : mouse_x - x - camera_x;
 
                     if(p0_units[i][3] > 800){
-                        p0_units[i][3] = 800
+                        p0_units[i][3] = 800;
                     }else if(p0_units[i][3] < -800){
-                        p0_units[i][3] = -800
+                        p0_units[i][3] = -800;
                     }
 
                     p0_units[i][4] = j ? 8 * (mouse_y - height + 100) : mouse_y - y - camera_y;
 
                     if(p0_units[i][4] > 800){
-                        p0_units[i][4] = 800
+                        p0_units[i][4] = 800;
                     }else if(p0_units[i][4] < -800){
-                        p0_units[i][4] = -800
+                        p0_units[i][4] = -800;
                     }
                 }
-            }while(i--)
+            }while(i--);
         }
+
     }else if(p0_buildings.length > 0){
         i = p0_buildings.length - 1;
         if(i >= 0){
@@ -800,27 +802,27 @@ function setdestination(j){
                     p0_buildings[i][6] = j ? 8 * (mouse_x - 100) : mouse_x - x - camera_x;
 
                     if(p0_buildings[i][6] > 800){
-                        p0_buildings[i][6] = 800
+                        p0_buildings[i][6] = 800;
                     }else if(p0_buildings[i][6] < -800){
-                        p0_buildings[i][6] = -800
+                        p0_buildings[i][6] = -800;
                     }
 
                     p0_buildings[i][7] = j ? 8 * (mouse_y - height + 100) : mouse_y - y - camera_y;
 
                     if(p0_buildings[i][7] > 800){
-                        p0_buildings[i][7] = 800
+                        p0_buildings[i][7] = 800;
                     }else if(p0_buildings[i][7] < -800){
-                        p0_buildings[i][7] = -800
+                        p0_buildings[i][7] = -800;
                     }
                 }
-            }while(i--)
+            }while(i--);
         }
     }
 }
 function play_audio(i){
     if(settings[2] > 0){/*audio volume*/
         get(i).currentTime = 0;
-        get(i).play()
+        get(i).play();
     }
 }
 
@@ -828,13 +830,14 @@ function resize(){
     if(mode > 0){
         width = get('buffer').width = get('canvas').width = window.innerWidth;
         height = get('buffer').height = get('canvas').height = window.innerHeight;
+
         x = width / 2;
-        y = height / 2
+        y = height / 2;
     }
 }
 
 function random_number(i){
-    return Math.floor(Math.random() * i)
+    return Math.floor(Math.random() * i);
 }
 
 function save(){
@@ -845,29 +848,42 @@ function save(){
             'scroll-speed',
             'audio-volume'
         ][i];
-        if(isNaN(get(j).value) || get(j).value == [25,10,1][i] || get(j).value < [1,1,0][i]){
-            ls.removeItem('rts-2d' + i);
-            settings[i] = [25, 10, 1][i];
-            get(j).value = settings[i]
+        if(isNaN(get(j).value) || get(j).value == [25, 10, 1][i] || get(j).value < [1, 1, 0][i]){
+            ls.removeItem('rts-2d-' + i);
+            settings[i] = [
+                25,
+                10,
+                1
+            ][i];
+            get(j).value = settings[i];
         }else{
             settings[i] = parseFloat(get(j).value);
-            ls.setItem('rts-2d' + i, settings[i])
+            ls.setItem(
+                'rts-2d-' + i,
+                settings[i]
+            );
         }
     }while(i--);
 
     if(get('camera-keys').value == 'WASD'){
-        ls.removeItem('rts-2d3');
-        settings[3] = 'WASD'
+        ls.removeItem('rts-2d-3');
+        settings[3] = 'WASD';
     }else{
         settings[3] = get('camera-keys').value;
-        ls.setItem('rts-2d3', settings[3])
+        ls.setItem(
+            'rts-2d-3',
+            settings[3]
+        );
     }
 
     settings[4] = get('clear').checked;
     if(settings[4]){
-        ls.removeItem('rts-2d4')
+        ls.removeItem('rts-2d-4');
     }else{
-        ls.setItem('rts-2d4', 0)
+        ls.setItem(
+            'rts-2d-4',
+            0
+        );
     }
 }
 
@@ -886,9 +902,9 @@ function select(){
             );
 
             if(p0_units[i][2]){
-                selected_type = 0
+                selected_type = 0;
             }
-        }while(i--)
+        }while(i--);
     }
 
     i = p0_buildings.length - 1;
@@ -904,12 +920,12 @@ function select(){
                 );
 
                 if(p0_buildings[i][5]){
-                    selected_type = 1
+                    selected_type = 1;
                 }
             }else{
-                p0_buildings[i][5] = 0
+                p0_buildings[i][5] = 0;
             }
-        }while(i--)
+        }while(i--);
     }
 }
 
@@ -993,7 +1009,7 @@ function setmode(newmode){
 
         resize();
 
-        interval = setInterval('draw()', settings[0])
+        interval = setInterval('draw()', settings[0]);
     }else{
         buffer = 0;
         canvas = 0;
@@ -1003,7 +1019,7 @@ function setmode(newmode){
             + settings[3] + '>Camera ↑←↓→<br><input disabled size=3 style=border:0 type=text value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[2] + '>Audio<br><label><input '
             + (settings[4] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><a onclick="if(confirm(\'Reset settings?\')){get(\'clear\').checked=get(\'audio-volume\').value=1;get(\'camera-keys\').value=\'WASD\';get(\'scroll-speed\').value=10;get(\'ms-per-frame\').value=25;save();setmode(0)}">Reset Settings</a><br><a onclick="get(\'hack-span\').style.display=get(\'hack-span\').style.display==\'none\'?\'inline\':\'none\'">Hack</a><span id=hack-span style=display:none><br><br><input id=ms-per-frame size=1 type=text value='
-            + settings[0] + '>ms/Frame</span></div></div>'
+            + settings[0] + '>ms/Frame</span></div></div>';
     }
 }
 
@@ -1037,11 +1053,11 @@ var p1_units = [];
 var q = 0;
 var selected_type = -1;
 var settings = [
-    ls.getItem('rts-2d0') === null ? 25 : parseInt(ls.getItem('rts-2d0')),
-    ls.getItem('rts-2d1') === null ? 10 : parseInt(ls.getItem('rts-2d1')),
-    ls.getItem('rts-2d2') === null ? 1 : parseFloat(ls.getItem('rts-2d2')),
-    ls.getItem('rts-2d3') === null ? 'WASD' : ls.getItem('rts-2d3'),
-    ls.getItem('rts-2d4') === null
+    ls.getItem('rts-2d-0') === null ? 25 : parseInt(ls.getItem('rts-2d-0')),
+    ls.getItem('rts-2d-1') === null ? 10 : parseInt(ls.getItem('rts-2d-1')),
+    ls.getItem('rts-2d-2') === null ? 1 : parseFloat(ls.getItem('rts-2d-2')),
+    ls.getItem('rts-2d-3') === null ? 'WASD' : ls.getItem('rts-2d-3'),
+    ls.getItem('rts-2d-4') === null
 ];
 var width = 0;
 var world_static = [];
@@ -1056,17 +1072,22 @@ window.onkeydown = function(e){
         i = i.charCode ? i.charCode : i.keyCode;
 
         if(i === 82 && p0_buildings.length > 0){
-            build_robot()
+            build_robot();
+
         }else if(String.fromCharCode(i) === settings[3][1]){
-            key_left = 1
+            key_left = 1;
+
         }else if(String.fromCharCode(i) === settings[3][3]){
-            key_right = 1
+            key_right = 1;
+
         }else if(String.fromCharCode(i) === settings[3][2]){
-            key_down = 1
+            key_down = 1;
+
         }else if(String.fromCharCode(i) === settings[3][0]){
-            key_up = 1
+            key_up = 1;
+
         }else if(i === 27){
-            setmode(0)
+            setmode(0);
         }
     }
 };
@@ -1076,13 +1097,16 @@ window.onkeyup = function(e){
     i = i.charCode ? i.charCode : i.keyCode;
 
     if(String.fromCharCode(i) === settings[3][1]){
-        key_left = 0
+        key_left = 0;
+
     }else if(String.fromCharCode(i) === settings[3][3]){
-        key_right = 0
+        key_right = 0;
+
     }else if(String.fromCharCode(i) === settings[3][2]){
-        key_down = 0
+        key_down = 0;
+
     }else if(String.fromCharCode(i) === settings[3][0]){
-        key_up = 0
+        key_up = 0;
     }
 };
 
@@ -1095,31 +1119,34 @@ window.onmousedown = function(e){
                 if(e.button == 0){
                     mouse_hold = 1;
                     mouse_lock_x = mouse_x;
-                    mouse_lock_y = mouse_y
+                    mouse_lock_y = mouse_y;
+
                 }else if(e.button == 2){
-                    setdestination(0)
+                    setdestination(0);
                 }
+
             }else{
-                build_robot()
+                build_robot();
             }
         }else{
             if(e.button == 2){
-                setdestination(1)
+                setdestination(1);
+
             }else{
                 mouse_hold = 2;
 
                 camera_x = -8 * (mouse_x - 100);
                 if(camera_x > 800){
-                    camera_x = 800
+                    camera_x = 800;
                 }else if(camera_x < -800){
-                    camera_x = -800
+                    camera_x = -800;
                 }
 
                 camera_y = -8 * (mouse_y - height + 100);
                 if(camera_y > 800){
-                    camera_y = 800
+                    camera_y = 800;
                 }else if(camera_y < -800){
-                    camera_y = -800
+                    camera_y = -800;
                 }
             }
         }
@@ -1130,41 +1157,42 @@ window.onmousemove = function(e){
     if(mode > 0){
         mouse_x = e.pageX;
         if(mouse_x < 0){
-            mouse_x = 0
+            mouse_x = 0;
         }else if(mouse_x > width){
-            mouse_x = width
+            mouse_x = width;
         }
 
         mouse_y = e.pageY;
         if(mouse_y < 0){
-            mouse_y = 0
+            mouse_y = 0;
         }else if(mouse_y > height){
-            mouse_y = height
+            mouse_y = height;
         }
 
         if(mouse_hold == 1){
-            select()
+            select();
+
         }else if(mouse_hold == 2){
 
             camera_x = -8 * (mouse_x - 100);
             if(camera_x > 800){
-                camera_x = 800
+                camera_x = 800;
             }else if(camera_x < -800){
-                camera_x = -800
+                camera_x = -800;
             }
 
             camera_y = -8 * (mouse_y - height + 100);
             if(camera_y > 800){
-                camera_y = 800
+                camera_y = 800;
             }else if(camera_y < -800){
-                camera_y = -800
+                camera_y = -800;
             }
         }
     }
 };
 
 window.onmouseup = function(){
-    mouse_hold = 0
+    mouse_hold = 0;
 };
 
-window.onresize = resize
+window.onresize = resize;
