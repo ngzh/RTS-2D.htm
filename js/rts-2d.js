@@ -737,7 +737,7 @@ function draw(){
         );
     }
 
-    if(settings[4]){/*clear?*/
+    if(settings[4]){/* clear? */
         canvas.clearRect(
             0,
             0,
@@ -761,11 +761,13 @@ function m(x0, y0, x1, y1){
     j1 = Math.abs(y0 - y1);
 
     if(j0 > j1){
-        return[1, j1 / j0];
+        return [1, j1 / j0];
+
     }else if(j1 > j0){
-        return[j0 / j1, 1];
+        return [j0 / j1, 1];
+
     }else{
-        return[.5, .5];
+        return [.5, .5];
     }
 }
 
@@ -820,7 +822,7 @@ function setdestination(j){
     }
 }
 function play_audio(i){
-    if(settings[2] > 0){/*audio volume*/
+    if(settings[2] > 0){/* audio volume */
         get(i).currentTime = 0;
         get(i).play();
     }
@@ -848,6 +850,7 @@ function save(){
             'scroll-speed',
             'audio-volume'
         ][i];
+
         if(isNaN(get(j).value) || get(j).value == [25, 10, 1][i] || get(j).value < [1, 1, 0][i]){
             ls.removeItem('rts-2d-' + i);
             settings[i] = [
@@ -856,6 +859,7 @@ function save(){
                 1
             ][i];
             get(j).value = settings[i];
+
         }else{
             settings[i] = parseFloat(get(j).value);
             ls.setItem(
@@ -868,6 +872,7 @@ function save(){
     if(get('camera-keys').value == 'WASD'){
         ls.removeItem('rts-2d-3');
         settings[3] = 'WASD';
+
     }else{
         settings[3] = get('camera-keys').value;
         ls.setItem(
@@ -879,6 +884,7 @@ function save(){
     settings[4] = get('clear').checked;
     if(settings[4]){
         ls.removeItem('rts-2d-4');
+
     }else{
         ls.setItem(
             'rts-2d-4',
@@ -960,7 +966,7 @@ function setmode(newmode){
             '#321'
         ][mode - 1];
 
-        world_static=[
+        world_static = [
             [
                 -800,
                 -800,
@@ -976,7 +982,7 @@ function setmode(newmode){
 
         i = random_number(2);
         j = random_number(2);
-        p0_buildings=[
+        p0_buildings = [
             [
                 i ? -775 : 675,/* x */
                 j ? 675 : -775,/* y */
@@ -988,7 +994,7 @@ function setmode(newmode){
                 j ? 725 : -725/* destination y */
             ]
         ];
-        p1_buildings=[
+        p1_buildings = [
             [
                 i ? 675 : -775,/* x */
                 j ? -775 : 675,/* y */
@@ -1128,6 +1134,7 @@ window.onmousedown = function(e){
             }else{
                 build_robot();
             }
+
         }else{
             if(e.button == 2){
                 setdestination(1);
