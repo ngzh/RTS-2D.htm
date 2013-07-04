@@ -489,10 +489,12 @@ function draw(){
     }
 
     /* draw bullets */
-    buffer.fillStyle = '#666';
     i = bullets.length - 1;
     if(i >= 0){
         do{
+            /* set bullet color to team color */
+            buffer.fillStyle = bullets[i][4] ? '#f00' : '#0f0';
+
             buffer.fillRect(
                 bullets[i][0] - 5,
                 bullets[i][1] - 5,
@@ -687,26 +689,75 @@ function draw(){
         }while(i--);
     }
 
+    var temp_height = 0;
+    var temp_width = 0;
+    var temp_x = 0;
+    var temp_y = 0;
+
     /* draw selection box on minimap */
     if(mouse_hold == 1){
+        /* max sure box cannot go past right edge */
+        temp_x = 100 - (x + camera_x - mouse_lock_x) / level_size_math;
+        temp_width = (mouse_x - mouse_lock_x) / level_size_math;
+        if(temp_x > 200 - temp_width){
+            /* box past right edge, decrease width to fix */
+            temp_width = 200 - temp_x;
+        }
+
+        /* make sure box can't go past top edge */
+        temp_y = height - 100 - (y + camera_y - mouse_lock_y) / level_size_math;
+        temp_height = (mouse_y - mouse_lock_y) / level_size_math;
+        if(temp_y < height - 200){
+            /* box past top edge, decrease height and make sure height isn't negative */
+            temp_height -= height - 200 - temp_y;
+            if(temp_height < 0){
+                temp_height = 0;
+            }
+
+            /* adjust box starting y position */
+            temp_y = height - 200;
+        }
+
         buffer.beginPath();
         buffer.rect(
-            100 - (x + camera_x - mouse_lock_x) / level_size_math,
-            height - 100 - (y + camera_y - mouse_lock_y) / level_size_math,
-            (mouse_x - mouse_lock_x) / level_size_math,
-            (mouse_y - mouse_lock_y) / level_size_math
+            temp_x,
+            temp_y,
+            temp_width,
+            temp_height
         );
         buffer.closePath();
         buffer.stroke();
     }
 
     /* draw camera boundaries on minimap */
+    /* max sure box cannot go past right edge */
+    temp_x = 100 - x / level_size_math - camera_x / level_size_math;
+    temp_width = width / level_size_math;
+    if(temp_x > 200 - temp_width){
+        /* box past right edge, decrease width to fix */
+        temp_width = 200 - temp_x;
+    }
+
+    /* make sure box can't go past top edge */
+    temp_y = height - 100 - y / level_size_math - camera_y / level_size_math;
+    temp_height = height / level_size_math;
+    if(temp_y < height - 200){
+        /* box past top edge, decrease height and make sure height isn't negative */
+        temp_height -= height - 200 - temp_y;
+        if(temp_height < 0){
+            temp_height = 0;
+        }
+
+        /* adjust box starting y position */
+        temp_y = height - 200;
+    }
+
     buffer.beginPath();
     buffer.rect(
-        100 - x / level_size_math - camera_x / level_size_math,
-        height - 100 - y / level_size_math - camera_y / level_size_math,
-        width / level_size_math,
-        height / level_size_math
+        temp_x,
+        temp_y,
+        temp_width,
+        temp_height
     );
     buffer.closePath();
     buffer.stroke();
