@@ -27,14 +27,17 @@ function draw(){
         camera_y -= settings[1];
         mouse_lock_y -= settings[1];
     }
+
     if(key_left && camera_x < settings[3]){
         camera_x += settings[1];
         mouse_lock_x += settings[1];
     }
+
     if(key_right && camera_x > -settings[3]){
         camera_x -= settings[1];
         mouse_lock_x -= settings[1];
     }
+
     if(key_up && camera_y < settings[3]){
         camera_y += settings[1];
         mouse_lock_y += settings[1];
@@ -833,6 +836,7 @@ function draw(){
                 x,
                 y / 2
             );
+
         }else{
             buffer.fillStyle = '#0f0';
             buffer.fillText(
@@ -942,8 +946,13 @@ function play_audio(i){
 
 function resize(){
     if(mode > 0){
-        width = get('buffer').width = get('canvas').width = window.innerWidth;
-        height = get('buffer').height = get('canvas').height = window.innerHeight;
+        width = window.innerWidth;
+        get('buffer').width = width;
+        get('canvas').width = width;
+
+        height = window.innerHeight;
+        get('buffer').height = height;
+        get('canvas').height = height;
 
         x = width / 2;
         y = height / 2;
@@ -1053,6 +1062,7 @@ function select(){
                 if(p0_buildings[i][5]){
                     selected_type = 1;
                 }
+
             }else{
                 p0_buildings[i][5] = 0;
             }
