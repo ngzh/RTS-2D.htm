@@ -592,8 +592,6 @@ function draw(){
 
     // draw robot building UI button text
     buffer.font = '27pt sans-serif';
-    buffer.textAlign = 'center';
-    buffer.textBaseline = 'middle';
     if(p0_buildings.length > 0){
         buffer.fillRect(
             205,
@@ -604,8 +602,8 @@ function draw(){
         buffer.fillStyle='#fff';
         buffer.fillText(
             'R',
-            237,
-            height - 32
+            225,
+            height - 20
         );
     }
 
@@ -613,8 +611,8 @@ function draw(){
     buffer.fillStyle = '#fff';
     buffer.fillText(
         '$' + money[0],
-        100,
-        height - 223
+        5,
+        height - 220
     );
 
     // draw minimap background
@@ -833,6 +831,7 @@ function draw(){
     // draw win/lose text if win/lose conditions met
     if((p0_buildings.length < 1 && p0_units.length < 1)
      || (p1_buildings.length < 1 && p1_units.length < 1)){
+        buffer.textAlign = 'center';
         if(p0_buildings.length < 1){
             buffer.fillStyle = '#f00';
             buffer.fillText(
