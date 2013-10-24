@@ -1209,12 +1209,12 @@ function setmode(newmode){
         canvas = 0;
 
         get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><b>RTS-2D</b></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div><hr><div class=c><label><input '
-            + (settings[6] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size size=3 value='
-            + settings[3] + '>*2 Level Size</div></div><div style=display:inline-block;text-align:left><div class=c><input id=camera-keys maxlength=4 size=3 value='
-            + settings[4] + '>Camera ↑←↓→<br><input disabled size=3 style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+            + (settings[6] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size size=5 value='
+            + settings[3] + '>*2 Level Size</div></div><div style=display:inline-block;text-align:left><div class=c><input id=camera-keys maxlength=4 size=5 value='
+            + settings[4] + '>Camera ↑←↓→<br><input disabled size=5 style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[2] + '>Audio<br><label><input '
-            + (settings[5] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=scroll-speed size=2 value='
-            + settings[1] + '>Scroll Speed<br><a onclick="if(confirm(\'Reset settings?\')){get(\'audio-volume\').value=get(\'clear\').checked=get(\'fog-of-war\').checked=1;get(\'camera-keys\').value=\'WASD\';get(\'scroll-speed\').value=10;get(\'level-size\').value=1600;get(\'ms-per-frame\').value=25;save();setmode(0)}">Reset Settings</a><br><a onclick="get(\'hack-span\').style.display=get(\'hack-span\').style.display==\'none\'?\'inline\':\'none\'">Hack</a><span id=hack-span style=display:none><br><br><input id=ms-per-frame size=2 value='
+            + (settings[5] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=scroll-speed size=3 value='
+            + settings[1] + '>Scroll Speed<br><a onclick="if(confirm(\'Reset settings?\')){get(\'audio-volume\').value=get(\'clear\').checked=get(\'fog-of-war\').checked=1;get(\'camera-keys\').value=\'WASD\';get(\'scroll-speed\').value=10;get(\'level-size\').value=1600;get(\'ms-per-frame\').value=25;save();setmode(0)}">Reset Settings</a><br><a onclick="get(\'hack-span\').style.display=get(\'hack-span\').style.display==\'none\'?\'inline\':\'none\'">Hack</a><span id=hack-span style=display:none><br><br><input id=ms-per-frame size=3 value='
             + settings[0] + '>ms/Frame</span></div></div>';
     }
 }
