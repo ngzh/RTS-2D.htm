@@ -15,12 +15,11 @@ function build_robot(){
 }
 
 function draw(){
+    money_timer += 1;
     if(money_timer > 99){
         money_timer = 0;
         money[0] += 1;
         money[1] += 1;
-    }else{
-        money_timer += 1;
     }
 
     if(key_down && camera_y > -settings[3]){
@@ -84,6 +83,8 @@ function draw(){
 
     i = p1_buildings.length - 1;
     if(i >= 0){
+        ai_build_robot += 1;
+
         if(ai_build_robot >= 230){
             ai_build_robot = 0;
 
@@ -99,8 +100,6 @@ function draw(){
                 ]);
             }
 
-        }else{
-            ai_build_robot += 1;
         }
 
         do{
@@ -275,15 +274,12 @@ function draw(){
                 }
 
                 j = fog.length - 1;
-                if(i >= 0){
+                if(j >= 0){
                     do{
-                        // only check fog that is still fogging
-                        if(fog[j][2] == 1){
-                            if(Math.sqrt(Math.pow(p0_units[i][1] - fog[j][1] + settings[3] - 50, 2)
-                                       + Math.pow(p0_units[i][0] - fog[j][0] + settings[3] - 50, 2)
-                              ) < 290){
-                                fog[j][2] = 0;
-                            }
+                        if(Math.sqrt(Math.pow(p0_units[i][1] - fog[j][1] + settings[3] - 50, 2)
+                                   + Math.pow(p0_units[i][0] - fog[j][0] + settings[3] - 50, 2)
+                          ) < 290){
+                            fog.splice(j, 1);
                         }
                     }while(j--);
                 }
@@ -477,14 +473,12 @@ function draw(){
     i = fog.length - 1;
     if(i >= 0){
         do{
-            if(fog[i][2]){
-                buffer.fillRect(
-                    -settings[3] + fog[i][0],
-                    -settings[3] + fog[i][1],
-                    100,
-                    100
-                );
-            }
+            buffer.fillRect(
+                -settings[3] + fog[i][0],
+                -settings[3] + fog[i][1],
+                100,
+                100
+            );
         }while(i--);
     }
 
@@ -590,8 +584,10 @@ function draw(){
         200
     );
 
-    // draw robot building UI button text
     buffer.font = '27pt sans-serif';
+    buffer.textAlign = 'left';
+
+    // draw robot building UI button text
     if(p0_buildings.length > 0){
         buffer.fillRect(
             205,
@@ -685,14 +681,12 @@ function draw(){
     i = fog.length - 1;
     if(i >= 0){
         do{
-            if(fog[i][2]){
-                buffer.fillRect(
-                    fog[i][0] / level_size_math,
-                    height - 200 + fog[i][1] / level_size_math,
-                    50 / (settings[3] / 200),
-                    50 / (settings[3] / 200)
-                );
-            }
+            buffer.fillRect(
+                fog[i][0] / level_size_math,
+                height - 200 + fog[i][1] / level_size_math,
+                50 / (settings[3] / 200),
+                50 / (settings[3] / 200)
+            );
         }while(i--);
     }
 
@@ -882,11 +876,8 @@ function m(x0, y0, x1, y1){
     if(j0 > j1){
         return [1, j1 / j0];
 
-    }else if(j1 > j0){
-        return [j0 / j1, 1];
-
     }else{
-        return [.5, .5];
+        return j1 > j0 ? [j0 / j1, 1] : [.5, .5];
     }
 }
 
@@ -1167,8 +1158,7 @@ function setmode(newmode){
             do{
                 fog.push([
                     temp_x * 100,// fog x
-                    temp_y,// fog y
-                    1// fog fogging
+                    temp_y// fog y
                 ]);
 
                 // add next fog unit one fog unit space to the right
@@ -1186,13 +1176,15 @@ function setmode(newmode){
             do{
                 // check each fog unit if within 390px of building
                 j = fog.length - 1;
-                do{
-                    if(Math.sqrt(Math.pow(p0_buildings[i][1] - fog[j][1] + settings[3], 2)
-                               + Math.pow(p0_buildings[i][0] - fog[j][0] + settings[3], 2)
-                      ) < 390){
-                        fog[j][2] = 0;
-                    }
-                }while(j--);
+                if(j >= 0){
+                    do{
+                        if(Math.sqrt(Math.pow(p0_buildings[i][1] - fog[j][1] + settings[3], 2)
+                                   + Math.pow(p0_buildings[i][0] - fog[j][0] + settings[3], 2)
+                          ) < 390){
+                            fog.splice(j, 1);
+                        }
+                    }while(j--);
+                }
             }while(i--);
         }
 
