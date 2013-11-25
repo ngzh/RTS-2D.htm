@@ -3,11 +3,11 @@ function build_robot(){
         money[0] -= 100;
 
         p0_units.push([
-            p0_buildings[0][0] + p0_buildings[0][2] / 2,// x
-            p0_buildings[0][1] + p0_buildings[0][3] / 2,// y
+            p0_buildings[selected_id][0] + p0_buildings[selected_id][2] / 2,// x
+            p0_buildings[selected_id][1] + p0_buildings[selected_id][3] / 2,// y
             0,// selected?
-            p0_buildings[0][6] != null ? p0_buildings[0][6] : p0_buildings[0][0],// destination x
-            p0_buildings[0][7] != null ? p0_buildings[0][7] : p0_buildings[0][1],// destination y
+            p0_buildings[selected_id][6] != null ? p0_buildings[selected_id][6] : p0_buildings[0][0],// destination x
+            p0_buildings[selected_id][7] != null ? p0_buildings[selected_id][7] : p0_buildings[0][1],// destination y
             0,// weapon reload
             100// health
         ]);
@@ -83,23 +83,24 @@ function draw(){
 
     i = p1_buildings.length - 1;
     if(i >= 0){
-        ai_build_robot += 1;
+        if(p1_buildings.length > 1){
+            ai_build_robot += 1;
 
-        if(ai_build_robot >= 230){
-            ai_build_robot = 0;
+            if(ai_build_robot >= 230){
+                ai_build_robot = 0;
 
-            if(money[1] >= 100){
-                money[1] -= 100;
-                p1_units.push([
-                    p1_buildings[0][0] + p1_buildings[0][2] / 2,// x
-                    p1_buildings[0][1] + p1_buildings[0][3] / 2,// y
-                    random_number(settings[3] * 2) - settings[3],// destination x
-                    random_number(settings[3] * 2) - settings[3],// destination y
-                    0,// weapon reload
-                    100// health
-                ]);
+                if(money[1] >= 100){
+                    money[1] -= 100;
+                    p1_units.push([
+                        p1_buildings[1][0] + p1_buildings[1][2] / 2,// x
+                        p1_buildings[1][1] + p1_buildings[1][3] / 2,// y
+                        random_number(settings[3] * 2) - settings[3],// destination x
+                        random_number(settings[3] * 2) - settings[3],// destination y
+                        0,// weapon reload
+                        100// health
+                    ]);
+                }
             }
-
         }
 
         do{
@@ -187,8 +188,8 @@ function draw(){
                     j = p0_buildings.length - 1;
                     if(j >= 0){
                         do{
-                            if(Math.sqrt(Math.pow(p1_units[i][1] - p0_buildings[j][1], 2)
-                             + Math.pow(p1_units[i][0] - p0_buildings[j][0], 2)) < 240){
+                            if(Math.sqrt(Math.pow(p1_units[i][1] - (p0_buildings[j][1] + 50), 2)
+                             + Math.pow(p1_units[i][0] - (p0_buildings[j][0] + 50), 2)) < 240){
                                 p1_units[i][4] = 75;
                                 bullets.push([
                                     p1_units[i][0],// x
@@ -556,6 +557,34 @@ function draw(){
         buffer.stroke();
     }
 
+    // draw building while in build mode
+    if(build_mode > 0){
+        buffer.fillStyle='#1f1';
+
+        i = mouse_x - 50;
+        q = settings[3] + camera_x + x -100;
+        if(i > q){
+            i = q;
+        }else if(i < -settings[3] + camera_x + x){
+            i = -settings[3] + camera_x + x;
+        }
+
+        j = mouse_y - 50;
+        q = settings[3] + camera_y + y -100;
+        if(j > q){
+            j = q;
+        }else if(j < -settings[3] + camera_y + y){
+            j = -settings[3] + camera_y + y;
+        }
+
+        buffer.fillRect(
+            i,
+            j,
+            100,
+            100
+        );
+    }
+
     // draw minimap frame
     buffer.fillStyle = '#222';
     buffer.fillRect(
@@ -565,42 +594,46 @@ function draw(){
         205
     );
 
-    // draw robot buliding UI button
-    if(p0_buildings.length > 0){
-        buffer.fillRect(
-            205,
-            height - 70,
-            70,
-            70
-        );
-    }
-
-    // draw robot building UI button background
-    buffer.fillStyle = '#111';
-    buffer.fillRect(
-        0,
-        height - 200,
-        200,
-        200
-    );
-
     buffer.font = '27pt sans-serif';
     buffer.textAlign = 'left';
 
-    // draw robot building UI button text
-    if(p0_buildings.length > 0){
+    if(selected_type > 0){
+        i = [
+            70,
+            70
+        ][selected_type - 1];
+
         buffer.fillRect(
             205,
-            height - 65,
-            65,
-            65
+            height - i,
+            i,
+            i
         );
+
+        i -= 5;
+
+        buffer.fillStyle = '#111';
+        buffer.fillRect(
+            205,
+            height - i,
+            i,
+            i
+        );
+
         buffer.fillStyle='#fff';
-        buffer.fillText(
-            'R',
-            225,
-            height - 20
-        );
+        if(selected_type == 1){
+            buffer.fillText(
+                'F',
+                225,
+                height - 20
+            );
+        }else if(selected_type == 2){
+            buffer.fillText(
+                'R',
+                225,
+                height - 20
+            );
+        }
     }
 
     // draw p0 money
@@ -651,7 +684,7 @@ function draw(){
     // draw p1 units on minimap
     i = p1_units.length - 1;
     if(i >= 0){
-        buffer.fillStyle = '#p0_buildings0';
+        buffer.fillStyle = '#b00';
         do{
             buffer.fillRect(
                 100 + (p1_units[i][0] - 15) / level_size_math,
@@ -906,7 +939,7 @@ function setdestination(j){
             }while(i--);
         }
 
-    }else if(p0_buildings.length > 0){
+    }else if(selected_type > 1){
         i = p0_buildings.length - 1;
         if(i >= 0){
             do{
@@ -968,7 +1001,7 @@ function save(){
         ][i];
 
         if(isNaN(get(j).value) || get(j).value == [25, 10, 1, 1600][i] || get(j).value < [1, 1, 0, 200][i]){
-            ls.removeItem('rts-2d-' + i);
+            window.localStorage.removeItem('rts-2d-' + i);
             settings[i] = [
                 25,
                 10,
@@ -979,7 +1012,7 @@ function save(){
 
         }else{
             settings[i] = parseFloat(get(j).value);
-            ls.setItem(
+            window.localStorage.setItem(
                 'rts-2d-' + i,
                 settings[i]
             );
@@ -987,12 +1020,12 @@ function save(){
     }while(i--);
 
     if(get('camera-keys').value == 'WASD'){
-        ls.removeItem('rts-2d-4');
+        window.localStorage.removeItem('rts-2d-4');
         settings[4] = 'WASD';
 
     }else{
         settings[4] = get('camera-keys').value;
-        ls.setItem(
+        window.localStorage.setItem(
             'rts-2d-4',
             settings[4]
         );
@@ -1000,10 +1033,10 @@ function save(){
 
     settings[5] = get('clear').checked;
     if(settings[5]){
-        ls.removeItem('rts-2d-5');
+        window.localStorage.removeItem('rts-2d-5');
 
     }else{
-        ls.setItem(
+        window.localStorage.setItem(
             'rts-2d-5',
             0
         );
@@ -1011,10 +1044,10 @@ function save(){
 
     settings[6] = get('fog-of-war').checked;
     if(settings[6]){
-        ls.removeItem('rts-2d-6');
+        window.localStorage.removeItem('rts-2d-6');
 
     }else{
-        ls.setItem(
+        window.localStorage.setItem(
             'rts-2d-6',
             0
         );
@@ -1022,6 +1055,7 @@ function save(){
 }
 
 function select(){
+    selected_id = -1;
     selected_type = -1;
 
     i = p0_units.length - 1;
@@ -1036,6 +1070,7 @@ function select(){
             );
 
             if(p0_units[i][2]){
+                selected_id = i;
                 selected_type = 0;
             }
         }while(i--);
@@ -1058,7 +1093,8 @@ function select(){
                 );
 
                 if(p0_buildings[i][5]){
-                    selected_type = 1;
+                    selected_id = i;
+                    selected_type = p0_buildings[i][8];
                 }
 
             }else{
@@ -1087,7 +1123,7 @@ function setmode(newmode){
 
         money = [
             1000,
-            1000
+             750
         ];
         mouse_hold = 0;
         mouse_lock_x = -1;
@@ -1127,13 +1163,20 @@ function setmode(newmode){
                 100,// height
                 1000,// health
                 0,// selected
-                i ? -settings[3] + 200 : settings[3] - 200,// destination x
-                j ? settings[3] - 75  : -settings[3] + 75// destination y
+                i ? -settings[3] + 75 : settings[3] - 75,// destination x
+                j ? settings[3] - 75  : -settings[3] + 75,// destination y
+                1// type
             ]
         ];
         p1_buildings = [
             [
                 i ? settings[3] - 125 : -settings[3] + 25,// x
+                j ? -settings[3] + 25 : settings[3] -125,// y
+                100,// width
+                100,// height
+                1000// health
+            ],[
+                i ? settings[3] - 250 : -settings[3] + 150,// x
                 j ? -settings[3] + 25 : settings[3] -125,// y
                 100,// width
                 100,// height
@@ -1213,6 +1256,7 @@ function setmode(newmode){
 
 var ai_build_robot = 0;
 var buffer = 0;
+var build_mode = 0;
 var bullets = [];
 var canvas = 0;
 var camera_x = 0;
@@ -1227,7 +1271,6 @@ var key_left = 0;
 var key_right = 0;
 var key_up = 0;
 var level_size_math = 0;
-var ls = window.localStorage;
 var mode = 0;
 var money = [];
 var money_timer = 0;
@@ -1241,15 +1284,16 @@ var p0_units = [];
 var p1_buildings = [];
 var p1_units = [];
 var q = 0;
+var selected_id = -1;
 var selected_type = -1;
 var settings = [
-    ls.getItem('rts-2d-0') === null ?     25 : parseInt(ls.getItem('rts-2d-0')),// milliseconds-per-frame
-    ls.getItem('rts-2d-1') === null ?     10 : parseInt(ls.getItem('rts-2d-1')),// scroll speed
-    ls.getItem('rts-2d-2') === null ?      1 : parseFloat(ls.getItem('rts-2d-2')),// audio volume
-    ls.getItem('rts-2d-3') === null ?   1600 : parseFloat(ls.getItem('rts-2d-3')),// level size
-    ls.getItem('rts-2d-4') === null ? 'WASD' : ls.getItem('rts-2d-4'),// camera move keys
-    ls.getItem('rts-2d-5') === null,// clear?
-    ls.getItem('rts-2d-6') === null// fog of war
+    window.localStorage.getItem('rts-2d-0') === null ?     25 : parseInt(window.localStorage.getItem('rts-2d-0')),// milliseconds-per-frame
+    window.localStorage.getItem('rts-2d-1') === null ?     10 : parseInt(window.localStorage.getItem('rts-2d-1')),// scroll speed
+    window.localStorage.getItem('rts-2d-2') === null ?      1 : parseFloat(window.localStorage.getItem('rts-2d-2')),// audio volume
+    window.localStorage.getItem('rts-2d-3') === null ?   1600 : parseFloat(window.localStorage.getItem('rts-2d-3')),// level size
+    window.localStorage.getItem('rts-2d-4') === null ? 'WASD' : window.localStorage.getItem('rts-2d-4'),// camera move keys
+    window.localStorage.getItem('rts-2d-5') === null,// clear?
+    window.localStorage.getItem('rts-2d-6') === null// fog of war
 ];
 var width = 0;
 var world_static = [];
@@ -1263,10 +1307,7 @@ window.onkeydown = function(e){
         i = window.event ? event : e;
         i = i.charCode ? i.charCode : i.keyCode;
 
-        if(i === 82 && p0_buildings.length > 0){
-            build_robot();
-
-        }else if(String.fromCharCode(i) === settings[4][1]){
+        if(String.fromCharCode(i) === settings[4][1]){
             key_left = 1;
 
         }else if(String.fromCharCode(i) === settings[4][3]){
@@ -1279,7 +1320,22 @@ window.onkeydown = function(e){
             key_up = 1;
 
         }else if(i === 27){
-            setmode(0);
+            if(build_mode > 0){
+                build_mode = 0;
+
+            }else{
+                setmode(0);
+            }
+
+        // user selected HQ
+        }else if(selected_type === 1){
+            if(i === 70){
+                build_mode = 1;
+            }
+
+        // user selected factory and pressed R button
+        }else if(selected_type === 2 && i === 82){
+            build_robot();
         }
     }
 };
@@ -1309,8 +1365,47 @@ window.onmousedown = function(e){
         // if not clicking on minimap
         if(mouse_x > 200 || mouse_y < height - 200){
 
+            // check if in buildling mode
+            if(build_mode > 0){
+                // build a factory
+                if(money[0] >= 250){
+                    build_mode = 0;
+                    money[0] -= 250;
+
+                    // make sure building is within buildable limit
+                    i = mouse_x - camera_x - x - 50;
+                    if(i > settings[3] - 100){
+                        i = settings[3] - 100;
+
+                    }else if(i < -settings[3]){
+                        i = -settings[3];
+                    }
+
+                    j = mouse_y - camera_y - y - 50;
+                    if(j > settings[3] - 100){
+                        j = settings[3] - 100;
+
+                    }else if(j < -settings[3]){
+                        j = -settings[3];
+                    }
+
+                    p0_buildings.push(
+                        [
+                            i,// x
+                            j,// y
+                            100,// width
+                            100,// height
+                            1000,// health
+                            0,// selected
+                            i + 50,// destination x
+                            j + 50,// destination y
+                            2// type
+                        ]
+                    );
+                }
+
             // if unit selected or not clicking on build robot button
-            if(selected_type < 1 || (mouse_y < height - 65 || mouse_x > 270)){
+            }else if(selected_type < 1 || (mouse_y < height - 65 || mouse_x > 270)){
                 // left click: start dragging
                 if(e.button == 0){
                     mouse_hold = 1;
@@ -1322,34 +1417,35 @@ window.onmousedown = function(e){
                     setdestination(0);
                 }
 
-            // try to build a robot
-            }else{
+            // else if HQ is selected, activate build mode
+            }else if(selected_type == 1){
+                build_mode = 1;
+
+            // else if factory is selected, build robot
+            }else if(selected_type == 2){
                 build_robot();
             }
 
-        // clicking on minimap
+        // right clicking on minimap
+        }else if(e.button == 2){
+            setdestination(1);
+
+        // other clicks: move camera
         }else{
-            // right click: set unit destination
-            if(e.button == 2){
-                setdestination(1);
+            mouse_hold = 2;
 
-            // other clicks: move camera
-            }else{
-                mouse_hold = 2;
+            camera_x = -level_size_math * (mouse_x - 100);
+            if(camera_x > settings[3]){
+                camera_x = settings[3];
+            }else if(camera_x < -settings[3]){
+                camera_x = -settings[3];
+            }
 
-                camera_x = -level_size_math * (mouse_x - 100);
-                if(camera_x > settings[3]){
-                    camera_x = settings[3];
-                }else if(camera_x < -settings[3]){
-                    camera_x = -settings[3];
-                }
-
-                camera_y = -level_size_math * (mouse_y - height + 100);
-                if(camera_y > settings[3]){
-                    camera_y = settings[3];
-                }else if(camera_y < -settings[3]){
-                    camera_y = -settings[3];
-                }
+            camera_y = -level_size_math * (mouse_y - height + 100);
+            if(camera_y > settings[3]){
+                camera_y = settings[3];
+            }else if(camera_y < -settings[3]){
+                camera_y = -settings[3];
             }
         }
     }
