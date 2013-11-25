@@ -81,25 +81,22 @@ function draw(){
         }while(i--);
     }
 
+    buffer.font = '42pt sans-serif';
+    buffer.textAlign = 'center';
+
     i = p1_buildings.length - 1;
     if(i >= 0){
         if(p1_buildings.length > 1){
-            ai_build_robot += 1;
-
-            if(ai_build_robot >= 230){
-                ai_build_robot = 0;
-
-                if(money[1] >= 100){
-                    money[1] -= 100;
-                    p1_units.push([
-                        p1_buildings[1][0] + p1_buildings[1][2] / 2,// x
-                        p1_buildings[1][1] + p1_buildings[1][3] / 2,// y
-                        random_number(settings[3] * 2) - settings[3],// destination x
-                        random_number(settings[3] * 2) - settings[3],// destination y
-                        0,// weapon reload
-                        100// health
-                    ]);
-                }
+            if(money[1] >= 100){
+                money[1] -= 100;
+                p1_units.push([
+                    p1_buildings[1][0] + p1_buildings[1][2] / 2,// x
+                    p1_buildings[1][1] + p1_buildings[1][3] / 2,// y
+                    random_number(settings[3] * 2) - settings[3],// destination x
+                    random_number(settings[3] * 2) - settings[3],// destination y
+                    0,// weapon reload
+                    100// health
+                ]);
             }
         }
 
@@ -122,6 +119,16 @@ function draw(){
                     p1_buildings[i][1] - 10,
                     p1_buildings[i][2] * (p1_buildings[i][4] / 1000),
                     5
+                );
+
+                // temporarily draw building name
+                buffer.fillText(
+                    [
+                        'HQ',
+                        'F'
+                    ][p1_buildings[i][5] - 1],
+                    p1_buildings[i][0] + 50,
+                    p1_buildings[i][1] + 50
                 );
             }
         }while(i--);
@@ -149,6 +156,17 @@ function draw(){
                     p0_buildings[i][1] - 10,
                     p0_buildings[i][2] * (p0_buildings[i][4] / 1000),
                     5
+                );
+
+                // temporarily draw building name
+                buffer.fillStyle = '#fff';
+                buffer.fillText(
+                    [
+                        'HQ',
+                        'F'
+                    ][p0_buildings[i][8] - 1],
+                    p0_buildings[i][0] + 50,
+                    p0_buildings[i][1] + 50
                 );
             }
         }while(i--);
@@ -1174,13 +1192,15 @@ function setmode(newmode){
                 j ? -settings[3] + 25 : settings[3] -125,// y
                 100,// width
                 100,// height
-                1000// health
+                1000,// health
+                1//type
             ],[
                 i ? settings[3] - 250 : -settings[3] + 150,// x
                 j ? -settings[3] + 25 : settings[3] -125,// y
                 100,// width
                 100,// height
-                1000// health
+                1000,// health
+                2//type
             ]
         ];
         p0_units = [];
@@ -1254,7 +1274,6 @@ function setmode(newmode){
     }
 }
 
-var ai_build_robot = 0;
 var buffer = 0;
 var build_mode = 0;
 var bullets = [];
