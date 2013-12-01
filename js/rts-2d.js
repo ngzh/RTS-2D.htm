@@ -602,6 +602,16 @@ function draw(){
             100,
             100
         );
+
+        buffer.fillStyle='#fff';
+        buffer.fillText(
+            [
+                'F',
+                'R'
+            ][selected_type - 1],
+            i + 50,
+            j + 50
+        );
     }
 
     // draw minimap frame
@@ -637,19 +647,14 @@ function draw(){
         );
 
         buffer.fillStyle='#fff';
-        if(selected_type == 1){
-            buffer.fillText(
+        buffer.fillText(
+            [
                 'F',
-                240,
-                height - 35
-            );
-        }else if(selected_type == 2){
-            buffer.fillText(
-                'R',
-                240,
-                height - 35
-            );
-        }
+                'R'
+            ][selected_type - 1],
+            240,
+            height - 35
+        );
     }
 
     // draw p0 money
