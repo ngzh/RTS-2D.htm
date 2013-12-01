@@ -82,6 +82,7 @@ function draw(){
     }
 
     buffer.font = '42pt sans-serif';
+    buffer.textBaseline = 'middle';
     buffer.textAlign = 'center';
 
     i = p1_buildings.length - 1;
@@ -612,9 +613,6 @@ function draw(){
         205
     );
 
-    buffer.font = '27pt sans-serif';
-    buffer.textAlign = 'left';
-
     if(selected_type > 0){
         i = [
             70,
@@ -642,24 +640,25 @@ function draw(){
         if(selected_type == 1){
             buffer.fillText(
                 'F',
-                225,
-                height - 20
+                240,
+                height - 35
             );
         }else if(selected_type == 2){
             buffer.fillText(
                 'R',
-                225,
-                height - 20
+                240,
+                height - 35
             );
         }
     }
 
     // draw p0 money
     buffer.fillStyle = '#fff';
+    buffer.textAlign = 'left';
     buffer.fillText(
         '$' + money[0],
         5,
-        height - 220
+        height - 230
     );
 
     // draw minimap background
