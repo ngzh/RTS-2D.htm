@@ -920,6 +920,23 @@ function draw(){
     );
 }
 
+function fog_update_building(){
+    i = p0_buildings.length - 1;
+    do{
+        // check each fog unit if within 390px of building
+        j = fog.length - 1;
+        if(j >= 0){
+            do{
+                if(Math.sqrt(Math.pow(p0_buildings[i][1] - fog[j][1] + settings[3], 2)
+                           + Math.pow(p0_buildings[i][0] - fog[j][0] + settings[3], 2)
+                  ) < 390){
+                    fog.splice(j, 1);
+                }
+            }while(j--);
+        }
+    }while(i--);
+}
+
 function get(i){
     return document.getElementById(i);
 }
@@ -1238,21 +1255,8 @@ function setmode(newmode){
                 }
             }while(i--);
 
-            // since player cannot YET build buildings, remove fog around buildings now
-            i = p0_buildings.length - 1;
-            do{
-                // check each fog unit if within 390px of building
-                j = fog.length - 1;
-                if(j >= 0){
-                    do{
-                        if(Math.sqrt(Math.pow(p0_buildings[i][1] - fog[j][1] + settings[3], 2)
-                                   + Math.pow(p0_buildings[i][0] - fog[j][0] + settings[3], 2)
-                          ) < 390){
-                            fog.splice(j, 1);
-                        }
-                    }while(j--);
-                }
-            }while(i--);
+            // remove fog around initial buildings
+            fog_update_building();
         }
 
         buffer = get('buffer').getContext('2d');
@@ -1425,6 +1429,9 @@ window.onmousedown = function(e){
                             2// type
                         ]
                     );
+
+                    // remove fog around buildings
+                    fog_update_building();
                 }
 
             // if unit selected or not clicking on build robot button
