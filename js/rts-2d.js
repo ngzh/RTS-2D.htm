@@ -1276,9 +1276,9 @@ function setmode(newmode){
             + settings[3] + '>*2 Level Size</div></div><div style=display:inline-block;text-align:left><div class=c><input id=camera-keys maxlength=4 value='
             + settings[4] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[2] + '>Audio<br><label><input '
-            + (settings[5] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=scroll-speed value='
-            + settings[1] + '>Scroll Speed<br><a onclick="if(confirm(\'Reset settings?\')){get(\'audio-volume\').value=get(\'clear\').checked=get(\'fog-of-war\').checked=1;get(\'camera-keys\').value=\'WASD\';get(\'scroll-speed\').value=10;get(\'level-size\').value=1600;get(\'ms-per-frame\').value=25;save();setmode(0)}">Reset Settings</a><br><a onclick="get(\'hack-span\').style.display=get(\'hack-span\').style.display==\'none\'?\'inline\':\'none\'">Hack</a><span id=hack-span style=display:none><br><br><input id=ms-per-frame value='
-            + settings[0] + '>ms/Frame</span></div></div>';
+            + (settings[5] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=ms-per-frame value='
+            + settings[0] + '>ms/Frame<br><input id=scroll-speed value='
+            + settings[1] + '>Scroll Speed<br><a onclick="if(confirm(\'Reset settings?\')){get(\'audio-volume\').value=get(\'clear\').checked=get(\'fog-of-war\').checked=1;get(\'camera-keys\').value=\'WASD\';get(\'scroll-speed\').value=10;get(\'level-size\').value=1600;get(\'ms-per-frame\').value=25;save();setmode(0)}">Reset Settings</a></div></div>';
     }
 }
 
