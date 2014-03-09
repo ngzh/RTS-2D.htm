@@ -914,7 +914,7 @@ function draw(){
         );
     }
     canvas.drawImage(
-        get('buffer'),
+        document.getElementById('buffer'),
         0,
         0
     );
@@ -937,10 +937,6 @@ function fog_update_building(){
     }while(i--);
 }
 
-function get(i){
-    return document.getElementById(i);
-}
-
 function m(x0, y0, x1, y1){
     var j0 = Math.abs(x0 - x1),
     j1 = Math.abs(y0 - y1);
@@ -953,72 +949,35 @@ function m(x0, y0, x1, y1){
     }
 }
 
-function setdestination(j){
-    if(selected_type == 0){
-        i = p0_units.length - 1;
-        if(i >= 0){
-            do{
-                if(p0_units[i][2]){
-                    p0_units[i][3] = j ? level_size_math * (mouse_x - 100) : mouse_x - x - camera_x;
-
-                    if(p0_units[i][3] > settings[3]){
-                        p0_units[i][3] = settings[3];
-                    }else if(p0_units[i][3] < -settings[3]){
-                        p0_units[i][3] = -settings[3];
-                    }
-
-                    p0_units[i][4] = j ? level_size_math * (mouse_y - height + 100) : mouse_y - y - camera_y;
-
-                    if(p0_units[i][4] > settings[3]){
-                        p0_units[i][4] = settings[3];
-                    }else if(p0_units[i][4] < -settings[3]){
-                        p0_units[i][4] = -settings[3];
-                    }
-                }
-            }while(i--);
-        }
-
-    }else if(selected_type > 1){
-        i = p0_buildings.length - 1;
-        if(i >= 0){
-            do{
-                if(p0_buildings[i][5]){
-                    p0_buildings[i][6] = j ? level_size_math * (mouse_x - 100) : mouse_x - x - camera_x;
-
-                    if(p0_buildings[i][6] > settings[3]){
-                        p0_buildings[i][6] = settings[3];
-                    }else if(p0_buildings[i][6] < -settings[3]){
-                        p0_buildings[i][6] = -settings[3];
-                    }
-
-                    p0_buildings[i][7] = j ? level_size_math * (mouse_y - height + 100) : mouse_y - y - camera_y;
-
-                    if(p0_buildings[i][7] > settings[3]){
-                        p0_buildings[i][7] = settings[3];
-                    }else if(p0_buildings[i][7] < -settings[3]){
-                        p0_buildings[i][7] = -settings[3];
-                    }
-                }
-            }while(i--);
-        }
-    }
-}
 function play_audio(i){
     if(settings[2] > 0){// audio volume
-        get(i).currentTime = 0;
-        get(i).play();
+        document.getElementById(i).currentTime = 0;
+        document.getElementById(i).play();
+    }
+}
+
+function resize(){
+    if(confirm('Reset settings?')){
+        document.getElementById('audio-volume').value = 1;
+        document.getElementById('camera-keys').value = 'WASD';
+        document.getElementById('clear').checked = 1;
+        document.getElementById('fog-of-war').checked = 1;
+        document.getElementById('level-size').value = 1600;
+        document.getElementById('ms-per-frame').value = 25;
+        document.getElementById('scroll-speed').value = 10;
+        save();
     }
 }
 
 function resize(){
     if(mode > 0){
         width = window.innerWidth;
-        get('buffer').width = width;
-        get('canvas').width = width;
+        document.getElementById('buffer').width = width;
+        document.getElementById('canvas').width = width;
 
         height = window.innerHeight;
-        get('buffer').height = height;
-        get('canvas').height = height;
+        document.getElementById('buffer').height = height;
+        document.getElementById('canvas').height = height;
 
         x = width / 2;
         y = height / 2;
@@ -1039,7 +998,7 @@ function save(){
             'level-size'
         ][i];
 
-        if(isNaN(get(j).value) || get(j).value == [25, 10, 1, 1600][i] || get(j).value < [1, 1, 0, 200][i]){
+        if(isNaN(document.getElementById(j).value) || document.getElementById(j).value == [25, 10, 1, 1600][i] || document.getElementById(j).value < [1, 1, 0, 200][i]){
             window.localStorage.removeItem('rts-2d-' + i);
             settings[i] = [
                 25,
@@ -1047,10 +1006,10 @@ function save(){
                 1,
                 1600
             ][i];
-            get(j).value = settings[i];
+            document.getElementById(j).value = settings[i];
 
         }else{
-            settings[i] = parseFloat(get(j).value);
+            settings[i] = parseFloat(document.getElementById(j).value);
             window.localStorage.setItem(
                 'rts-2d-' + i,
                 settings[i]
@@ -1058,19 +1017,19 @@ function save(){
         }
     }while(i--);
 
-    if(get('camera-keys').value == 'WASD'){
+    if(document.getElementById('camera-keys').value == 'WASD'){
         window.localStorage.removeItem('rts-2d-4');
         settings[4] = 'WASD';
 
     }else{
-        settings[4] = get('camera-keys').value;
+        settings[4] = document.getElementById('camera-keys').value;
         window.localStorage.setItem(
             'rts-2d-4',
             settings[4]
         );
     }
 
-    settings[5] = get('clear').checked;
+    settings[5] = document.getElementById('clear').checked;
     if(settings[5]){
         window.localStorage.removeItem('rts-2d-5');
 
@@ -1081,7 +1040,7 @@ function save(){
         );
     }
 
-    settings[6] = get('fog-of-war').checked;
+    settings[6] = document.getElementById('fog-of-war').checked;
     if(settings[6]){
         window.localStorage.removeItem('rts-2d-6');
 
@@ -1143,6 +1102,57 @@ function select(){
     }
 }
 
+function setdestination(j){
+    if(selected_type == 0){
+        i = p0_units.length - 1;
+        if(i >= 0){
+            do{
+                if(p0_units[i][2]){
+                    p0_units[i][3] = j ? level_size_math * (mouse_x - 100) : mouse_x - x - camera_x;
+
+                    if(p0_units[i][3] > settings[3]){
+                        p0_units[i][3] = settings[3];
+                    }else if(p0_units[i][3] < -settings[3]){
+                        p0_units[i][3] = -settings[3];
+                    }
+
+                    p0_units[i][4] = j ? level_size_math * (mouse_y - height + 100) : mouse_y - y - camera_y;
+
+                    if(p0_units[i][4] > settings[3]){
+                        p0_units[i][4] = settings[3];
+                    }else if(p0_units[i][4] < -settings[3]){
+                        p0_units[i][4] = -settings[3];
+                    }
+                }
+            }while(i--);
+        }
+
+    }else if(selected_type > 1){
+        i = p0_buildings.length - 1;
+        if(i >= 0){
+            do{
+                if(p0_buildings[i][5]){
+                    p0_buildings[i][6] = j ? level_size_math * (mouse_x - 100) : mouse_x - x - camera_x;
+
+                    if(p0_buildings[i][6] > settings[3]){
+                        p0_buildings[i][6] = settings[3];
+                    }else if(p0_buildings[i][6] < -settings[3]){
+                        p0_buildings[i][6] = -settings[3];
+                    }
+
+                    p0_buildings[i][7] = j ? level_size_math * (mouse_y - height + 100) : mouse_y - y - camera_y;
+
+                    if(p0_buildings[i][7] > settings[3]){
+                        p0_buildings[i][7] = settings[3];
+                    }else if(p0_buildings[i][7] < -settings[3]){
+                        p0_buildings[i][7] = -settings[3];
+                    }
+                }
+            }while(i--);
+        }
+    }
+}
+
 function setmode(newmode){
     clearInterval(interval);
 
@@ -1171,8 +1181,8 @@ function setmode(newmode){
         mouse_y = -1;
         selected_type = -1;
 
-        get('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas>';
-        get('canvas').style.background = [
+        document.getElementById('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas>';
+        document.getElementById('canvas').style.background = [
             '#277',
             '#444',
             '#321'
@@ -1259,8 +1269,8 @@ function setmode(newmode){
             fog_update_building();
         }
 
-        buffer = get('buffer').getContext('2d');
-        canvas = get('canvas').getContext('2d');
+        buffer = document.getElementById('buffer').getContext('2d');
+        canvas = document.getElementById('canvas').getContext('2d');
 
         resize();
 
@@ -1271,14 +1281,14 @@ function setmode(newmode){
         buffer = 0;
         canvas = 0;
 
-        get('page').innerHTML = '<div style="border-right:8px solid #222;display:inline-block;text-align:left;vertical-align:top"><div class=c><b>RTS-2D</b></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div><hr><div class=c><label><input '
-            + (settings[6] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
-            + settings[3] + '>*2 Level Size</div></div><div style=display:inline-block;text-align:left><div class=c><input id=camera-keys maxlength=4 value='
+        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>RTS-2D</b></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
             + settings[4] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
             + settings[2] + '>Audio<br><label><input '
-            + (settings[5] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><input id=ms-per-frame value='
+            + (settings[5] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><label><input '
+            + (settings[6] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
+            + settings[3] + '>*2 Level Size<br><input id=ms-per-frame value='
             + settings[0] + '>ms/Frame<br><input id=scroll-speed value='
-            + settings[1] + '>Scroll Speed<br><a onclick="if(confirm(\'Reset settings?\')){get(\'audio-volume\').value=get(\'clear\').checked=get(\'fog-of-war\').checked=1;get(\'camera-keys\').value=\'WASD\';get(\'scroll-speed\').value=10;get(\'level-size\').value=1600;get(\'ms-per-frame\').value=25;save();setmode(0)}">Reset Settings</a></div></div>';
+            + settings[1] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
     }
 }
 
