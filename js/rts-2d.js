@@ -549,7 +549,7 @@ function draw(){
                     p0_units[i][1],
                     240,
                     0,
-                    Math.PI * 2,
+                    pi_times_two,
                     false
                 );
                 buffer.closePath();
@@ -795,7 +795,7 @@ function draw(){
                     height - 100 + p0_units[i][1] / level_size_math,
                     120 / (settings[3] / 200),
                     0,
-                    Math.PI * 2,
+                    pi_times_two,
                     false
                 );
                 buffer.closePath();
@@ -1320,6 +1320,7 @@ var p0_buildings = [];
 var p0_units = [];
 var p1_buildings = [];
 var p1_units = [];
+var pi_times_two = Math.PI * 2;
 var q = 0;
 var selected_id = -1;
 var selected_type = -1;
