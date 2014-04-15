@@ -1342,22 +1342,10 @@ setmode(0);
 
 window.onkeydown = function(e){
     if(mode > 0){
-        i = window.event ? event : e;
-        i = i.charCode ? i.charCode : i.keyCode;
+        var key = window.event ? event : e;
+        key = key.charCode ? key.charCode : key.keyCode;
 
-        if(String.fromCharCode(i) === settings[4][1]){
-            key_left = 1;
-
-        }else if(String.fromCharCode(i) === settings[4][3]){
-            key_right = 1;
-
-        }else if(String.fromCharCode(i) === settings[4][2]){
-            key_down = 1;
-
-        }else if(String.fromCharCode(i) === settings[4][0]){
-            key_up = 1;
-
-        }else if(i === 27){
+        if(key === 27){
             if(build_mode > 0){
                 build_mode = 0;
 
@@ -1366,32 +1354,49 @@ window.onkeydown = function(e){
             }
 
         // user selected HQ
-        }else if(selected_type === 1){
-            if(i === 70){
-                build_mode = 1;
+        }else{
+            if(selected_type === 1){
+                if(key === 70){
+                    build_mode = 1;
+                }
+
+            // user selected factory and pressed R button
+            }else if(selected_type === 2 && key === 82){
+                build_robot();
             }
 
-        // user selected factory and pressed R button
-        }else if(selected_type === 2 && i === 82){
-            build_robot();
+            key = String.fromCharCode(key);
+
+            if(key === settings[4][1]){
+                key_left = 1;
+
+            }else if(key === settings[4][3]){
+                key_right = 1;
+
+            }else if(key === settings[4][2]){
+                key_down = 1;
+
+            }else if(key === settings[4][0]){
+                key_up = 1;
+            }
         }
     }
 };
 
 window.onkeyup = function(e){
-    i = window.event ? event : e;
-    i = i.charCode ? i.charCode : i.keyCode;
+    var key = window.event ? event : e;
+    key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
-    if(String.fromCharCode(i) === settings[4][1]){
+    if(key === settings[4][1]){
         key_left = 0;
 
-    }else if(String.fromCharCode(i) === settings[4][3]){
+    }else if(key === settings[4][3]){
         key_right = 0;
 
-    }else if(String.fromCharCode(i) === settings[4][2]){
+    }else if(key === settings[4][2]){
         key_down = 0;
 
-    }else if(String.fromCharCode(i) === settings[4][0]){
+    }else if(key === settings[4][0]){
         key_up = 0;
     }
 };
