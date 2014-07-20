@@ -101,8 +101,8 @@ function draw(){
                 p1_units.push([
                   p1_buildings[1][0] + p1_buildings[1][2] / 2,// x
                   p1_buildings[1][1] + p1_buildings[1][3] / 2,// y
-                  random_number(settings[3] * 2) - settings[3],// destination x
-                  random_number(settings[3] * 2) - settings[3],// destination y
+                  Math.floor(Math.random() * settings[3] * 2) - settings[3],// destination x
+                  Math.floor(Math.random() * settings[3] * 2) - settings[3],// destination y
                   0,// weapon reload
                   100// health
                 ]);
@@ -264,8 +264,8 @@ function draw(){
                   && p1_units[loop_counter][0] < p1_units[loop_counter][2] + 5
                   && p1_units[loop_counter][1] > p1_units[loop_counter][3] - 5
                   && p1_units[loop_counter][1] < p1_units[loop_counter][3] + 5){
-                    p1_units[loop_counter][2] = random_number(settings[3] * 2) - settings[3];
-                    p1_units[loop_counter][3] = random_number(settings[3] * 2) - settings[3];
+                    p1_units[loop_counter][2] = Math.floor(Math.random() * settings[3] * 2) - settings[3];
+                    p1_units[loop_counter][3] = Math.floor(Math.random() * settings[3] * 2) - settings[3];
                 }
 
             }
@@ -1041,10 +1041,6 @@ function resize(){
     }
 }
 
-function random_number(i){
-    return Math.floor(Math.random() * i);
-}
-
 function save(){
     var loop_counter = 3;
     do{
@@ -1273,8 +1269,8 @@ function setmode(newmode){
           ]
         ];
 
-        i = random_number(2);
-        j = random_number(2);
+        i = Math.floor(Math.random() * 2);
+        j = Math.floor(Math.random() * 2);
         p0_buildings = [
           [
             i ? -settings[3] + 25 : settings[3] - 125,// x
