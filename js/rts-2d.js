@@ -297,8 +297,9 @@ function draw(){
     if(loop_counter >= 0){
         do{
             // if not yet reached destination, move and update fog
-            if(p0_units[loop_counter][0] != p0_units[loop_counter][3] || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
-                j=m(
+            if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
+              || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
+                j = m(
                   p0_units[loop_counter][0],
                   p0_units[loop_counter][1],
                   p0_units[loop_counter][3],
@@ -586,7 +587,8 @@ function draw(){
         do{
             if(p0_units[loop_counter][2]){
                 // if not yet reached destination, draw destination line
-                if(p0_units[loop_counter][0] != p0_units[loop_counter][3] || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
+                if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
+                  || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
                     buffer.beginPath();
                     buffer.moveTo(
                       p0_units[loop_counter][0],
@@ -617,18 +619,18 @@ function draw(){
     }
 
     buffer.translate(
-        -camera_x - x,
-        -camera_y - y
+      -camera_x - x,
+      -camera_y - y
     );
 
     // draw selection box
     if(mouse_hold == 1){
         buffer.beginPath();
         buffer.rect(
-            mouse_lock_x,
-            mouse_lock_y,
-            mouse_x - mouse_lock_x,
-            mouse_y - mouse_lock_y
+          mouse_lock_x,
+          mouse_lock_y,
+          mouse_x - mouse_lock_x,
+          mouse_y - mouse_lock_y
         );
         buffer.closePath();
         buffer.stroke();
@@ -832,7 +834,8 @@ function draw(){
             if(p0_units[loop_counter][2]){
 
                 // if unit has a destination it has not yet reached, draw destination line
-                if(p0_units[loop_counter][0] != p0_units[loop_counter][3] || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
+                if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
+                  || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
                     buffer.beginPath();
                     buffer.moveTo(
                       100 + p0_units[loop_counter][0] / level_size_math,
@@ -939,6 +942,7 @@ function draw(){
     if((p0_buildings.length < 1 && p0_units.length < 1)
       || (p1_buildings.length < 1 && p1_units.length < 1)){
         buffer.textAlign = 'center';
+
         if(p0_buildings.length < 1){
             buffer.fillStyle = '#f00';
             buffer.fillText(
@@ -955,6 +959,7 @@ function draw(){
               y / 2
             );
         }
+
         buffer.fillStyle = '#fff';
         buffer.fillText(
           'ESC = Main Menu',
@@ -1023,6 +1028,7 @@ function reset(){
         document.getElementById('level-size').value = 1600;
         document.getElementById('ms-per-frame').value = 25;
         document.getElementById('scroll-speed').value = 10;
+
         save();
     }
 }
