@@ -1023,8 +1023,8 @@ function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
         document.getElementById('camera-keys').value = 'WASD';
-        document.getElementById('clear').checked = 1;
-        document.getElementById('fog-of-war').checked = 1;
+        document.getElementById('clear').checked = true;
+        document.getElementById('fog-of-war').checked = true;
         document.getElementById('level-size').value = 1600;
         document.getElementById('ms-per-frame').value = 25;
         document.getElementById('scroll-speed').value = 10;
