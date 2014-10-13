@@ -54,14 +54,12 @@ function draw(){
         select();
     }
 
-    if(settings[5]){// clear?
-        buffer.clearRect(
-          0,
-          0,
-          width,
-          height
-        );
-    }
+    buffer.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
 
     j = x + camera_x;
     q = y + camera_y;
@@ -968,14 +966,12 @@ function draw(){
         );
     }
 
-    if(settings[5]){// clear?
-        canvas.clearRect(
-          0,
-          0,
-          width,
-          height
-        );
-    }
+    canvas.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
     canvas.drawImage(
       document.getElementById('buffer'),
       0,
@@ -1023,7 +1019,6 @@ function reset(){
     if(confirm('Reset settings?')){
         document.getElementById('audio-volume').value = 1;
         document.getElementById('camera-keys').value = 'WASD';
-        document.getElementById('clear').checked = true;
         document.getElementById('fog-of-war').checked = true;
         document.getElementById('level-size').value = 1600;
         document.getElementById('ms-per-frame').value = 25;
@@ -1090,24 +1085,13 @@ function save(){
         );
     }
 
-    settings[5] = document.getElementById('clear').checked;
+    settings[5] = document.getElementById('fog-of-war').checked;
     if(settings[5]){
         window.localStorage.removeItem('rts-2d-5');
 
     }else{
         window.localStorage.setItem(
           'rts-2d-5',
-          0
-        );
-    }
-
-    settings[6] = document.getElementById('fog-of-war').checked;
-    if(settings[6]){
-        window.localStorage.removeItem('rts-2d-6');
-
-    }else{
-        window.localStorage.setItem(
-          'rts-2d-6',
           0
         );
     }
@@ -1316,7 +1300,7 @@ function setmode(newmode){
 
         // add fog of war, if settings allow it
         fog = [];
-        if(settings[6]){
+        if(settings[5]){
             var temp_x = 0;
             var temp_y = 0;
             var times = Math.floor(settings[3] / 50);// half of level width divided by half of fog unit
@@ -1360,8 +1344,7 @@ function setmode(newmode){
         document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>RTS-2D.htm</b></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
           + settings[4] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings[2] + '>Audio<br><label><input '
-          + (settings[5] ? 'checked ' : '') + 'id=clear type=checkbox>Clear</label><br><label><input '
-          + (settings[6] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
+          + (settings[5] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
           + settings[3] + '>*2 Level Size<br><input id=ms-per-frame value='
           + settings[0] + '>ms/Frame<br><input id=scroll-speed value='
           + settings[1] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
@@ -1416,7 +1399,6 @@ var settings = [
   window.localStorage.getItem('rts-2d-4') === null
     ? 'WASD'
     : window.localStorage.getItem('rts-2d-4'),// camera move keys
-  window.localStorage.getItem('rts-2d-5') === null,// clear?
   window.localStorage.getItem('rts-2d-6') === null// fog of war
 ];
 var width = 0;
