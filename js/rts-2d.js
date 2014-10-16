@@ -27,27 +27,27 @@ function draw(){
     }
 
     if(key_down
-      && camera_y > -settings[3]){
-        camera_y -= settings[1];
-        mouse_lock_y -= settings[1];
+      && camera_y > -settings['level-size']){
+        camera_y -= settings['scroll-speed'];
+        mouse_lock_y -= settings['scroll-speed'];
     }
 
     if(key_left
-      && camera_x < settings[3]){
-        camera_x += settings[1];
-        mouse_lock_x += settings[1];
+      && camera_x < settings['level-size']){
+        camera_x += settings['scroll-speed'];
+        mouse_lock_x += settings['scroll-speed'];
     }
 
     if(key_right
-      && camera_x > -settings[3]){
-        camera_x -= settings[1];
-        mouse_lock_x -= settings[1];
+      && camera_x > -settings['level-size']){
+        camera_x -= settings['scroll-speed'];
+        mouse_lock_x -= settings['scroll-speed'];
     }
 
     if(key_up
-      && camera_y < settings[3]){
-        camera_y += settings[1];
-        mouse_lock_y += settings[1];
+      && camera_y < settings['level-size']){
+        camera_y += settings['scroll-speed'];
+        mouse_lock_y += settings['scroll-speed'];
     }
 
     if(mouse_hold == 1){
@@ -99,8 +99,8 @@ function draw(){
                 p1_units.push([
                   p1_buildings[1][0] + p1_buildings[1][2] / 2,// x
                   p1_buildings[1][1] + p1_buildings[1][3] / 2,// y
-                  Math.floor(Math.random() * settings[3] * 2) - settings[3],// destination x
-                  Math.floor(Math.random() * settings[3] * 2) - settings[3],// destination y
+                  Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// destination x
+                  Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// destination y
                   0,// weapon reload
                   100// health
                 ]);
@@ -262,8 +262,8 @@ function draw(){
                   && p1_units[loop_counter][0] < p1_units[loop_counter][2] + 5
                   && p1_units[loop_counter][1] > p1_units[loop_counter][3] - 5
                   && p1_units[loop_counter][1] < p1_units[loop_counter][3] + 5){
-                    p1_units[loop_counter][2] = Math.floor(Math.random() * settings[3] * 2) - settings[3];
-                    p1_units[loop_counter][3] = Math.floor(Math.random() * settings[3] * 2) - settings[3];
+                    p1_units[loop_counter][2] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
+                    p1_units[loop_counter][3] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
                 }
 
             }
@@ -323,8 +323,8 @@ function draw(){
                 j = fog.length - 1;
                 if(j >= 0){
                     do{
-                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - fog[j][1] + settings[3] - 50, 2)
-                            + Math.pow(p0_units[loop_counter][0] - fog[j][0] + settings[3] - 50, 2)
+                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - fog[j][1] + settings['level-size'] - 50, 2)
+                            + Math.pow(p0_units[loop_counter][0] - fog[j][0] + settings['level-size'] - 50, 2)
                           ) < 290){
                             fog.splice(
                               j,
@@ -551,8 +551,8 @@ function draw(){
     if(loop_counter >= 0){
         do{
             buffer.fillRect(
-              -settings[3] + fog[loop_counter][0],
-              -settings[3] + fog[loop_counter][1],
+              -settings['level-size'] + fog[loop_counter][0],
+              -settings['level-size'] + fog[loop_counter][1],
               100,
               100
             );
@@ -639,19 +639,19 @@ function draw(){
         buffer.fillStyle='#1f1';
 
         i = mouse_x - 50;
-        q = settings[3] + camera_x + x -100;
+        q = settings['level-size'] + camera_x + x -100;
         if(i > q){
             i = q;
-        }else if(i < -settings[3] + camera_x + x){
-            i = -settings[3] + camera_x + x;
+        }else if(i < -settings['level-size'] + camera_x + x){
+            i = -settings['level-size'] + camera_x + x;
         }
 
         j = mouse_y - 50;
-        q = settings[3] + camera_y + y -100;
+        q = settings['level-size'] + camera_y + y -100;
         if(j > q){
             j = q;
-        }else if(j < -settings[3] + camera_y + y){
-            j = -settings[3] + camera_y + y;
+        }else if(j < -settings['level-size'] + camera_y + y){
+            j = -settings['level-size'] + camera_y + y;
         }
 
         buffer.fillRect(
@@ -741,8 +741,8 @@ function draw(){
             buffer.fillRect(
               100 + p1_buildings[loop_counter][0] / level_size_math,
               height - 100 + p1_buildings[loop_counter][1] / level_size_math,
-              50 / (settings[3] / 200),
-              50 / (settings[3] / 200)
+              50 / (settings['level-size'] / 200),
+              50 / (settings['level-size'] / 200)
             );
         }while(loop_counter--);
     }
@@ -755,8 +755,8 @@ function draw(){
             buffer.fillRect(
               100 + p0_buildings[loop_counter][0] / level_size_math,
               height - 100 + p0_buildings[loop_counter][1] / level_size_math,
-              50 / (settings[3] / 200),
-              50 / (settings[3] / 200)
+              50 / (settings['level-size'] / 200),
+              50 / (settings['level-size'] / 200)
             );
         }while(loop_counter--);
     }
@@ -769,8 +769,8 @@ function draw(){
             buffer.fillRect(
               100 + (p1_units[loop_counter][0] - 15) / level_size_math,
               height - 100 + (p1_units[loop_counter][1] - 15) / level_size_math,
-              15 / (settings[3] / 200),
-              15 / (settings[3] / 200)
+              15 / (settings['level-size'] / 200),
+              15 / (settings['level-size'] / 200)
             );
         }while(loop_counter--);
     }
@@ -783,8 +783,8 @@ function draw(){
             buffer.fillRect(
               100 + (p0_units[loop_counter][0] - 15) / level_size_math,
               height - 100 + (p0_units[loop_counter][1] - 15) / level_size_math,
-              15 / (settings[3] / 200),
-              15 / (settings[3] / 200)
+              15 / (settings['level-size'] / 200),
+              15 / (settings['level-size'] / 200)
             );
         }while(loop_counter--);
     }
@@ -797,8 +797,8 @@ function draw(){
             buffer.fillRect(
               fog[loop_counter][0] / level_size_math,
               height - 200 + fog[loop_counter][1] / level_size_math,
-              50 / (settings[3] / 200),
-              50 / (settings[3] / 200)
+              50 / (settings['level-size'] / 200),
+              50 / (settings['level-size'] / 200)
             );
         }while(loop_counter--);
     }
@@ -852,7 +852,7 @@ function draw(){
                 buffer.arc(
                   100 + p0_units[loop_counter][0] / level_size_math,
                   height - 100 + p0_units[loop_counter][1] / level_size_math,
-                  120 / (settings[3] / 200),
+                  120 / (settings['level-size'] / 200),
                   0,
                   pi_times_two,
                   false
@@ -986,8 +986,8 @@ function fog_update_building(){
         j = fog.length - 1;
         if(j >= 0){
             do{
-                if(Math.sqrt(Math.pow(p0_buildings[loop_counter][1] - fog[j][1] + settings[3], 2)
-                           + Math.pow(p0_buildings[loop_counter][0] - fog[j][0] + settings[3], 2)
+                if(Math.sqrt(Math.pow(p0_buildings[loop_counter][1] - fog[j][1] + settings['level-size'], 2)
+                           + Math.pow(p0_buildings[loop_counter][0] - fog[j][0] + settings['level-size'], 2)
                   ) < 390){
                     fog.splice(j, 1);
                 }
@@ -1009,7 +1009,7 @@ function m(x0, y0, x1, y1){
 }
 
 function play_audio(id){
-    if(settings[2] > 0){// audio volume
+    if(settings['audio-volume'] > 0){
         document.getElementById(id).currentTime = 0;
         document.getElementById(id).play();
     }
@@ -1043,56 +1043,90 @@ function resize(){
 }
 
 function save(){
-    var loop_counter = 3;
-    do{
-        j = [
-          'ms-per-frame',
-          'scroll-speed',
-          'audio-volume',
-          'level-size'
-        ][loop_counter];
-
-        if(isNaN(document.getElementById(j).value)
-          || document.getElementById(j).value == [25, 10, 1, 1600][loop_counter]
-          || document.getElementById(j).value < [1, 1, 0, 200][loop_counter]){
-            window.localStorage.removeItem('rts-2d-' + loop_counter);
-            settings[loop_counter] = [
-              25,
-              10,
-              1,
-              1600
-            ][loop_counter];
-            document.getElementById(j).value = settings[loop_counter];
-
-        }else{
-            settings[loop_counter] = parseFloat(document.getElementById(j).value);
-            window.localStorage.setItem(
-              'rts-2d-' + loop_counter,
-              settings[loop_counter]
-            );
-        }
-    }while(loop_counter--);
-
-    if(document.getElementById('camera-keys').value == 'WASD'){
-        window.localStorage.removeItem('rts-2d-4');
-        settings[4] = 'WASD';
+    // Save audio-volume setting.
+    if(document.getElementById('audio-volume').value === 1){
+        window.localStorage.removeItem('RTS-2D.htm-audio-volume');
+        settings['audio-volume'] = 1;
 
     }else{
-        settings[4] = document.getElementById('camera-keys').value;
+        settings['audio-volume'] = parseFloat(document.getElementById('audio-volume').value);
         window.localStorage.setItem(
-          'rts-2d-4',
-          settings[4]
+          'RTS-2D.htm-audio-volume',
+          settings['audio-volume']
         );
     }
 
-    settings[5] = document.getElementById('fog-of-war').checked;
-    if(settings[5]){
-        window.localStorage.removeItem('rts-2d-5');
+    // Save camera-keys setting.
+    if(document.getElementById('camera-keys').value == 'WASD'){
+        window.localStorage.removeItem('RTS-2D.htm-camera-keys');
+        settings['camera-keys'] = 'WASD';
 
     }else{
+        settings['camera-keys'] = document.getElementById('camera-keys').value;
         window.localStorage.setItem(
-          'rts-2d-5',
-          0
+          'RTS-2D.htm-camera-keys',
+          settings['camera-keys']
+        );
+    }
+
+    // Save fog-of-war setting.
+    if(document.getElementById('fog-of-war').checked){
+        window.localStorage.removeItem('RTS-2D.htm-fog-of-war');
+        settings['fog-of-war'] = false;
+
+    }else{
+        settings['fog-of-war'] = true;
+        window.localStorage.setItem(
+          'RTS-2D.htm-fog-of-war',
+          1
+        );
+    }
+
+    // Save level-size setting.
+    if(document.getElementById('level-size').value == 1600
+      || isNaN(document.getElementById('level-size').value)
+      || document.getElementById('level-size').value < 200){
+        window.localStorage.removeItem('RTS-2D.htm-level-size');
+        document.getElementById('level-size').value = 1600;
+        settings['level-size'] = 1600;
+
+    }else{
+        settings['level-size'] = parseInt(document.getElementById('level-size').value);
+        window.localStorage.setItem(
+          'RTS-2D.htm-level-size',
+          settings['level-size']
+        );
+    }
+
+    // Save ms-per-frame setting.
+    if(document.getElementById('ms-per-frame').value == 25
+      || isNaN(document.getElementById('ms-per-frame').value)
+      || document.getElementById('ms-per-frame').value < 1){
+        window.localStorage.removeItem('RTS-2D.htm-ms-per-frame');
+        document.getElementById('ms-per-frame').value = 25;
+        settings['ms-per-frame'] = 25;
+
+    }else{
+        settings['ms-per-frame'] = parseInt(document.getElementById('ms-per-frame').value);
+        window.localStorage.setItem(
+          'RTS-2D.htm-ms-per-frame',
+          settings['ms-per-frame']
+        );
+    }
+
+    // Save scroll-speed setting.
+    if(document.getElementById('scroll-speed').value == 10
+      || isNaN(document.getElementById('scroll-speed').value)
+      || document.getElementById('scroll-speed').value < 1){
+        window.localStorage.removeItem('RTS-2D.htm-scroll-speed');
+        document.getElementById('scroll-speed').value = 10;
+        settings['scroll-speed'] = 10;
+
+    }else{
+        settings['scroll-speed'] = parseInt(document.getElementById('scroll-speed').value);
+        window.localStorage.setItem(
+          'RTS-2D.htm-scroll-speed',
+          settings['scroll-speed']
         );
     }
 }
@@ -1161,20 +1195,20 @@ function setdestination(j){
                       ? level_size_math * (mouse_x - 100)
                       : mouse_x - x - camera_x;
 
-                    if(p0_units[loop_counter][3] > settings[3]){
-                        p0_units[loop_counter][3] = settings[3];
-                    }else if(p0_units[loop_counter][3] < -settings[3]){
-                        p0_units[loop_counter][3] = -settings[3];
+                    if(p0_units[loop_counter][3] > settings['level-size']){
+                        p0_units[loop_counter][3] = settings['level-size'];
+                    }else if(p0_units[loop_counter][3] < -settings['level-size']){
+                        p0_units[loop_counter][3] = -settings['level-size'];
                     }
 
                     p0_units[loop_counter][4] = j
                       ? level_size_math * (mouse_y - height + 100)
                       : mouse_y - y - camera_y;
 
-                    if(p0_units[loop_counter][4] > settings[3]){
-                        p0_units[loop_counter][4] = settings[3];
-                    }else if(p0_units[loop_counter][4] < -settings[3]){
-                        p0_units[loop_counter][4] = -settings[3];
+                    if(p0_units[loop_counter][4] > settings['level-size']){
+                        p0_units[loop_counter][4] = settings['level-size'];
+                    }else if(p0_units[loop_counter][4] < -settings['level-size']){
+                        p0_units[loop_counter][4] = -settings['level-size'];
                     }
                 }
             }while(loop_counter--);
@@ -1189,20 +1223,20 @@ function setdestination(j){
                       ? level_size_math * (mouse_x - 100)
                       : mouse_x - x - camera_x;
 
-                    if(p0_buildings[loop_counter][6] > settings[3]){
-                        p0_buildings[loop_counter][6] = settings[3];
-                    }else if(p0_buildings[loop_counter][6] < -settings[3]){
-                        p0_buildings[loop_counter][6] = -settings[3];
+                    if(p0_buildings[loop_counter][6] > settings['level-size']){
+                        p0_buildings[loop_counter][6] = settings['level-size'];
+                    }else if(p0_buildings[loop_counter][6] < -settings['level-size']){
+                        p0_buildings[loop_counter][6] = -settings['level-size'];
                     }
 
                     p0_buildings[loop_counter][7] = j
                       ? level_size_math * (mouse_y - height + 100)
                       : mouse_y - y - camera_y;
 
-                    if(p0_buildings[loop_counter][7] > settings[3]){
-                        p0_buildings[loop_counter][7] = settings[3];
-                    }else if(p0_buildings[loop_counter][7] < -settings[3]){
-                        p0_buildings[loop_counter][7] = -settings[3];
+                    if(p0_buildings[loop_counter][7] > settings['level-size']){
+                        p0_buildings[loop_counter][7] = settings['level-size'];
+                    }else if(p0_buildings[loop_counter][7] < -settings['level-size']){
+                        p0_buildings[loop_counter][7] = -settings['level-size'];
                     }
                 }
             }while(loop_counter--);
@@ -1225,7 +1259,7 @@ function setmode(newmode){
         key_right = 0;
         key_up = 0;
 
-        level_size_math = settings[3] / 100;
+        level_size_math = settings['level-size'] / 100;
 
         money = [
           1000,
@@ -1247,10 +1281,10 @@ function setmode(newmode){
 
         world_static = [
           [
-            -settings[3],
-            -settings[3],
-            settings[3] * 2,
-            settings[3] * 2,
+            -settings['level-size'],
+            -settings['level-size'],
+            settings['level-size'] * 2,
+            settings['level-size'] * 2,
             [
               '#765',
               '#333',
@@ -1263,28 +1297,28 @@ function setmode(newmode){
         j = Math.floor(Math.random() * 2);
         p0_buildings = [
           [
-            i ? -settings[3] + 25 : settings[3] - 125,// x
-            j ? settings[3] - 125 : -settings[3] + 25,// y
+            i ? -settings['level-size'] + 25 : settings['level-size'] - 125,// x
+            j ? settings['level-size'] - 125 : -settings['level-size'] + 25,// y
             100,// width
             100,// height
             1000,// health
             0,// selected
-            i ? -settings[3] + 75 : settings[3] - 75,// destination x
-            j ? settings[3] - 75  : -settings[3] + 75,// destination y
+            i ? -settings['level-size'] + 75 : settings['level-size'] - 75,// destination x
+            j ? settings['level-size'] - 75  : -settings['level-size'] + 75,// destination y
             1// type
           ]
         ];
         p1_buildings = [
           [
-            i ? settings[3] - 125 : -settings[3] + 25,// x
-            j ? -settings[3] + 25 : settings[3] -125,// y
+            i ? settings['level-size'] - 125 : -settings['level-size'] + 25,// x
+            j ? -settings['level-size'] + 25 : settings['level-size'] -125,// y
             100,// width
             100,// height
             1000,// health
             1//type
           ],[
-            i ? settings[3] - 250 : -settings[3] + 150,// x
-            j ? -settings[3] + 25 : settings[3] -125,// y
+            i ? settings['level-size'] - 250 : -settings['level-size'] + 150,// x
+            j ? -settings['level-size'] + 25 : settings['level-size'] -125,// y
             100,// width
             100,// height
             1000,// health
@@ -1300,10 +1334,10 @@ function setmode(newmode){
 
         // add fog of war, if settings allow it
         fog = [];
-        if(settings[5]){
+        if(settings['fog-of-war']){
             var temp_x = 0;
             var temp_y = 0;
-            var times = Math.floor(settings[3] / 50);// half of level width divided by half of fog unit
+            var times = Math.floor(settings['level-size'] / 50);// half of level width divided by half of fog unit
 
             var loop_counter = Math.pow(times, 2) - 1;// true number of fog units to add
             do{
@@ -1333,7 +1367,7 @@ function setmode(newmode){
 
         interval = setInterval(
           'draw()',
-          settings[0]
+          settings['ms-per-frame']
         );
 
     // main menu mode
@@ -1342,12 +1376,12 @@ function setmode(newmode){
         canvas = 0;
 
         document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>RTS-2D.htm</b></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
-          + settings[4] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings[2] + '>Audio<br><label><input '
-          + (settings[5] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
-          + settings[3] + '>*2 Level Size<br><input id=ms-per-frame value='
-          + settings[0] + '>ms/Frame<br><input id=scroll-speed value='
-          + settings[1] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
+          + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+          + settings['audio-volume'] + '>Audio<br><label><input '
+          + (settings['fog-of-war'] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
+          + settings['level-size'] + '>*2 Level Size<br><input id=ms-per-frame value='
+          + settings['ms-per-frame'] + '>ms/Frame<br><input id=scroll-speed value='
+          + settings['scroll-speed'] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
     }
 }
 
@@ -1383,24 +1417,24 @@ var pi_times_two = Math.PI * 2;
 var q = 0;
 var selected_id = -1;
 var selected_type = -1;
-var settings = [
-  window.localStorage.getItem('rts-2d-0') === null
-    ? 25
-    : parseInt(window.localStorage.getItem('rts-2d-0')),// milliseconds-per-frame
-  window.localStorage.getItem('rts-2d-1') === null
-    ? 10
-    : parseInt(window.localStorage.getItem('rts-2d-1')),// scroll speed
-  window.localStorage.getItem('rts-2d-2') === null
+var settings = {
+  'audio-volume': window.localStorage.getItem('RTS-2D.htm-audio-volume') === null
     ? 1
-    : parseFloat(window.localStorage.getItem('rts-2d-2')),// audio volume
-  window.localStorage.getItem('rts-2d-3') === null
-    ? 1600
-    : parseFloat(window.localStorage.getItem('rts-2d-3')),// level size
-  window.localStorage.getItem('rts-2d-4') === null
+    : parseFloat(window.localStorage.getItem('RTS-2D.htm-audio-volume')),
+  'camera-keys': window.localStorage.getItem('RTS-2D.htm-camera-keys') === null
     ? 'WASD'
-    : window.localStorage.getItem('rts-2d-4'),// camera move keys
-  window.localStorage.getItem('rts-2d-6') === null// fog of war
-];
+    : window.localStorage.getItem('RTS-2D.htm-camera-keys'),
+  'fog-of-war': window.localStorage.getItem('RTS-2D.htm-fog-of-war') === null,
+  'level-size': window.localStorage.getItem('RTS-2D.htm-level-size') === null
+    ? 1600
+    : parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')),
+  'ms-per-frame': window.localStorage.getItem('RTS-2D.htm-ms-per-frame') === null
+    ? 25
+    : parseInt(window.localStorage.getItem('RTS-2D.htm-ms-per-frame')),
+  'scroll-speed': window.localStorage.getItem('RTS-2D.htm-scroll-speed') === null
+    ? 10
+    : parseInt(window.localStorage.getItem('RTS-2D.htm-scroll-speed')),
+};
 var width = 0;
 var world_static = [];
 var x = 0;
@@ -1436,16 +1470,16 @@ window.onkeydown = function(e){
 
             key = String.fromCharCode(key);
 
-            if(key === settings[4][1]){
+            if(key === settings['camera-keys'][1]){
                 key_left = 1;
 
-            }else if(key === settings[4][3]){
+            }else if(key === settings['camera-keys'][3]){
                 key_right = 1;
 
-            }else if(key === settings[4][2]){
+            }else if(key === settings['camera-keys'][2]){
                 key_down = 1;
 
-            }else if(key === settings[4][0]){
+            }else if(key === settings['camera-keys'][0]){
                 key_up = 1;
             }
         }
@@ -1456,16 +1490,16 @@ window.onkeyup = function(e){
     var key = window.event ? event : e;
     key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
-    if(key === settings[4][1]){
+    if(key === settings['camera-keys'][1]){
         key_left = 0;
 
-    }else if(key === settings[4][3]){
+    }else if(key === settings['camera-keys'][3]){
         key_right = 0;
 
-    }else if(key === settings[4][2]){
+    }else if(key === settings['camera-keys'][2]){
         key_down = 0;
 
-    }else if(key === settings[4][0]){
+    }else if(key === settings['camera-keys'][0]){
         key_up = 0;
     }
 };
@@ -1487,19 +1521,19 @@ window.onmousedown = function(e){
 
                     // make sure building is within buildable limit
                     i = mouse_x - camera_x - x - 50;
-                    if(i > settings[3] - 100){
-                        i = settings[3] - 100;
+                    if(i > settings['level-size'] - 100){
+                        i = settings['level-size'] - 100;
 
-                    }else if(i < -settings[3]){
-                        i = -settings[3];
+                    }else if(i < -settings['level-size']){
+                        i = -settings['level-size'];
                     }
 
                     j = mouse_y - camera_y - y - 50;
-                    if(j > settings[3] - 100){
-                        j = settings[3] - 100;
+                    if(j > settings['level-size'] - 100){
+                        j = settings['level-size'] - 100;
 
-                    }else if(j < -settings[3]){
-                        j = -settings[3];
+                    }else if(j < -settings['level-size']){
+                        j = -settings['level-size'];
                     }
 
                     p0_buildings.push(
@@ -1553,17 +1587,17 @@ window.onmousedown = function(e){
             mouse_hold = 2;
 
             camera_x = -level_size_math * (mouse_x - 100);
-            if(camera_x > settings[3]){
-                camera_x = settings[3];
-            }else if(camera_x < -settings[3]){
-                camera_x = -settings[3];
+            if(camera_x > settings['level-size']){
+                camera_x = settings['level-size'];
+            }else if(camera_x < -settings['level-size']){
+                camera_x = -settings['level-size'];
             }
 
             camera_y = -level_size_math * (mouse_y - height + 100);
-            if(camera_y > settings[3]){
-                camera_y = settings[3];
-            }else if(camera_y < -settings[3]){
-                camera_y = -settings[3];
+            if(camera_y > settings['level-size']){
+                camera_y = settings['level-size'];
+            }else if(camera_y < -settings['level-size']){
+                camera_y = -settings['level-size'];
             }
         }
     }
@@ -1593,17 +1627,17 @@ window.onmousemove = function(e){
         }else if(mouse_hold == 2){
 
             camera_x = -level_size_math * (mouse_x - 100);
-            if(camera_x > settings[3]){
-                camera_x = settings[3];
-            }else if(camera_x < -settings[3]){
-                camera_x = -settings[3];
+            if(camera_x > settings['level-size']){
+                camera_x = settings['level-size'];
+            }else if(camera_x < -settings['level-size']){
+                camera_x = -settings['level-size'];
             }
 
             camera_y = -level_size_math * (mouse_y - height + 100);
-            if(camera_y > settings[3]){
-                camera_y = settings[3];
-            }else if(camera_y < -settings[3]){
-                camera_y = -settings[3];
+            if(camera_y > settings['level-size']){
+                camera_y = settings['level-size'];
+            }else if(camera_y < -settings['level-size']){
+                camera_y = -settings['level-size'];
             }
         }
     }
