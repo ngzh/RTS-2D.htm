@@ -1082,13 +1082,13 @@ function save(){
     // Save fog-of-war setting.
     if(document.getElementById('fog-of-war').checked){
         window.localStorage.removeItem('RTS-2D.htm-fog-of-war');
-        settings['fog-of-war'] = false;
+        settings['fog-of-war'] = true;
 
     }else{
-        settings['fog-of-war'] = true;
+        settings['fog-of-war'] = false;
         window.localStorage.setItem(
           'RTS-2D.htm-fog-of-war',
-          1
+          0
         );
     }
 
