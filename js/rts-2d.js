@@ -80,18 +80,20 @@ function draw(){
     if(loop_counter >= 0){
         do{
             // If static world object is on screen, draw it.
-            if(world_static[loop_counter][0] + world_static[loop_counter][2] + offset_x > 0
-              && world_static[loop_counter][0] + offset_x < width
-              && world_static[loop_counter][1] + world_static[loop_counter][3] + offset_y > 0
-              && world_static[loop_counter][1] + offset_y < height){
-                buffer.fillStyle = world_static[loop_counter][4];
-                buffer.fillRect(
-                  world_static[loop_counter][0],
-                  world_static[loop_counter][1],
-                  world_static[loop_counter][2],
-                  world_static[loop_counter][3]
-                );
+            if(world_static[loop_counter][0] + world_static[loop_counter][2] + offset_x <= 0
+              || world_static[loop_counter][0] + offset_x >= width
+              || world_static[loop_counter][1] + world_static[loop_counter][3] + offset_y <= 0
+              || world_static[loop_counter][1] + offset_y >= height){
+                continue;
             }
+
+            buffer.fillStyle = world_static[loop_counter][4];
+            buffer.fillRect(
+              world_static[loop_counter][0],
+              world_static[loop_counter][1],
+              world_static[loop_counter][2],
+              world_static[loop_counter][3]
+            );
         }while(loop_counter--);
     }
 
@@ -117,36 +119,38 @@ function draw(){
 
         do{
             // If building is on screen, draw it.
-            if(p1_buildings[loop_counter][0] + p1_buildings[loop_counter][2] + offset_x > 0
-              && p1_buildings[loop_counter][0] + offset_x < width
-              && p1_buildings[loop_counter][1] + p1_buildings[loop_counter][3] + offset_y > 0
-              && p1_buildings[loop_counter][1] + offset_y < height){
-                buffer.fillStyle = '#600';
-                buffer.fillRect(
-                  p1_buildings[loop_counter][0],
-                  p1_buildings[loop_counter][1],
-                  p1_buildings[loop_counter][2],
-                  p1_buildings[loop_counter][3]
-                );
-                buffer.fillStyle = '#0f0';
-                buffer.fillRect(
-                  p1_buildings[loop_counter][0],
-                  p1_buildings[loop_counter][1] - 10,
-                  p1_buildings[loop_counter][2] * (p1_buildings[loop_counter][4] / 1000),
-                  5
-                );
-
-                // Temporarily draw building name.
-                buffer.fillStyle = '#fff';
-                buffer.fillText(
-                  [
-                    'HQ',
-                    'F',
-                  ][p1_buildings[loop_counter][5] - 1],
-                  p1_buildings[loop_counter][0] + 50,
-                  p1_buildings[loop_counter][1] + 50
-                );
+            if(p1_buildings[loop_counter][0] + p1_buildings[loop_counter][2] + offset_x <= 0
+              || p1_buildings[loop_counter][0] + offset_x >= width
+              || p1_buildings[loop_counter][1] + p1_buildings[loop_counter][3] + offset_y <= 0
+              || p1_buildings[loop_counter][1] + offset_y >= height){
+                continue;
             }
+
+            buffer.fillStyle = '#600';
+            buffer.fillRect(
+              p1_buildings[loop_counter][0],
+              p1_buildings[loop_counter][1],
+              p1_buildings[loop_counter][2],
+              p1_buildings[loop_counter][3]
+            );
+            buffer.fillStyle = '#0f0';
+            buffer.fillRect(
+              p1_buildings[loop_counter][0],
+              p1_buildings[loop_counter][1] - 10,
+              p1_buildings[loop_counter][2] * (p1_buildings[loop_counter][4] / 1000),
+              5
+            );
+
+            // Temporarily draw building name.
+            buffer.fillStyle = '#fff';
+            buffer.fillText(
+              [
+                'HQ',
+                'F',
+              ][p1_buildings[loop_counter][5] - 1],
+              p1_buildings[loop_counter][0] + 50,
+              p1_buildings[loop_counter][1] + 50
+            );
         }while(loop_counter--);
     }
 
@@ -155,38 +159,40 @@ function draw(){
     if(loop_counter >= 0){
         do{
             // If building is on screen, draw it.
-            if(p0_buildings[loop_counter][0] + p0_buildings[loop_counter][2] + offset_x > 0
-              && p0_buildings[loop_counter][0] + offset_x < width
-              && p0_buildings[loop_counter][1] + p0_buildings[loop_counter][3] + offset_y > 0
-              && p0_buildings[loop_counter][1] + offset_y < height){
-                buffer.fillStyle = p0_buildings[loop_counter][5]
-                  ? '#1f1'
-                  : '#060';
-                buffer.fillRect(
-                  p0_buildings[loop_counter][0],
-                  p0_buildings[loop_counter][1],
-                  p0_buildings[loop_counter][2],
-                  p0_buildings[loop_counter][3]
-                );
-                buffer.fillStyle = '#0f0';
-                buffer.fillRect(
-                  p0_buildings[loop_counter][0],
-                  p0_buildings[loop_counter][1] - 10,
-                  p0_buildings[loop_counter][2] * (p0_buildings[loop_counter][4] / 1000),
-                  5
-                );
-
-                // Temporarily draw building name.
-                buffer.fillStyle = '#fff';
-                buffer.fillText(
-                  [
-                    'HQ',
-                    'F',
-                  ][p0_buildings[loop_counter][8] - 1],
-                  p0_buildings[loop_counter][0] + 50,
-                  p0_buildings[loop_counter][1] + 50
-                );
+            if(p0_buildings[loop_counter][0] + p0_buildings[loop_counter][2] + offset_x <= 0
+              || p0_buildings[loop_counter][0] + offset_x >= width
+              || p0_buildings[loop_counter][1] + p0_buildings[loop_counter][3] + offset_y <= 0
+              || p0_buildings[loop_counter][1] + offset_y >= height){
+                continue;
             }
+
+            buffer.fillStyle = p0_buildings[loop_counter][5]
+              ? '#1f1'
+              : '#060';
+            buffer.fillRect(
+              p0_buildings[loop_counter][0],
+              p0_buildings[loop_counter][1],
+              p0_buildings[loop_counter][2],
+              p0_buildings[loop_counter][3]
+            );
+            buffer.fillStyle = '#0f0';
+            buffer.fillRect(
+              p0_buildings[loop_counter][0],
+              p0_buildings[loop_counter][1] - 10,
+              p0_buildings[loop_counter][2] * (p0_buildings[loop_counter][4] / 1000),
+              5
+            );
+
+            // Temporarily draw building name.
+            buffer.fillStyle = '#fff';
+            buffer.fillText(
+              [
+                'HQ',
+                'F',
+              ][p0_buildings[loop_counter][8] - 1],
+              p0_buildings[loop_counter][0] + 50,
+              p0_buildings[loop_counter][1] + 50
+            );
         }while(loop_counter--);
     }
 
@@ -278,25 +284,27 @@ function draw(){
             }
 
             // If unit is on screen, draw it.
-            if(p1_units[loop_counter][0] + 15 + x + camera_x > 0
-              && p1_units[loop_counter][0] - 15 + x + camera_x < width
-              && p1_units[loop_counter][1] + 15 + y + camera_y > 0
-              && p1_units[loop_counter][1] - 15 + y + camera_y < height){
-                buffer.fillStyle = '#b00';
-                buffer.fillRect(
-                  p1_units[loop_counter][0] - 15,
-                  p1_units[loop_counter][1] - 15,
-                  30,
-                  30
-                );
-                buffer.fillStyle = '#0f0';
-                buffer.fillRect(
-                  p1_units[loop_counter][0] - 15,
-                  p1_units[loop_counter][1] - 25,
-                  30 * (p1_units[loop_counter][5] / 100),
-                  5
-                );
+            if(p1_units[loop_counter][0] + 15 + x + camera_x <= 0
+              || p1_units[loop_counter][0] - 15 + x + camera_x >= width
+              || p1_units[loop_counter][1] + 15 + y + camera_y <= 0
+              || p1_units[loop_counter][1] - 15 + y + camera_y >= height){
+                continue;
             }
+
+            buffer.fillStyle = '#b00';
+            buffer.fillRect(
+              p1_units[loop_counter][0] - 15,
+              p1_units[loop_counter][1] - 15,
+              30,
+              30
+            );
+            buffer.fillStyle = '#0f0';
+            buffer.fillRect(
+              p1_units[loop_counter][0] - 15,
+              p1_units[loop_counter][1] - 25,
+              30 * (p1_units[loop_counter][5] / 100),
+              5
+            );
         }while(loop_counter--);
     }
 
@@ -393,25 +401,27 @@ function draw(){
             }
 
             // If unit is on screen, draw it.
-            if(p0_units[loop_counter][0] + 15 + x + camera_x > 0
-              && p0_units[loop_counter][0] - 15 + x + camera_x < width
-              && p0_units[loop_counter][1] + 15 + y + camera_y > 0
-              && p0_units[loop_counter][1] - 15 + y + camera_y < height){
-                buffer.fillStyle = p0_units[loop_counter][2] ? '#1f1' : '#0b0';
-                buffer.fillRect(
-                  p0_units[loop_counter][0] - 15,
-                  p0_units[loop_counter][1] - 15,
-                  30,
-                  30
-                );
-                buffer.fillStyle = '#0f0';
-                buffer.fillRect(
-                  p0_units[loop_counter][0] - 15,
-                  p0_units[loop_counter][1] - 25,
-                  30 * (p0_units[loop_counter][6] / 100),
-                  5
-                );
+            if(p0_units[loop_counter][0] + 15 + x + camera_x <= 0
+              || p0_units[loop_counter][0] - 15 + x + camera_x >= width
+              || p0_units[loop_counter][1] + 15 + y + camera_y <= 0
+              || p0_units[loop_counter][1] - 15 + y + camera_y >= height){
+                continue;
             }
+
+            buffer.fillStyle = p0_units[loop_counter][2] ? '#1f1' : '#0b0';
+            buffer.fillRect(
+              p0_units[loop_counter][0] - 15,
+              p0_units[loop_counter][1] - 15,
+              30,
+              30
+            );
+            buffer.fillStyle = '#0f0';
+            buffer.fillRect(
+              p0_units[loop_counter][0] - 15,
+              p0_units[loop_counter][1] - 25,
+              30 * (p0_units[loop_counter][6] / 100),
+              5
+            );
         }while(loop_counter--);
     }
 
@@ -447,92 +457,103 @@ function draw(){
             }
 
             // If bullet reaches destination, check for collisions.
-            if(bullets[loop_counter][0] > bullets[loop_counter][2] - 10
-              && bullets[loop_counter][0] < bullets[loop_counter][2] + 10
-              && bullets[loop_counter][1] > bullets[loop_counter][3] - 10
-              && bullets[loop_counter][1] < bullets[loop_counter][3] + 10){
-                if(bullets[loop_counter][4]){
-                    var p0_units_counter = p0_units.length - 1;
-                    if(p0_units_counter >= 0){
-                        do{
-                            if(bullets[loop_counter][0] > p0_units[p0_units_counter][0] - 15
-                              && bullets[loop_counter][0] < p0_units[p0_units_counter][0] + 15
-                              && bullets[loop_counter][1] > p0_units[p0_units_counter][1] - 15
-                              && bullets[loop_counter][1] < p0_units[p0_units_counter][1] + 15){
-                                p0_units[p0_units_counter][6] -= 25;
-                                if(p0_units[p0_units_counter][6] <= 0){
-                                    p0_units.splice(
-                                      p0_units_counter,
-                                      1
-                                    );
-                                }
-                                break;
-                            }
-                        }while(p0_units_counter--);
-                    }
-
-                    var p0_buildings_counter = p0_buildings.length - 1;
-                    if(p0_buildings_counter >= 0){
-                        do{
-                            if(bullets[loop_counter][0] > p0_buildings[p0_buildings_counter][0]
-                              && bullets[loop_counter][0] < p0_buildings[p0_buildings_counter][0] + 100
-                              && bullets[loop_counter][1] > p0_buildings[p0_buildings_counter][1]
-                              && bullets[loop_counter][1] < p0_buildings[p0_buildings_counter][1] + 100){
-                                p0_buildings[p0_buildings_counter][4] -= 25;
-                                if(p0_buildings[p0_buildings_counter][4] <= 0){
-                                    p0_buildings.splice(
-                                      p0_buildings_counter,
-                                      1
-                                    );
-                                }
-                                break;
-                            }
-                        }while(p0_buildings_counter--);
-                    }
-                }else{
-                    var p1_units_counter = p1_units.length - 1;
-                    if(p1_units_counter >= 0){
-                        do{
-                            if(bullets[loop_counter][0] > p1_units[p1_units_counter][0] - 15
-                              && bullets[loop_counter][0] < p1_units[p1_units_counter][0] + 15
-                              && bullets[loop_counter][1] > p1_units[p1_units_counter][1] - 15
-                              && bullets[loop_counter][1] < p1_units[p1_units_counter][1] + 15){
-                                p1_units[p1_units_counter][5] -= 25;
-                                if(p1_units[p1_units_counter][5] <= 0){
-                                    p1_units.splice(
-                                      p1_units_counter,
-                                      1
-                                    );
-                                }
-                                break;
-                            }
-                        }while(p1_units_counter--);
-                    }
-
-                    var p1_buildings_counter = p1_buildings.length - 1;
-                    if(p1_buildings_counter >= 0){
-                        do{
-                            if(bullets[loop_counter][0] > p1_buildings[p1_buildings_counter][0]
-                              && bullets[loop_counter][0] < p1_buildings[p1_buildings_counter][0] + 100
-                              && bullets[loop_counter][1] > p1_buildings[p1_buildings_counter][1]
-                              && bullets[loop_counter][1] < p1_buildings[p1_buildings_counter][1] + 100){
-                                p1_buildings[p1_buildings_counter][4] -= 25;
-                                if(p1_buildings[p1_buildings_counter][4] <= 0){
-                                    p1_buildings.splice(
-                                      p1_buildings_counter,
-                                      1
-                                    );
-                                }
-                                break;
-                            }
-                        }while(p1_buildings_counter--);
-                    }
-                }
-                bullets.splice(
-                  loop_counter,
-                  1
-                );
+            if(bullets[loop_counter][0] <= bullets[loop_counter][2] - 10
+              || bullets[loop_counter][0] >= bullets[loop_counter][2] + 10
+              || bullets[loop_counter][1] <= bullets[loop_counter][3] - 10
+              || bullets[loop_counter][1] >= bullets[loop_counter][3] + 10){
+                continue;
             }
+
+            if(bullets[loop_counter][4]){
+                var p0_units_counter = p0_units.length - 1;
+                if(p0_units_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p0_units[p0_units_counter][0] - 15
+                          || bullets[loop_counter][0] >= p0_units[p0_units_counter][0] + 15
+                          || bullets[loop_counter][1] <= p0_units[p0_units_counter][1] - 15
+                          || bullets[loop_counter][1] >= p0_units[p0_units_counter][1] + 15){
+                            continue;
+                        }
+
+                        p0_units[p0_units_counter][6] -= 25;
+                        if(p0_units[p0_units_counter][6] <= 0){
+                            p0_units.splice(
+                              p0_units_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p0_units_counter--);
+                }
+
+                var p0_buildings_counter = p0_buildings.length - 1;
+                if(p0_buildings_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p0_buildings[p0_buildings_counter][0]
+                          || bullets[loop_counter][0] >= p0_buildings[p0_buildings_counter][0] + 100
+                          || bullets[loop_counter][1] <= p0_buildings[p0_buildings_counter][1]
+                          || bullets[loop_counter][1] >= p0_buildings[p0_buildings_counter][1] + 100){
+                            continue;
+                        }
+
+                        p0_buildings[p0_buildings_counter][4] -= 25;
+                        if(p0_buildings[p0_buildings_counter][4] <= 0){
+                            p0_buildings.splice(
+                              p0_buildings_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p0_buildings_counter--);
+                }
+
+            }else{
+                var p1_units_counter = p1_units.length - 1;
+                if(p1_units_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p1_units[p1_units_counter][0] - 15
+                          || bullets[loop_counter][0] >= p1_units[p1_units_counter][0] + 15
+                          || bullets[loop_counter][1] <= p1_units[p1_units_counter][1] - 15
+                          || bullets[loop_counter][1] >= p1_units[p1_units_counter][1] + 15){
+                            continue;
+                        }
+
+                        p1_units[p1_units_counter][5] -= 25;
+                        if(p1_units[p1_units_counter][5] <= 0){
+                            p1_units.splice(
+                              p1_units_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p1_units_counter--);
+                }
+
+                var p1_buildings_counter = p1_buildings.length - 1;
+                if(p1_buildings_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p1_buildings[p1_buildings_counter][0]
+                          || bullets[loop_counter][0] >= p1_buildings[p1_buildings_counter][0] + 100
+                          || bullets[loop_counter][1] <= p1_buildings[p1_buildings_counter][1]
+                          || bullets[loop_counter][1] >= p1_buildings[p1_buildings_counter][1] + 100){
+                            continue;
+                        }
+
+                        p1_buildings[p1_buildings_counter][4] -= 25;
+                        if(p1_buildings[p1_buildings_counter][4] <= 0){
+                            p1_buildings.splice(
+                              p1_buildings_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p1_buildings_counter--);
+                }
+            }
+            bullets.splice(
+              loop_counter,
+              1
+            );
         }while(loop_counter--);
 
         // Draw bullets.
@@ -816,7 +837,8 @@ function draw(){
     if(loop_counter >= 0){
         do{
             // If buliding is selected and has a destination, draw destination line.
-            if(p0_buildings[loop_counter][5] && p0_buildings[loop_counter][6] != null){
+            if(p0_buildings[loop_counter][5]
+              && p0_buildings[loop_counter][6] != null){
                 buffer.beginPath();
                 buffer.moveTo(
                   100 + (p0_buildings[loop_counter][0] + p0_buildings[loop_counter][2] / 2) / level_size_math,
