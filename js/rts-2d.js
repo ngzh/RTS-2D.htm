@@ -1294,10 +1294,10 @@ function setmode(newmode){
     if(mode > 0){
         save();
 
-        key_down = 0;
-        key_left = 0;
-        key_right = 0;
-        key_up = 0;
+        key_down = false;
+        key_left = false;
+        key_right = false;
+        key_up = false;
 
         level_size_math = settings['level-size'] / 100;
 
@@ -1457,10 +1457,10 @@ var camera_y = 0;
 var fog = [];
 var height = 0;
 var interval = 0;
-var key_down = 0;
-var key_left = 0;
-var key_right = 0;
-var key_up = 0;
+var key_down = false;
+var key_left = false;
+var key_right = false;
+var key_up = false;
 var level_size_math = 0;
 var mode = 0;
 var money = [];
@@ -1538,16 +1538,16 @@ window.onkeydown = function(e){
     key = String.fromCharCode(key);
 
     if(key === settings['camera-keys'][1]){
-        key_left = 1;
+        key_left = true;
 
     }else if(key === settings['camera-keys'][3]){
-        key_right = 1;
+        key_right = true;
 
     }else if(key === settings['camera-keys'][2]){
-        key_down = 1;
+        key_down = true;
 
     }else if(key === settings['camera-keys'][0]){
-        key_up = 1;
+        key_up = true;
     }
 };
 
@@ -1556,16 +1556,16 @@ window.onkeyup = function(e){
     key = String.fromCharCode(key.charCode ? key.charCode : key.keyCode);
 
     if(key === settings['camera-keys'][1]){
-        key_left = 0;
+        key_left = false;
 
     }else if(key === settings['camera-keys'][3]){
-        key_right = 0;
+        key_right = false;
 
     }else if(key === settings['camera-keys'][2]){
-        key_down = 0;
+        key_down = false;
 
     }else if(key === settings['camera-keys'][0]){
-        key_up = 0;
+        key_up = false;
     }
 };
 
