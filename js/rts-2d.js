@@ -22,46 +22,6 @@ function build_robot(){
 
 // TODO: Improve clarity.
 function draw(){
-    money_timer += 1;
-    if(money_timer > 99){
-        money_timer = 0;
-        money[0] += 1;
-        money[1] += 1;
-    }
-
-    // Move camera down.
-    if(key_down
-      && camera_y > -settings['level-size']){
-        camera_y -= settings['scroll-speed'];
-        mouse_lock_y -= settings['scroll-speed'];
-    }
-
-    // Move camera left.
-    if(key_left
-      && camera_x < settings['level-size']){
-        camera_x += settings['scroll-speed'];
-        mouse_lock_x += settings['scroll-speed'];
-    }
-
-    // Move camera right.
-    if(key_right
-      && camera_x > -settings['level-size']){
-        camera_x -= settings['scroll-speed'];
-        mouse_lock_x -= settings['scroll-speed'];
-    }
-
-    // Move camera up.
-    if(key_up
-      && camera_y < settings['level-size']){
-        camera_y += settings['scroll-speed'];
-        mouse_lock_y += settings['scroll-speed'];
-    }
-
-    // Handle selection box.
-    if(mouse_hold == 1){
-        select();
-    }
-
     buffer.clearRect(
       0,
       0,
@@ -103,20 +63,6 @@ function draw(){
 
     loop_counter = p1_buildings.length - 1;
     if(loop_counter >= 0){
-        if(p1_buildings.length > 1){
-            if(money[1] >= 100){
-                money[1] -= 100;
-                p1_units.push([
-                  p1_buildings[1][0] + p1_buildings[1][2] / 2,// X
-                  p1_buildings[1][1] + p1_buildings[1][3] / 2,// Y
-                  Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination X
-                  Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination Y
-                  0,// Weapon reload
-                  100,// Health
-                ]);
-            }
-        }
-
         do{
             // If building is on screen, draw it.
             if(p1_buildings[loop_counter][0] + p1_buildings[loop_counter][2] + offset_x <= 0
@@ -199,90 +145,6 @@ function draw(){
     loop_counter = p1_units.length - 1;
     if(loop_counter >= 0){
         do{
-            // If reloading, decrease reload,...
-            if(p1_units[loop_counter][4] > 0){
-                p1_units[loop_counter][4] -= 1;
-
-            // ...else look for nearby p0 units to fire at.
-            }else{
-                var check_for_buildings = true;
-                var p0_units_counter = p0_units.length - 1;
-                if(p0_units_counter >= 0){
-                    do{
-                        if(Math.sqrt(Math.pow(p1_units[loop_counter][1] - p0_units[p0_units_counter][1], 2)
-                         + Math.pow(p1_units[loop_counter][0] - p0_units[p0_units_counter][0], 2)) < 240){
-                            p1_units[loop_counter][4] = 75;
-                            bullets.push([
-                              p1_units[loop_counter][0],// X
-                              p1_units[loop_counter][1],// Y
-                              p0_units[p0_units_counter][0],// destination X
-                              p0_units[p0_units_counter][1],// destination Y
-                              1,// Player
-                            ]);
-                            check_for_buildings = false;
-                            break;
-                        }
-                    }while(p0_units_counter--);
-                }
-
-                // If no units in range, look for buildings to fire at.
-                if(check_for_buildings){
-                    var p0_buildings_counter = p0_buildings.length - 1;
-                    if(p0_buildings_counter >= 0){
-                        do{
-                            if(Math.sqrt(Math.pow(p1_units[loop_counter][1] - (p0_buildings[p0_buildings_counter][1] + 50), 2)
-                             + Math.pow(p1_units[loop_counter][0] - (p0_buildings[p0_buildings_counter][0] + 50), 2)) < 240){
-                                p1_units[loop_counter][4] = 75;
-                                bullets.push([
-                                  p1_units[loop_counter][0],// X
-                                  p1_units[loop_counter][1],// Y
-                                  p0_buildings[p0_buildings_counter][0] + 50,// Destination X
-                                  p0_buildings[p0_buildings_counter][1] + 50,// Destination Y
-                                  1,// Player
-                                ]);
-                                break;
-                            }
-                        }while(p0_buildings_counter--);
-                    }
-                }
-            }
-
-            // Movement "ai", pick new destination once destination is reached.
-            if(p1_units[loop_counter][0] != p1_units[loop_counter][2]
-              || p1_units[loop_counter][1] != p1_units[loop_counter][3]){
-                var j = m(
-                  p1_units[loop_counter][0],
-                  p1_units[loop_counter][1],
-                  p1_units[loop_counter][2],
-                  p1_units[loop_counter][3]
-                );
-
-                if(p1_units[loop_counter][0] != p1_units[loop_counter][2]){
-                    p1_units[loop_counter][0] += 
-                      (p1_units[loop_counter][0] > p1_units[loop_counter][2]
-                        ? -j[0]
-                        : j[0]
-                      ) * .7;
-                }
-
-                if(p1_units[loop_counter][1] != p1_units[loop_counter][3]){
-                    p1_units[loop_counter][1] +=
-                      (p1_units[loop_counter][1] > p1_units[loop_counter][3]
-                        ? -j[1]
-                        : j[1]
-                      ) * .7;
-                }
-
-                if(p1_units[loop_counter][0] > p1_units[loop_counter][2] - 5
-                  && p1_units[loop_counter][0] < p1_units[loop_counter][2] + 5
-                  && p1_units[loop_counter][1] > p1_units[loop_counter][3] - 5
-                  && p1_units[loop_counter][1] < p1_units[loop_counter][3] + 5){
-                    p1_units[loop_counter][2] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
-                    p1_units[loop_counter][3] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
-                }
-
-            }
-
             // If unit is on screen, draw it.
             if(p1_units[loop_counter][0] + 15 + x + camera_x <= 0
               || p1_units[loop_counter][0] - 15 + x + camera_x >= width
@@ -311,95 +173,6 @@ function draw(){
     loop_counter = p0_units.length - 1;
     if(loop_counter >= 0){
         do{
-            // If not yet reached destination, move and update fog.
-            if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
-              || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
-                var j = m(
-                  p0_units[loop_counter][0],
-                  p0_units[loop_counter][1],
-                  p0_units[loop_counter][3],
-                  p0_units[loop_counter][4]
-                );
-
-                if(p0_units[loop_counter][0] != p0_units[loop_counter][3]){
-                    p0_units[loop_counter][0] +=
-                      (p0_units[loop_counter][0] > p0_units[loop_counter][3]
-                        ? -j[0]
-                        : j[0]
-                      ) * .7;
-                }
-
-                if(p0_units[loop_counter][1] != p0_units[loop_counter][4]){
-                    p0_units[loop_counter][1] +=
-                      (p0_units[loop_counter][1] > p0_units[loop_counter][4] 
-                        ? -j[1]
-                        : j[1]
-                      ) * .7;
-                }
-
-                var fog_counter = fog.length - 1;
-                if(fog_counter >= 0){
-                    do{
-                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - fog[fog_counter][1] + settings['level-size'] - 50, 2)
-                            + Math.pow(p0_units[loop_counter][0] - fog[fog_counter][0] + settings['level-size'] - 50, 2)
-                          ) < 290){
-                            fog.splice(
-                              fog_counter,
-                              1
-                            );
-                        }
-                    }while(fog_counter--);
-                }
-            }
-
-            // If reloading, decrease reload,...
-            if(p0_units[loop_counter][5] > 0){
-                p0_units[loop_counter][5] -= 1;
-
-            // ...else look for nearby p1 units to fire at.
-            }else{
-                var check_for_buildings = true;
-                var p1_units_counter = p1_units.length - 1;
-                if(p1_units_counter >= 0){
-                    do{
-                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - p1_units[p1_units_counter][1], 2)
-                         + Math.pow(p0_units[loop_counter][0] - p1_units[p1_units_counter][0], 2)) < 240){
-                            p0_units[loop_counter][5] = 75;
-                            bullets.push([
-                              p0_units[loop_counter][0],// X
-                              p0_units[loop_counter][1],// Y
-                              p1_units[p1_units_counter][0],// destination X
-                              p1_units[p1_units_counter][1],// destination Y
-                              0// Player
-                            ]);
-                            check_for_buildings = false;
-                            break;
-                        }
-                    }while(p1_units_counter--);
-                }
-
-                // If no units in range, look for buildings to fire at.
-                if(check_for_buildings){
-                    var p1_buildings_counter = p1_buildings.length - 1;
-                    if(p1_buildings_counter >= 0){
-                        do{
-                            if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - (p1_buildings[p1_buildings_counter][1] + 50), 2)
-                             + Math.pow(p0_units[loop_counter][0] - (p1_buildings[p1_buildings_counter][0] + 50), 2)) < 240){
-                                p0_units[loop_counter][5] = 75;
-                                bullets.push([
-                                  p0_units[loop_counter][0],// X
-                                  p0_units[loop_counter][1],// Y
-                                  p1_buildings[p1_buildings_counter][0] + 50,// Destination X
-                                  p1_buildings[p1_buildings_counter][1] + 50,// Destination Y
-                                  0// Player
-                                ]);
-                                break;
-                            }
-                        }while(p1_buildings_counter--);
-                    }
-                }
-            }
-
             // If unit is on screen, draw it.
             if(p0_units[loop_counter][0] + 15 + x + camera_x <= 0
               || p0_units[loop_counter][0] - 15 + x + camera_x >= width
@@ -427,152 +200,20 @@ function draw(){
 
     loop_counter = bullets.length - 1;
     if(loop_counter >= 0){
+        // Draw bullets.
         do{
-            // Calculate bullet movement.
-            var j = m(
-              bullets[loop_counter][0],
-              bullets[loop_counter][1],
-              bullets[loop_counter][2],
-              bullets[loop_counter][3]
-            );
+            // Set bullet color to team color.
+            buffer.fillStyle = bullets[loop_counter][4]
+              ? '#f00'
+              : '#0f0';
 
-            // Move bullet x.
-            if(bullets[loop_counter][0] != bullets[loop_counter][2]){
-                bullets[loop_counter][0] +=
-                  10
-                  * (bullets[loop_counter][0] > bullets[loop_counter][2]
-                    ? -j[0]
-                    : j[0]
-                  );
-            }
-
-            // Move bullet y.
-            if(bullets[loop_counter][1] != bullets[loop_counter][3]){
-                bullets[loop_counter][1] +=
-                  10
-                  * (bullets[loop_counter][1] > bullets[loop_counter][3]
-                    ? -j[1]
-                    : j[1]
-                  );
-            }
-
-            // If bullet reaches destination, check for collisions.
-            if(bullets[loop_counter][0] <= bullets[loop_counter][2] - 10
-              || bullets[loop_counter][0] >= bullets[loop_counter][2] + 10
-              || bullets[loop_counter][1] <= bullets[loop_counter][3] - 10
-              || bullets[loop_counter][1] >= bullets[loop_counter][3] + 10){
-                continue;
-            }
-
-            if(bullets[loop_counter][4]){
-                var p0_units_counter = p0_units.length - 1;
-                if(p0_units_counter >= 0){
-                    do{
-                        if(bullets[loop_counter][0] <= p0_units[p0_units_counter][0] - 15
-                          || bullets[loop_counter][0] >= p0_units[p0_units_counter][0] + 15
-                          || bullets[loop_counter][1] <= p0_units[p0_units_counter][1] - 15
-                          || bullets[loop_counter][1] >= p0_units[p0_units_counter][1] + 15){
-                            continue;
-                        }
-
-                        p0_units[p0_units_counter][6] -= 25;
-                        if(p0_units[p0_units_counter][6] <= 0){
-                            p0_units.splice(
-                              p0_units_counter,
-                              1
-                            );
-                        }
-                        break;
-                    }while(p0_units_counter--);
-                }
-
-                var p0_buildings_counter = p0_buildings.length - 1;
-                if(p0_buildings_counter >= 0){
-                    do{
-                        if(bullets[loop_counter][0] <= p0_buildings[p0_buildings_counter][0]
-                          || bullets[loop_counter][0] >= p0_buildings[p0_buildings_counter][0] + 100
-                          || bullets[loop_counter][1] <= p0_buildings[p0_buildings_counter][1]
-                          || bullets[loop_counter][1] >= p0_buildings[p0_buildings_counter][1] + 100){
-                            continue;
-                        }
-
-                        p0_buildings[p0_buildings_counter][4] -= 25;
-                        if(p0_buildings[p0_buildings_counter][4] <= 0){
-                            p0_buildings.splice(
-                              p0_buildings_counter,
-                              1
-                            );
-                        }
-                        break;
-                    }while(p0_buildings_counter--);
-                }
-
-            }else{
-                var p1_units_counter = p1_units.length - 1;
-                if(p1_units_counter >= 0){
-                    do{
-                        if(bullets[loop_counter][0] <= p1_units[p1_units_counter][0] - 15
-                          || bullets[loop_counter][0] >= p1_units[p1_units_counter][0] + 15
-                          || bullets[loop_counter][1] <= p1_units[p1_units_counter][1] - 15
-                          || bullets[loop_counter][1] >= p1_units[p1_units_counter][1] + 15){
-                            continue;
-                        }
-
-                        p1_units[p1_units_counter][5] -= 25;
-                        if(p1_units[p1_units_counter][5] <= 0){
-                            p1_units.splice(
-                              p1_units_counter,
-                              1
-                            );
-                        }
-                        break;
-                    }while(p1_units_counter--);
-                }
-
-                var p1_buildings_counter = p1_buildings.length - 1;
-                if(p1_buildings_counter >= 0){
-                    do{
-                        if(bullets[loop_counter][0] <= p1_buildings[p1_buildings_counter][0]
-                          || bullets[loop_counter][0] >= p1_buildings[p1_buildings_counter][0] + 100
-                          || bullets[loop_counter][1] <= p1_buildings[p1_buildings_counter][1]
-                          || bullets[loop_counter][1] >= p1_buildings[p1_buildings_counter][1] + 100){
-                            continue;
-                        }
-
-                        p1_buildings[p1_buildings_counter][4] -= 25;
-                        if(p1_buildings[p1_buildings_counter][4] <= 0){
-                            p1_buildings.splice(
-                              p1_buildings_counter,
-                              1
-                            );
-                        }
-                        break;
-                    }while(p1_buildings_counter--);
-                }
-            }
-            bullets.splice(
-              loop_counter,
-              1
+            buffer.fillRect(
+              bullets[loop_counter][0] - 5,
+              bullets[loop_counter][1] - 5,
+              10,
+              10
             );
         }while(loop_counter--);
-
-        // Draw bullets.
-        loop_counter = bullets.length - 1;
-        if(loop_counter >= 0){
-            do{
-                // Set bullet color to team color.
-                buffer.fillStyle = bullets[loop_counter][4]
-                  ? '#f00'
-                  : '#0f0';
-
-                buffer.fillRect(
-                  bullets[loop_counter][0] - 5,
-                  bullets[loop_counter][1] - 5,
-                  10,
-                  10
-                );
-            }while(loop_counter--);
-        }
     }
 
     // Draw fog.
@@ -1007,6 +648,8 @@ function draw(){
       0,
       0
     );
+
+    window.requestAnimationFrame(draw);
 }
 
 function fog_update_building(){
@@ -1027,6 +670,384 @@ function fog_update_building(){
             }while(fog_counter--);
         }
     }while(loop_counter--);
+}
+
+function logic(){
+    money_timer += 1;
+    if(money_timer > 99){
+        money_timer = 0;
+        money[0] += 1;
+        money[1] += 1;
+    }
+
+    // Move camera down.
+    if(key_down
+      && camera_y > -settings['level-size']){
+        camera_y -= settings['scroll-speed'];
+        mouse_lock_y -= settings['scroll-speed'];
+    }
+
+    // Move camera left.
+    if(key_left
+      && camera_x < settings['level-size']){
+        camera_x += settings['scroll-speed'];
+        mouse_lock_x += settings['scroll-speed'];
+    }
+
+    // Move camera right.
+    if(key_right
+      && camera_x > -settings['level-size']){
+        camera_x -= settings['scroll-speed'];
+        mouse_lock_x -= settings['scroll-speed'];
+    }
+
+    // Move camera up.
+    if(key_up
+      && camera_y < settings['level-size']){
+        camera_y += settings['scroll-speed'];
+        mouse_lock_y += settings['scroll-speed'];
+    }
+
+    // Handle selection box.
+    if(mouse_hold == 1){
+        select();
+    }
+
+    buffer.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+    if(p1_buildings.length > 1){
+        if(money[1] >= 100){
+            money[1] -= 100;
+            p1_units.push([
+              p1_buildings[1][0] + p1_buildings[1][2] / 2,// X
+              p1_buildings[1][1] + p1_buildings[1][3] / 2,// Y
+              Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination X
+              Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination Y
+              0,// Weapon reload
+              100,// Health
+            ]);
+        }
+    }
+
+    loop_counter = p1_units.length - 1;
+    if(loop_counter >= 0){
+        do{
+            // If reloading, decrease reload,...
+            if(p1_units[loop_counter][4] > 0){
+                p1_units[loop_counter][4] -= 1;
+
+            // ...else look for nearby p0 units to fire at.
+            }else{
+                var check_for_buildings = true;
+                var p0_units_counter = p0_units.length - 1;
+                if(p0_units_counter >= 0){
+                    do{
+                        if(Math.sqrt(Math.pow(p1_units[loop_counter][1] - p0_units[p0_units_counter][1], 2)
+                         + Math.pow(p1_units[loop_counter][0] - p0_units[p0_units_counter][0], 2)) < 240){
+                            p1_units[loop_counter][4] = 75;
+                            bullets.push([
+                              p1_units[loop_counter][0],// X
+                              p1_units[loop_counter][1],// Y
+                              p0_units[p0_units_counter][0],// destination X
+                              p0_units[p0_units_counter][1],// destination Y
+                              1,// Player
+                            ]);
+                            check_for_buildings = false;
+                            break;
+                        }
+                    }while(p0_units_counter--);
+                }
+
+                // If no units in range, look for buildings to fire at.
+                if(check_for_buildings){
+                    var p0_buildings_counter = p0_buildings.length - 1;
+                    if(p0_buildings_counter >= 0){
+                        do{
+                            if(Math.sqrt(Math.pow(p1_units[loop_counter][1] - (p0_buildings[p0_buildings_counter][1] + 50), 2)
+                             + Math.pow(p1_units[loop_counter][0] - (p0_buildings[p0_buildings_counter][0] + 50), 2)) < 240){
+                                p1_units[loop_counter][4] = 75;
+                                bullets.push([
+                                  p1_units[loop_counter][0],// X
+                                  p1_units[loop_counter][1],// Y
+                                  p0_buildings[p0_buildings_counter][0] + 50,// Destination X
+                                  p0_buildings[p0_buildings_counter][1] + 50,// Destination Y
+                                  1,// Player
+                                ]);
+                                break;
+                            }
+                        }while(p0_buildings_counter--);
+                    }
+                }
+            }
+
+            // Movement "ai", pick new destination once destination is reached.
+            if(p1_units[loop_counter][0] != p1_units[loop_counter][2]
+              || p1_units[loop_counter][1] != p1_units[loop_counter][3]){
+                var j = m(
+                  p1_units[loop_counter][0],
+                  p1_units[loop_counter][1],
+                  p1_units[loop_counter][2],
+                  p1_units[loop_counter][3]
+                );
+
+                if(p1_units[loop_counter][0] != p1_units[loop_counter][2]){
+                    p1_units[loop_counter][0] += 
+                      (p1_units[loop_counter][0] > p1_units[loop_counter][2]
+                        ? -j[0]
+                        : j[0]
+                      ) * .7;
+                }
+
+                if(p1_units[loop_counter][1] != p1_units[loop_counter][3]){
+                    p1_units[loop_counter][1] +=
+                      (p1_units[loop_counter][1] > p1_units[loop_counter][3]
+                        ? -j[1]
+                        : j[1]
+                      ) * .7;
+                }
+
+                if(p1_units[loop_counter][0] > p1_units[loop_counter][2] - 5
+                  && p1_units[loop_counter][0] < p1_units[loop_counter][2] + 5
+                  && p1_units[loop_counter][1] > p1_units[loop_counter][3] - 5
+                  && p1_units[loop_counter][1] < p1_units[loop_counter][3] + 5){
+                    p1_units[loop_counter][2] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
+                    p1_units[loop_counter][3] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
+                }
+
+            }
+        }while(loop_counter--);
+    }
+
+    loop_counter = p0_units.length - 1;
+    if(loop_counter >= 0){
+        do{
+            // If not yet reached destination, move and update fog.
+            if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
+              || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
+                var j = m(
+                  p0_units[loop_counter][0],
+                  p0_units[loop_counter][1],
+                  p0_units[loop_counter][3],
+                  p0_units[loop_counter][4]
+                );
+
+                if(p0_units[loop_counter][0] != p0_units[loop_counter][3]){
+                    p0_units[loop_counter][0] +=
+                      (p0_units[loop_counter][0] > p0_units[loop_counter][3]
+                        ? -j[0]
+                        : j[0]
+                      ) * .7;
+                }
+
+                if(p0_units[loop_counter][1] != p0_units[loop_counter][4]){
+                    p0_units[loop_counter][1] +=
+                      (p0_units[loop_counter][1] > p0_units[loop_counter][4] 
+                        ? -j[1]
+                        : j[1]
+                      ) * .7;
+                }
+
+                var fog_counter = fog.length - 1;
+                if(fog_counter >= 0){
+                    do{
+                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - fog[fog_counter][1] + settings['level-size'] - 50, 2)
+                            + Math.pow(p0_units[loop_counter][0] - fog[fog_counter][0] + settings['level-size'] - 50, 2)
+                          ) < 290){
+                            fog.splice(
+                              fog_counter,
+                              1
+                            );
+                        }
+                    }while(fog_counter--);
+                }
+            }
+
+            // If reloading, decrease reload,...
+            if(p0_units[loop_counter][5] > 0){
+                p0_units[loop_counter][5] -= 1;
+
+            // ...else look for nearby p1 units to fire at.
+            }else{
+                var check_for_buildings = true;
+                var p1_units_counter = p1_units.length - 1;
+                if(p1_units_counter >= 0){
+                    do{
+                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - p1_units[p1_units_counter][1], 2)
+                         + Math.pow(p0_units[loop_counter][0] - p1_units[p1_units_counter][0], 2)) < 240){
+                            p0_units[loop_counter][5] = 75;
+                            bullets.push([
+                              p0_units[loop_counter][0],// X
+                              p0_units[loop_counter][1],// Y
+                              p1_units[p1_units_counter][0],// destination X
+                              p1_units[p1_units_counter][1],// destination Y
+                              0// Player
+                            ]);
+                            check_for_buildings = false;
+                            break;
+                        }
+                    }while(p1_units_counter--);
+                }
+
+                // If no units in range, look for buildings to fire at.
+                if(check_for_buildings){
+                    var p1_buildings_counter = p1_buildings.length - 1;
+                    if(p1_buildings_counter >= 0){
+                        do{
+                            if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - (p1_buildings[p1_buildings_counter][1] + 50), 2)
+                             + Math.pow(p0_units[loop_counter][0] - (p1_buildings[p1_buildings_counter][0] + 50), 2)) < 240){
+                                p0_units[loop_counter][5] = 75;
+                                bullets.push([
+                                  p0_units[loop_counter][0],// X
+                                  p0_units[loop_counter][1],// Y
+                                  p1_buildings[p1_buildings_counter][0] + 50,// Destination X
+                                  p1_buildings[p1_buildings_counter][1] + 50,// Destination Y
+                                  0// Player
+                                ]);
+                                break;
+                            }
+                        }while(p1_buildings_counter--);
+                    }
+                }
+            }
+        }while(loop_counter--);
+    }
+
+    loop_counter = bullets.length - 1;
+    if(loop_counter >= 0){
+        do{
+            // Calculate bullet movement.
+            var j = m(
+              bullets[loop_counter][0],
+              bullets[loop_counter][1],
+              bullets[loop_counter][2],
+              bullets[loop_counter][3]
+            );
+
+            // Move bullet x.
+            if(bullets[loop_counter][0] != bullets[loop_counter][2]){
+                bullets[loop_counter][0] +=
+                  10
+                  * (bullets[loop_counter][0] > bullets[loop_counter][2]
+                    ? -j[0]
+                    : j[0]
+                  );
+            }
+
+            // Move bullet y.
+            if(bullets[loop_counter][1] != bullets[loop_counter][3]){
+                bullets[loop_counter][1] +=
+                  10
+                  * (bullets[loop_counter][1] > bullets[loop_counter][3]
+                    ? -j[1]
+                    : j[1]
+                  );
+            }
+
+            // If bullet reaches destination, check for collisions.
+            if(bullets[loop_counter][0] <= bullets[loop_counter][2] - 10
+              || bullets[loop_counter][0] >= bullets[loop_counter][2] + 10
+              || bullets[loop_counter][1] <= bullets[loop_counter][3] - 10
+              || bullets[loop_counter][1] >= bullets[loop_counter][3] + 10){
+                continue;
+            }
+
+            if(bullets[loop_counter][4]){
+                var p0_units_counter = p0_units.length - 1;
+                if(p0_units_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p0_units[p0_units_counter][0] - 15
+                          || bullets[loop_counter][0] >= p0_units[p0_units_counter][0] + 15
+                          || bullets[loop_counter][1] <= p0_units[p0_units_counter][1] - 15
+                          || bullets[loop_counter][1] >= p0_units[p0_units_counter][1] + 15){
+                            continue;
+                        }
+
+                        p0_units[p0_units_counter][6] -= 25;
+                        if(p0_units[p0_units_counter][6] <= 0){
+                            p0_units.splice(
+                              p0_units_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p0_units_counter--);
+                }
+
+                var p0_buildings_counter = p0_buildings.length - 1;
+                if(p0_buildings_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p0_buildings[p0_buildings_counter][0]
+                          || bullets[loop_counter][0] >= p0_buildings[p0_buildings_counter][0] + 100
+                          || bullets[loop_counter][1] <= p0_buildings[p0_buildings_counter][1]
+                          || bullets[loop_counter][1] >= p0_buildings[p0_buildings_counter][1] + 100){
+                            continue;
+                        }
+
+                        p0_buildings[p0_buildings_counter][4] -= 25;
+                        if(p0_buildings[p0_buildings_counter][4] <= 0){
+                            p0_buildings.splice(
+                              p0_buildings_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p0_buildings_counter--);
+                }
+
+            }else{
+                var p1_units_counter = p1_units.length - 1;
+                if(p1_units_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p1_units[p1_units_counter][0] - 15
+                          || bullets[loop_counter][0] >= p1_units[p1_units_counter][0] + 15
+                          || bullets[loop_counter][1] <= p1_units[p1_units_counter][1] - 15
+                          || bullets[loop_counter][1] >= p1_units[p1_units_counter][1] + 15){
+                            continue;
+                        }
+
+                        p1_units[p1_units_counter][5] -= 25;
+                        if(p1_units[p1_units_counter][5] <= 0){
+                            p1_units.splice(
+                              p1_units_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p1_units_counter--);
+                }
+
+                var p1_buildings_counter = p1_buildings.length - 1;
+                if(p1_buildings_counter >= 0){
+                    do{
+                        if(bullets[loop_counter][0] <= p1_buildings[p1_buildings_counter][0]
+                          || bullets[loop_counter][0] >= p1_buildings[p1_buildings_counter][0] + 100
+                          || bullets[loop_counter][1] <= p1_buildings[p1_buildings_counter][1]
+                          || bullets[loop_counter][1] >= p1_buildings[p1_buildings_counter][1] + 100){
+                            continue;
+                        }
+
+                        p1_buildings[p1_buildings_counter][4] -= 25;
+                        if(p1_buildings[p1_buildings_counter][4] <= 0){
+                            p1_buildings.splice(
+                              p1_buildings_counter,
+                              1
+                            );
+                        }
+                        break;
+                    }while(p1_buildings_counter--);
+                }
+            }
+            bullets.splice(
+              loop_counter,
+              1
+            );
+        }while(loop_counter--);
+    }
 }
 
 // TODO: Improve clarity.
@@ -1412,8 +1433,9 @@ function setmode(newmode){
 
         resize();
 
+        window.requestAnimationFrame(draw);
         interval = setInterval(
-          'draw()',
+          'logic()',
           settings['ms-per-frame']
         );
 
