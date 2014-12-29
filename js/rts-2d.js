@@ -649,7 +649,7 @@ function draw(){
       0
     );
 
-    window.requestAnimationFrame(draw);
+    animationFrame = window.requestAnimationFrame(draw);
 }
 
 function fog_update_building(){
@@ -1306,6 +1306,7 @@ function setdestination(on_minimap){
 }
 
 function setmode(newmode){
+    window.cancelAnimationFrame(animationFrame);
     clearInterval(interval);
 
     bullets = [];
@@ -1433,7 +1434,7 @@ function setmode(newmode){
 
         resize();
 
-        window.requestAnimationFrame(draw);
+        animationFrame = window.requestAnimationFrame(draw);
         interval = setInterval(
           'logic()',
           settings['ms-per-frame']
@@ -1470,6 +1471,7 @@ function validate_camera_move(mouse_x, mouse_y){
     }
 }
 
+var animationFrame = 0;
 var buffer = 0;
 var build_mode = 0;
 var bullets = [];
