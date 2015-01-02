@@ -868,6 +868,21 @@ function logic(){
                     }while(fog_counter--);
                 }
             }else{
+				// When reached destination 
+				// units should not too close to each other
+
+				//mark unit is not moving
+				p0_units[loop_counter][7] = false;
+				for(var it = 0; it< p0_units.length; it += 1){
+					if(it == loop_counter){
+
+					}else{
+						if(distance(p0_units[loop_counter],
+									p0_units[it]) <= 20){
+							random_walk(p0_units[loop_counter], 40);
+						}
+					}
+				}
 			}
 
             // If reloading, decrease reload,...
@@ -1068,6 +1083,18 @@ function m(x0, y0, x1, y1){
 
 function in_position(x0, y0, x1, y1) {
 	return Math.abs(x0 - x1) <= 1 && Math.abs(y0 - y1) <= 1 ? false : true;
+}
+
+// get the distance from u1 to u2
+function distance(u1, u2) {
+	return Math.sqrt(Math.pow(u1[0] - u2[0], 2) +
+					 Math.pow(u1[1] - u2[1], 2));
+}
+
+// let unit to walk a little bit
+function random_walk(unit) {
+	unit[3] = unit[0] + Math.random() * 30 - 15; 
+	unit[4] = unit[1] + Math.random() * 30 - 15;
 }
 
 function play_audio(id){
