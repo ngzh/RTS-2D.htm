@@ -827,8 +827,10 @@ function logic(){
     if(loop_counter >= 0){
         do{
             // If not yet reached destination, move and update fog.
-            if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
-              || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
+			if(in_position(p0_units[loop_counter][0],
+						   p0_units[loop_counter][1],
+						   p0_units[loop_counter][3],
+						   p0_units[loop_counter][4])){
                 var j = m(
                   p0_units[loop_counter][0],
                   p0_units[loop_counter][1],
@@ -865,7 +867,8 @@ function logic(){
                         }
                     }while(fog_counter--);
                 }
-            }
+            }else{
+			}
 
             // If reloading, decrease reload,...
             if(p0_units[loop_counter][5] > 0){
@@ -1061,6 +1064,10 @@ function m(x0, y0, x1, y1){
     }else{
         return j1 > j0 ? [j0 / j1, 1] : [.5, .5];
     }
+}
+
+function in_position(x0, y0, x1, y1) {
+	return Math.abs(x0 - x1) <= 1 && Math.abs(y0 - y1) <= 1 ? false : true;
 }
 
 function play_audio(id){
