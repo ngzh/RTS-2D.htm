@@ -879,7 +879,7 @@ function logic(){
 					}else{
 						if(distance(p0_units[loop_counter],
 									p0_units[it]) <= 20){
-							random_walk(p0_units[loop_counter], 40);
+							keep_distance(p0_units[loop_counter], p0_units[it]);
 						}
 					}
 				}
@@ -1091,11 +1091,15 @@ function distance(u1, u2) {
 					 Math.pow(u1[1] - u2[1], 2));
 }
 
-// let unit to walk a little bit
-function random_walk(unit) {
-	unit[3] = unit[0] + Math.random() * 30 - 15; 
-	unit[4] = unit[1] + Math.random() * 30 - 15;
+function keep_distance(u1, u2) {
+    var rand1 = Math.random();
+    var rand2 = Math.random();
+	// 2 * rand1 and 2* rand2 is to seperate units that have exactly the same (x,y)
+	// you can try using one random number instead of two, it's hard to describe
+    u1[3] = Math.round(u1[3] - 1.0 * rand2 * (u2[0] - u1[0] + 2 * rand1));
+    u1[4] = Math.round(u1[4] - 1.0 * rand1 * (u2[1] - u1[1] + 2 * rand2));
 }
+
 
 function play_audio(id){
     if(settings['audio-volume'] <= 0){
