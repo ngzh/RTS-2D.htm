@@ -1081,21 +1081,21 @@ function m(x0, y0, x1, y1){
     }
 }
 
-function in_position(x0, y0, x1, y1) {
-	return Math.abs(x0 - x1) <= 1 && Math.abs(y0 - y1) <= 1 ? false : true;
+function in_position(x0, y0, x1, y1){
+    return Math.abs(x0 - x1) <= 1 && Math.abs(y0 - y1) <= 1 ? false : true;
 }
 
 // get the distance from u1 to u2
-function distance(u1, u2) {
-	return Math.sqrt(Math.pow(u1[0] - u2[0], 2) +
-					 Math.pow(u1[1] - u2[1], 2));
+function distance(u1, u2){
+    return Math.sqrt(Math.pow(u1[0] - u2[0], 2) +
+		     Math.pow(u1[1] - u2[1], 2));
 }
 
-function keep_distance(u1, u2) {
+function keep_distance(u1, u2){
     var rand1 = Math.random();
     var rand2 = Math.random();
-	// 2 * rand1 and 2* rand2 is to seperate units that have exactly the same (x,y)
-	// you can try using one random number instead of two, it's hard to describe
+    // 2 * rand1 and 2* rand2 is to seperate units that have exactly the same (x,y)
+    // you can try using one random number instead of two, it's hard to describe
     u1[3] = Math.round(u1[3] - 1.0 * rand2 * (u2[0] - u1[0] + 2 * rand1));
     u1[4] = Math.round(u1[4] - 1.0 * rand1 * (u2[1] - u1[1] + 2 * rand2));
 }
