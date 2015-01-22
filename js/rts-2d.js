@@ -20,6 +20,10 @@ function build_robot(){
     ]);
 }
 
+function distance(x0, y0, x1, y1){
+    return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
+}
+
 // TODO: Improve clarity.
 function draw(){
     buffer.clearRect(
@@ -659,9 +663,12 @@ function fog_update_building(){
         var fog_counter = fog.length - 1;
         if(fog_counter >= 0){
             do{
-                if(Math.sqrt(Math.pow(p0_buildings[loop_counter][1] - fog[fog_counter][1] + settings['level-size'], 2)
-                    + Math.pow(p0_buildings[loop_counter][0] - fog[fog_counter][0] + settings['level-size'], 2)
-                  ) < 390){
+                if(distance(
+                  p0_buildings[loop_counter][0],
+                  p0_buildings[loop_counter][1],
+                  fog[fog_counter][0] - settings['level-size'],
+                  fog[fog_counter][1] - settings['level-size']
+                ) < 390){
                     fog.splice(
                       fog_counter,
                       1
@@ -747,8 +754,12 @@ function logic(){
                 var p0_units_counter = p0_units.length - 1;
                 if(p0_units_counter >= 0){
                     do{
-                        if(Math.sqrt(Math.pow(p1_units[loop_counter][1] - p0_units[p0_units_counter][1], 2)
-                         + Math.pow(p1_units[loop_counter][0] - p0_units[p0_units_counter][0], 2)) < 240){
+                        if(distance(
+                          p1_units[loop_counter][0],
+                          p1_units[loop_counter][1],
+                          p0_units[p0_units_counter][0],
+                          p0_units[p0_units_counter][1]
+                        ) < 240){
                             p1_units[loop_counter][4] = 75;
                             bullets.push([
                               p1_units[loop_counter][0],// X
@@ -768,8 +779,12 @@ function logic(){
                     var p0_buildings_counter = p0_buildings.length - 1;
                     if(p0_buildings_counter >= 0){
                         do{
-                            if(Math.sqrt(Math.pow(p1_units[loop_counter][1] - (p0_buildings[p0_buildings_counter][1] + 50), 2)
-                             + Math.pow(p1_units[loop_counter][0] - (p0_buildings[p0_buildings_counter][0] + 50), 2)) < 240){
+                            if(distance(
+                              p1_units[loop_counter][0],
+                              p1_units[loop_counter][1],
+                              p0_buildings[p0_buildings_counter][0] + 50,
+                              p0_buildings[p0_buildings_counter][1] + 50
+                            ) < 240){
                                 p1_units[loop_counter][4] = 75;
                                 bullets.push([
                                   p1_units[loop_counter][0],// X
@@ -827,10 +842,8 @@ function logic(){
     if(loop_counter >= 0){
         do{
             // If not yet reached destination, move and update fog.
-			if(in_position(p0_units[loop_counter][0],
-						   p0_units[loop_counter][1],
-						   p0_units[loop_counter][3],
-						   p0_units[loop_counter][4])){
+            if(Math.abs(p0_units[loop_counter][0] - p0_units[loop_counter][3]) > 1
+              && Math.abs(p0_units[loop_counter][1] - p0_units[loop_counter][4]) > 1){
                 var j = m(
                   p0_units[loop_counter][0],
                   p0_units[loop_counter][1],
@@ -857,9 +870,12 @@ function logic(){
                 var fog_counter = fog.length - 1;
                 if(fog_counter >= 0){
                     do{
-                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - fog[fog_counter][1] + settings['level-size'] - 50, 2)
-                            + Math.pow(p0_units[loop_counter][0] - fog[fog_counter][0] + settings['level-size'] - 50, 2)
-                          ) < 290){
+                        if(distance(
+                          p0_units[loop_counter][0],
+                          p0_units[loop_counter][1],
+                          fog[fog_counter][0] - settings['level-size'] + 50,
+                          fog[fog_counter][1] - settings['level-size'] + 50
+                        ) < 290){
                             fog.splice(
                               fog_counter,
                               1
@@ -867,23 +883,30 @@ function logic(){
                         }
                     }while(fog_counter--);
                 }
+
+            // Destination reached, make sure units don't overlap.
             }else{
-				// When reached destination 
-				// units should not too close to each other
+                var unit_counter = p0_units.length - 1;
+                do{
+                    if(loop_counter != unit_counter){
+                        if(distance(
+                          p0_units[loop_counter][0],
+                          p0_units[loop_counter][1],
+                          p0_units[unit_counter][0],
+                          p0_units[unit_counter][1]
+                        ) < 20){
+                            p0_units[loop_counter][3] = p0_units[loop_counter][0]
+                              + Math.floor(Math.random() * 40) - 20;
+                            p0_units[loop_counter][4] = p0_units[loop_counter][1]
+                              + Math.floor(Math.random() * 40) - 20;
 
-				//mark unit is not moving
-				p0_units[loop_counter][7] = false;
-				for(var it = 0; it< p0_units.length; it += 1){
-					if(it == loop_counter){
+                            validate_destination(loop_counter);
 
-					}else{
-						if(distance(p0_units[loop_counter],
-									p0_units[it]) <= 20){
-							keep_distance(p0_units[loop_counter], p0_units[it]);
-						}
-					}
-				}
-			}
+                            break;
+                        }
+                    }
+                }while(unit_counter--);
+            }
 
             // If reloading, decrease reload,...
             if(p0_units[loop_counter][5] > 0){
@@ -895,8 +918,12 @@ function logic(){
                 var p1_units_counter = p1_units.length - 1;
                 if(p1_units_counter >= 0){
                     do{
-                        if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - p1_units[p1_units_counter][1], 2)
-                         + Math.pow(p0_units[loop_counter][0] - p1_units[p1_units_counter][0], 2)) < 240){
+                        if(distance(
+                          p0_units[loop_counter][0],
+                          p0_units[loop_counter][1],
+                          p1_units[p1_units_counter][0],
+                          p1_units[p1_units_counter][1]
+                        ) < 240){
                             p0_units[loop_counter][5] = 75;
                             bullets.push([
                               p0_units[loop_counter][0],// X
@@ -916,8 +943,12 @@ function logic(){
                     var p1_buildings_counter = p1_buildings.length - 1;
                     if(p1_buildings_counter >= 0){
                         do{
-                            if(Math.sqrt(Math.pow(p0_units[loop_counter][1] - (p1_buildings[p1_buildings_counter][1] + 50), 2)
-                             + Math.pow(p0_units[loop_counter][0] - (p1_buildings[p1_buildings_counter][0] + 50), 2)) < 240){
+                            if(distance(
+                              p0_units[loop_counter][0],
+                              p0_units[loop_counter][1],
+                              p1_buildings[p1_buildings_counter][0] + 50,
+                              p1_buildings[p1_buildings_counter][1] + 50
+                            ) < 240){
                                 p0_units[loop_counter][5] = 75;
                                 bullets.push([
                                   p0_units[loop_counter][0],// X
@@ -1080,26 +1111,6 @@ function m(x0, y0, x1, y1){
         return j1 > j0 ? [j0 / j1, 1] : [.5, .5];
     }
 }
-
-function in_position(x0, y0, x1, y1){
-    return Math.abs(x0 - x1) <= 1 && Math.abs(y0 - y1) <= 1 ? false : true;
-}
-
-// get the distance from u1 to u2
-function distance(u1, u2){
-    return Math.sqrt(Math.pow(u1[0] - u2[0], 2) +
-		     Math.pow(u1[1] - u2[1], 2));
-}
-
-function keep_distance(u1, u2){
-    var rand1 = Math.random();
-    var rand2 = Math.random();
-    // 2 * rand1 and 2* rand2 is to seperate units that have exactly the same (x,y)
-    // you can try using one random number instead of two, it's hard to describe
-    u1[3] = Math.round(u1[3] - 1.0 * rand2 * (u2[0] - u1[0] + 2 * rand1));
-    u1[4] = Math.round(u1[4] - 1.0 * rand1 * (u2[1] - u1[1] + 2 * rand2));
-}
-
 
 function play_audio(id){
     if(settings['audio-volume'] <= 0){
@@ -1294,21 +1305,11 @@ function setdestination(on_minimap){
                       ? level_size_math * (mouse_x - 100)
                       : mouse_x - x - camera_x;
 
-                    if(p0_units[loop_counter][3] > settings['level-size']){
-                        p0_units[loop_counter][3] = settings['level-size'];
-                    }else if(p0_units[loop_counter][3] < -settings['level-size']){
-                        p0_units[loop_counter][3] = -settings['level-size'];
-                    }
-
                     p0_units[loop_counter][4] = on_minimap
                       ? level_size_math * (mouse_y - height + 100)
                       : mouse_y - y - camera_y;
 
-                    if(p0_units[loop_counter][4] > settings['level-size']){
-                        p0_units[loop_counter][4] = settings['level-size'];
-                    }else if(p0_units[loop_counter][4] < -settings['level-size']){
-                        p0_units[loop_counter][4] = -settings['level-size'];
-                    }
+                    validate_destination(loop_counter);
                 }
             }while(loop_counter--);
         }
@@ -1506,6 +1507,20 @@ function validate_camera_move(mouse_x, mouse_y){
         camera_y = settings['level-size'];
     }else if(camera_y < -settings['level-size']){
         camera_y = -settings['level-size'];
+    }
+}
+
+function validate_destination(unit_id){
+    if(p0_units[unit_id][3] > settings['level-size']){
+        p0_units[unit_id][3] = settings['level-size'];
+    }else if(p0_units[unit_id][3] < -settings['level-size']){
+        p0_units[unit_id][3] = -settings['level-size'];
+    }
+
+    if(p0_units[unit_id][4] > settings['level-size']){
+        p0_units[unit_id][4] = settings['level-size'];
+    }else if(p0_units[unit_id][4] < -settings['level-size']){
+        p0_units[unit_id][4] = -settings['level-size'];
     }
 }
 
