@@ -827,8 +827,10 @@ function logic(){
     if(loop_counter >= 0){
         do{
             // If not yet reached destination, move and update fog.
-            if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
-              || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
+			if(in_position(p0_units[loop_counter][0],
+						   p0_units[loop_counter][1],
+						   p0_units[loop_counter][3],
+						   p0_units[loop_counter][4])){
                 var j = m(
                   p0_units[loop_counter][0],
                   p0_units[loop_counter][1],
@@ -865,7 +867,23 @@ function logic(){
                         }
                     }while(fog_counter--);
                 }
-            }
+            }else{
+				// When reached destination 
+				// units should not too close to each other
+
+				//mark unit is not moving
+				p0_units[loop_counter][7] = false;
+				for(var it = 0; it< p0_units.length; it += 1){
+					if(it == loop_counter){
+
+					}else{
+						if(distance(p0_units[loop_counter],
+									p0_units[it]) <= 20){
+							keep_distance(p0_units[loop_counter], p0_units[it]);
+						}
+					}
+				}
+			}
 
             // If reloading, decrease reload,...
             if(p0_units[loop_counter][5] > 0){
@@ -1062,6 +1080,26 @@ function m(x0, y0, x1, y1){
         return j1 > j0 ? [j0 / j1, 1] : [.5, .5];
     }
 }
+
+function in_position(x0, y0, x1, y1){
+    return Math.abs(x0 - x1) <= 1 && Math.abs(y0 - y1) <= 1 ? false : true;
+}
+
+// get the distance from u1 to u2
+function distance(u1, u2){
+    return Math.sqrt(Math.pow(u1[0] - u2[0], 2) +
+		     Math.pow(u1[1] - u2[1], 2));
+}
+
+function keep_distance(u1, u2){
+    var rand1 = Math.random();
+    var rand2 = Math.random();
+    // 2 * rand1 and 2* rand2 is to seperate units that have exactly the same (x,y)
+    // you can try using one random number instead of two, it's hard to describe
+    u1[3] = Math.round(u1[3] - 1.0 * rand2 * (u2[0] - u1[0] + 2 * rand1));
+    u1[4] = Math.round(u1[4] - 1.0 * rand1 * (u2[1] - u1[1] + 2 * rand2));
+}
+
 
 function play_audio(id){
     if(settings['audio-volume'] <= 0){
