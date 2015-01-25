@@ -238,19 +238,23 @@ function draw(){
     loop_counter = p0_buildings.length - 1;
     if(loop_counter >= 0){
         do{
-            if(p0_buildings[loop_counter][5] && p0_buildings[loop_counter][6] != null){
-                buffer.beginPath();
-                buffer.moveTo(
-                  p0_buildings[loop_counter][0] + p0_buildings[loop_counter][2] / 2,
-                  p0_buildings[loop_counter][1] + p0_buildings[loop_counter][2] / 2
-                );
-                buffer.lineTo(
-                  p0_buildings[loop_counter][6],
-                  p0_buildings[loop_counter][7]
-                );
-                buffer.closePath();
-                buffer.stroke();
+            // Only draw if building is selected.
+            if(!p0_buildings[loop_counter][5]
+              || p0_buildings[loop_counter][6] == null){
+                continue;
             }
+
+            buffer.beginPath();
+            buffer.moveTo(
+              p0_buildings[loop_counter][0] + p0_buildings[loop_counter][2] / 2,
+              p0_buildings[loop_counter][1] + p0_buildings[loop_counter][2] / 2
+            );
+            buffer.lineTo(
+              p0_buildings[loop_counter][6],
+              p0_buildings[loop_counter][7]
+            );
+            buffer.closePath();
+            buffer.stroke();
         }while(loop_counter--);
     }
 
@@ -258,36 +262,39 @@ function draw(){
     loop_counter = p0_units.length - 1;
     if(loop_counter >= 0){
         do{
-            if(p0_units[loop_counter][2]){
-                // If not yet reached destination, draw destination line.
-                if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
-                  || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
-                    buffer.beginPath();
-                    buffer.moveTo(
-                      p0_units[loop_counter][0],
-                      p0_units[loop_counter][1]
-                    );
-                    buffer.lineTo(
-                      p0_units[loop_counter][3],
-                      p0_units[loop_counter][4]
-                    );
-                    buffer.closePath();
-                    buffer.stroke();
-                }
+            // Only draw if unit is selected.
+            if(!p0_units[loop_counter][2]){
+                continue;
+            }
 
-                // Draw range circle.
+            // If not yet reached destination, draw destination line.
+            if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
+              || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
                 buffer.beginPath();
-                buffer.arc(
+                buffer.moveTo(
                   p0_units[loop_counter][0],
-                  p0_units[loop_counter][1],
-                  240,
-                  0,
-                  pi_times_two,
-                  false
+                  p0_units[loop_counter][1]
+                );
+                buffer.lineTo(
+                  p0_units[loop_counter][3],
+                  p0_units[loop_counter][4]
                 );
                 buffer.closePath();
                 buffer.stroke();
             }
+
+            // Draw range circle.
+            buffer.beginPath();
+            buffer.arc(
+              p0_units[loop_counter][0],
+              p0_units[loop_counter][1],
+              240,
+              0,
+              pi_times_two,
+              false
+            );
+            buffer.closePath();
+            buffer.stroke();
         }while(loop_counter--);
     }
 
@@ -481,21 +488,23 @@ function draw(){
     loop_counter = p0_buildings.length - 1;
     if(loop_counter >= 0){
         do{
-            // If buliding is selected and has a destination, draw destination line.
-            if(p0_buildings[loop_counter][5]
-              && p0_buildings[loop_counter][6] != null){
-                buffer.beginPath();
-                buffer.moveTo(
-                  100 + (p0_buildings[loop_counter][0] + p0_buildings[loop_counter][2] / 2) / level_size_math,
-                  height - 100 + (p0_buildings[loop_counter][1] + p0_buildings[loop_counter][3] / 2) / level_size_math
-                );
-                buffer.lineTo(
-                  100 + p0_buildings[loop_counter][6] / level_size_math,
-                  height - 100 + p0_buildings[loop_counter][7] / level_size_math
-                );
-                buffer.closePath();
-                buffer.stroke();
+            // Only draw if building is selected.
+            if(!p0_buildings[loop_counter][5]
+              || p0_buildings[loop_counter][6] == null){
+                continue;
             }
+
+            buffer.beginPath();
+            buffer.moveTo(
+              100 + (p0_buildings[loop_counter][0] + p0_buildings[loop_counter][2] / 2) / level_size_math,
+              height - 100 + (p0_buildings[loop_counter][1] + p0_buildings[loop_counter][3] / 2) / level_size_math
+            );
+            buffer.lineTo(
+              100 + p0_buildings[loop_counter][6] / level_size_math,
+              height - 100 + p0_buildings[loop_counter][7] / level_size_math
+            );
+            buffer.closePath();
+            buffer.stroke();
         }while(loop_counter--);
     }
 
@@ -503,38 +512,39 @@ function draw(){
     loop_counter = p0_units.length - 1;
     if(loop_counter >= 0){
         do{
-            // If unit is selected.
-            if(p0_units[loop_counter][2]){
+            // Only draw if unit is selected.
+            if(!p0_units[loop_counter][2]){
+                continue;
+            }
 
-                // If unit has a destination it has not yet reached, draw destination line.
-                if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
-                  || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
-                    buffer.beginPath();
-                    buffer.moveTo(
-                      100 + p0_units[loop_counter][0] / level_size_math,
-                      height - 100 + p0_units[loop_counter][1] / level_size_math
-                    );
-                    buffer.lineTo(
-                      100 + p0_units[loop_counter][3] / level_size_math,
-                      height - 100 + p0_units[loop_counter][4] / level_size_math
-                    );
-                    buffer.closePath();
-                    buffer.stroke();
-                }
-
-                // Draw range circle.
+            // Draw destination if the unit has one.
+            if(p0_units[loop_counter][0] != p0_units[loop_counter][3]
+              || p0_units[loop_counter][1] != p0_units[loop_counter][4]){
                 buffer.beginPath();
-                buffer.arc(
+                buffer.moveTo(
                   100 + p0_units[loop_counter][0] / level_size_math,
-                  height - 100 + p0_units[loop_counter][1] / level_size_math,
-                  120 / (settings['level-size'] / 200),
-                  0,
-                  pi_times_two,
-                  false
+                  height - 100 + p0_units[loop_counter][1] / level_size_math
+                );
+                buffer.lineTo(
+                  100 + p0_units[loop_counter][3] / level_size_math,
+                  height - 100 + p0_units[loop_counter][4] / level_size_math
                 );
                 buffer.closePath();
                 buffer.stroke();
             }
+
+            // Draw range circle.
+            buffer.beginPath();
+            buffer.arc(
+              100 + p0_units[loop_counter][0] / level_size_math,
+              height - 100 + p0_units[loop_counter][1] / level_size_math,
+              120 / (settings['level-size'] / 200),
+              0,
+              pi_times_two,
+              false
+            );
+            buffer.closePath();
+            buffer.stroke();
         }while(loop_counter--);
     }
 
@@ -556,6 +566,7 @@ function draw(){
         // Make sure box can't go past top edge.
         temp_y = height - 100 - (y + camera_y - mouse_lock_y) / level_size_math;
         temp_height = (mouse_y - mouse_lock_y) / level_size_math;
+
         // Box past top edge? Decrease height and make sure height isn't negative.
         if(temp_y < height - 200){
             temp_height -= height - 200 - temp_y;
@@ -659,23 +670,25 @@ function draw(){
 function fog_update_building(){
     var loop_counter = p0_buildings.length - 1;
     do{
-        // Check if each fog unit is within 390px of a building.
         var fog_counter = fog.length - 1;
-        if(fog_counter >= 0){
-            do{
-                if(distance(
-                  p0_buildings[loop_counter][0],
-                  p0_buildings[loop_counter][1],
-                  fog[fog_counter][0] - settings['level-size'],
-                  fog[fog_counter][1] - settings['level-size']
-                ) < 390){
-                    fog.splice(
-                      fog_counter,
-                      1
-                    );
-                }
-            }while(fog_counter--);
+        if(fog_counter < 0){
+            continue;
         }
+
+        // Check if each fog unit is within 390px of a building.
+        do{
+            if(distance(
+              p0_buildings[loop_counter][0],
+              p0_buildings[loop_counter][1],
+              fog[fog_counter][0] - settings['level-size'],
+              fog[fog_counter][1] - settings['level-size']
+            ) < 390){
+                fog.splice(
+                  fog_counter,
+                  1
+                );
+            }
+        }while(fog_counter--);
     }while(loop_counter--);
 }
 
@@ -727,18 +740,17 @@ function logic(){
       height
     );
 
-    if(p1_buildings.length > 1){
-        if(money[1] >= 100){
-            money[1] -= 100;
-            p1_units.push([
-              p1_buildings[1][0] + p1_buildings[1][2] / 2,// X
-              p1_buildings[1][1] + p1_buildings[1][3] / 2,// Y
-              Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination X
-              Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination Y
-              0,// Weapon reload
-              100,// Health
-            ]);
-        }
+    if(p1_buildings.length > 1
+      && money[1] >= 100){
+        money[1] -= 100;
+        p1_units.push([
+          p1_buildings[1][0] + p1_buildings[1][2] / 2,// X
+          p1_buildings[1][1] + p1_buildings[1][3] / 2,// Y
+          Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination X
+          Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination Y
+          0,// Weapon reload
+          100,// Health
+        ]);
     }
 
     loop_counter = p1_units.length - 1;
@@ -1300,17 +1312,19 @@ function setdestination(on_minimap){
         var loop_counter = p0_units.length - 1;
         if(loop_counter >= 0){
             do{
-                if(p0_units[loop_counter][2]){
-                    p0_units[loop_counter][3] = on_minimap
-                      ? level_size_math * (mouse_x - 100)
-                      : mouse_x - x - camera_x;
-
-                    p0_units[loop_counter][4] = on_minimap
-                      ? level_size_math * (mouse_y - height + 100)
-                      : mouse_y - y - camera_y;
-
-                    validate_destination(loop_counter);
+                if(!p0_units[loop_counter][2]){
+                    continue;
                 }
+
+                p0_units[loop_counter][3] = on_minimap
+                  ? level_size_math * (mouse_x - 100)
+                  : mouse_x - x - camera_x;
+
+                p0_units[loop_counter][4] = on_minimap
+                  ? level_size_math * (mouse_y - height + 100)
+                  : mouse_y - y - camera_y;
+
+                validate_destination(loop_counter);
             }while(loop_counter--);
         }
 
@@ -1318,26 +1332,28 @@ function setdestination(on_minimap){
         var loop_counter = p0_buildings.length - 1;
         if(loop_counter >= 0){
             do{
-                if(p0_buildings[loop_counter][5]){
-                    p0_buildings[loop_counter][6] = on_minimap
-                      ? level_size_math * (mouse_x - 100)
-                      : mouse_x - x - camera_x;
+                if(!p0_buildings[loop_counter][5]){
+                    continue;
+                }
 
-                    if(p0_buildings[loop_counter][6] > settings['level-size']){
-                        p0_buildings[loop_counter][6] = settings['level-size'];
-                    }else if(p0_buildings[loop_counter][6] < -settings['level-size']){
-                        p0_buildings[loop_counter][6] = -settings['level-size'];
-                    }
+                p0_buildings[loop_counter][6] = on_minimap
+                  ? level_size_math * (mouse_x - 100)
+                  : mouse_x - x - camera_x;
 
-                    p0_buildings[loop_counter][7] = on_minimap
-                      ? level_size_math * (mouse_y - height + 100)
-                      : mouse_y - y - camera_y;
+                if(p0_buildings[loop_counter][6] > settings['level-size']){
+                    p0_buildings[loop_counter][6] = settings['level-size'];
+                }else if(p0_buildings[loop_counter][6] < -settings['level-size']){
+                    p0_buildings[loop_counter][6] = -settings['level-size'];
+                }
 
-                    if(p0_buildings[loop_counter][7] > settings['level-size']){
-                        p0_buildings[loop_counter][7] = settings['level-size'];
-                    }else if(p0_buildings[loop_counter][7] < -settings['level-size']){
-                        p0_buildings[loop_counter][7] = -settings['level-size'];
-                    }
+                p0_buildings[loop_counter][7] = on_minimap
+                  ? level_size_math * (mouse_y - height + 100)
+                  : mouse_y - y - camera_y;
+
+                if(p0_buildings[loop_counter][7] > settings['level-size']){
+                    p0_buildings[loop_counter][7] = settings['level-size'];
+                }else if(p0_buildings[loop_counter][7] < -settings['level-size']){
+                    p0_buildings[loop_counter][7] = -settings['level-size'];
                 }
             }while(loop_counter--);
         }
