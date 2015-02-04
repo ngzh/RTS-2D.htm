@@ -1103,6 +1103,7 @@ function logic(){
                     }while(p1_buildings_counter--);
                 }
             }
+
             bullets.splice(
               loop_counter,
               1
@@ -1265,7 +1266,7 @@ function select(){
                   && mouse_x > x + p0_units[loop_counter][0] + camera_x - 15)
                 || (mouse_lock_x > x + p0_units[loop_counter][0] + camera_x - 15
                   && mouse_x < x + p0_units[loop_counter][0] + camera_x + 15)
-              )&&(
+              ) && (
                 (mouse_lock_y < y + p0_units[loop_counter][1] + camera_y + 15
                   && mouse_y > y + p0_units[loop_counter][1] + camera_y - 15)
                 || (mouse_lock_y > y + p0_units[loop_counter][1] + camera_y - 15
@@ -1282,26 +1283,26 @@ function select(){
     loop_counter = p0_buildings.length - 1;
     if(loop_counter >= 0){
         do{
-            if(selected_type == -1){
-                p0_buildings[loop_counter][5] = (
-                    (mouse_lock_x < x + p0_buildings[loop_counter][0] + camera_x + p0_buildings[loop_counter][2]
-                      && mouse_x > x + p0_buildings[loop_counter][0] + camera_x)
-                    || (mouse_lock_x > x + p0_buildings[loop_counter][0] + camera_x
-                      && mouse_x < x + p0_buildings[loop_counter][0] + camera_x + p0_buildings[loop_counter][2])
-                  )&&(
-                    (mouse_lock_y < y + p0_buildings[loop_counter][1] + camera_y + p0_buildings[loop_counter][3]
-                      && mouse_y > y + p0_buildings[loop_counter][1] + camera_y)
-                    || (mouse_lock_y > y + p0_buildings[loop_counter][1] + camera_y
-                      && mouse_y < y + p0_buildings[loop_counter][1] + camera_y + p0_buildings[loop_counter][3])
-                  );
-
-                if(p0_buildings[loop_counter][5]){
-                    selected_id = loop_counter;
-                    selected_type = p0_buildings[loop_counter][8];
-                }
-
-            }else{
+            if(selected_type != -1){
                 p0_buildings[loop_counter][5] = 0;
+                continue;
+            }
+
+            p0_buildings[loop_counter][5] = (
+                (mouse_lock_x < x + p0_buildings[loop_counter][0] + camera_x + p0_buildings[loop_counter][2]
+                  && mouse_x > x + p0_buildings[loop_counter][0] + camera_x)
+                || (mouse_lock_x > x + p0_buildings[loop_counter][0] + camera_x
+                  && mouse_x < x + p0_buildings[loop_counter][0] + camera_x + p0_buildings[loop_counter][2])
+              ) && (
+                (mouse_lock_y < y + p0_buildings[loop_counter][1] + camera_y + p0_buildings[loop_counter][3]
+                  && mouse_y > y + p0_buildings[loop_counter][1] + camera_y)
+                || (mouse_lock_y > y + p0_buildings[loop_counter][1] + camera_y
+                  && mouse_y < y + p0_buildings[loop_counter][1] + camera_y + p0_buildings[loop_counter][3])
+              );
+
+            if(p0_buildings[loop_counter][5]){
+                selected_id = loop_counter;
+                selected_type = p0_buildings[loop_counter][8];
             }
         }while(loop_counter--);
     }
