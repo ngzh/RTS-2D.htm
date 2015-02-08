@@ -1363,7 +1363,7 @@ function setdestination(on_minimap){
 
 function setmode(newmode){
     window.cancelAnimationFrame(animationFrame);
-    clearInterval(interval);
+    window.clearInterval(interval);
 
     bullets = [];
     mode = newmode;
@@ -1491,7 +1491,7 @@ function setmode(newmode){
         resize();
 
         animationFrame = window.requestAnimationFrame(draw);
-        interval = setInterval(
+        interval = window.setInterval(
           'logic()',
           settings['ms-per-frame']
         );
