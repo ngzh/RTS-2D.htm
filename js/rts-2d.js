@@ -24,7 +24,6 @@ function distance(x0, y0, x1, y1){
     return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
 }
 
-// TODO: Improve clarity.
 function draw(){
     buffer.clearRect(
       0,
@@ -1112,7 +1111,6 @@ function logic(){
     }
 }
 
-// TODO: Improve clarity.
 function m(x0, y0, x1, y1){
     var j0 = Math.abs(x0 - x1);
     var j1 = Math.abs(y0 - y1);
