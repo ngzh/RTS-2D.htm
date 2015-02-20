@@ -211,8 +211,8 @@ function draw(){
               : '#0f0';
 
             buffer.fillRect(
-              bullets[loop_counter][0] - 5,
-              bullets[loop_counter][1] - 5,
+              Math.round(bullets[loop_counter][0]) - 5,
+              Math.round(bullets[loop_counter][1]) - 5,
               10,
               10
             );
