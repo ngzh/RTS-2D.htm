@@ -39,8 +39,8 @@ function draw(){
       offset_y
     );
 
+    // Draw visible static world objects.
     for(var id in world_static){
-        // If static world object is on screen, draw it.
         if(world_static[id][0] + world_static[id][2] + offset_x <= 0
           || world_static[id][0] + offset_x >= width
           || world_static[id][1] + world_static[id][3] + offset_y <= 0
@@ -61,8 +61,8 @@ function draw(){
     buffer.textBaseline = 'middle';
     buffer.textAlign = 'center';
 
+    // Draw visible player 1 buildings.
     for(var building in p1_buildings){
-        // If building is on screen, draw it.
         if(p1_buildings[building][0] + p1_buildings[building][2] + offset_x <= 0
           || p1_buildings[building][0] + offset_x >= width
           || p1_buildings[building][1] + p1_buildings[building][3] + offset_y <= 0
@@ -85,7 +85,6 @@ function draw(){
           5
         );
 
-        // Temporarily draw building name.
         buffer.fillStyle = '#fff';
         buffer.fillText(
           [
@@ -97,9 +96,9 @@ function draw(){
         );
     }
 
+    // Draw visible player 0 buildings.
     buffer.strokeStyle = '#ddd';
     for(building in p0_buildings){
-        // If building is on screen, draw it.
         if(p0_buildings[building][0] + p0_buildings[building][2] + offset_x <= 0
           || p0_buildings[building][0] + offset_x >= width
           || p0_buildings[building][1] + p0_buildings[building][3] + offset_y <= 0
@@ -124,7 +123,6 @@ function draw(){
           5
         );
 
-        // Temporarily draw building name.
         buffer.fillStyle = '#fff';
         buffer.fillText(
           [
@@ -136,8 +134,8 @@ function draw(){
         );
     }
 
+    // Draw visible player 1 units.
     for(var unit in p1_units){
-        // If unit is on screen, draw it.
         if(p1_units[unit][0] + 15 + x + camera_x <= 0
           || p1_units[unit][0] - 15 + x + camera_x >= width
           || p1_units[unit][1] + 15 + y + camera_y <= 0
@@ -161,8 +159,8 @@ function draw(){
         );
     }
 
+    // Draw visible player 0 units.
     for(unit in p0_units){
-        // If unit is on screen, draw it.
         if(p0_units[unit][0] + 15 + x + camera_x <= 0
           || p0_units[unit][0] - 15 + x + camera_x >= width
           || p0_units[unit][1] + 15 + y + camera_y <= 0
@@ -212,9 +210,8 @@ function draw(){
         );
     }
 
-    // Draw building destination.
+    // Draw selected building destination.
     for(building in p0_buildings){
-        // Only draw if building is selected.
         if(!p0_buildings[building][5]
           || p0_buildings[building][6] == null){
             continue;
@@ -233,14 +230,12 @@ function draw(){
         buffer.stroke();
     }
 
-    // Draw unit destination and range.
+    // Draw selected unit destinations and range.
     for(unit in p0_units){
-        // Only draw if unit is selected.
         if(!p0_units[unit][2]){
             continue;
         }
 
-        // If not yet reached destination, draw destination line.
         if(p0_units[unit][0] != p0_units[unit][3]
           || p0_units[unit][1] != p0_units[unit][4]){
             buffer.beginPath();
@@ -256,7 +251,6 @@ function draw(){
             buffer.stroke();
         }
 
-        // Draw range circle.
         buffer.beginPath();
         buffer.arc(
           p0_units[unit][0],
@@ -390,10 +384,10 @@ function draw(){
     buffer.fillStyle = '#600';
     for(building in p1_buildings){
         buffer.fillRect(
-          100 + p1_buildings[building][0] / level_size_math,
-          height - 100 + p1_buildings[building][1] / level_size_math,
-          50 / (settings['level-size'] / 200),
-          50 / (settings['level-size'] / 200)
+          100 + p1_buildings[building][0] / math[0],
+          height - 100 + p1_buildings[building][1] / math[0],
+          math[2],
+          math[2]
         );
     }
 
@@ -401,10 +395,10 @@ function draw(){
     for(building in p0_buildings){
         buffer.fillStyle = p0_buildings[building][5] ? '#1f1' : '#060';
         buffer.fillRect(
-          100 + p0_buildings[building][0] / level_size_math,
-          height - 100 + p0_buildings[building][1] / level_size_math,
-          50 / (settings['level-size'] / 200),
-          50 / (settings['level-size'] / 200)
+          100 + p0_buildings[building][0] / math[0],
+          height - 100 + p0_buildings[building][1] / math[0],
+          math[2],
+          math[2]
         );
     }
 
@@ -412,10 +406,10 @@ function draw(){
     buffer.fillStyle = '#b00';
     for(unit in p1_units){
         buffer.fillRect(
-          100 + (p1_units[unit][0] - 15) / level_size_math,
-          height - 100 + (p1_units[unit][1] - 15) / level_size_math,
-          15 / (settings['level-size'] / 200),
-          15 / (settings['level-size'] / 200)
+          100 + (p1_units[unit][0] - 15) / math[0],
+          height - 100 + (p1_units[unit][1] - 15) / math[0],
+          math[1],
+          math[1]
         );
     }
 
@@ -423,10 +417,10 @@ function draw(){
     for(unit in p0_units){
         buffer.fillStyle = p0_units[unit][2] ? '#1f1' : '#0b0';
         buffer.fillRect(
-          100 + (p0_units[unit][0] - 15) / level_size_math,
-          height - 100 + (p0_units[unit][1] - 15) / level_size_math,
-          15 / (settings['level-size'] / 200),
-          15 / (settings['level-size'] / 200)
+          100 + (p0_units[unit][0] - 15) / math[0],
+          height - 100 + (p0_units[unit][1] - 15) / math[0],
+          math[1],
+          math[1]
         );
     }
 
@@ -434,10 +428,10 @@ function draw(){
     buffer.fillStyle = '#000';
     for(id in fog){
         buffer.fillRect(
-          fog[id][0] / level_size_math,
-          height - 200 + fog[id][1] / level_size_math,
-          50 / (settings['level-size'] / 200),
-          50 / (settings['level-size'] / 200)
+          fog[id][0] / math[0],
+          height - 200 + fog[id][1] / math[0],
+          math[2],
+          math[2]
         );
     }
 
@@ -451,12 +445,12 @@ function draw(){
 
         buffer.beginPath();
         buffer.moveTo(
-          100 + (p0_buildings[building][0] + p0_buildings[building][2] / 2) / level_size_math,
-          height - 100 + (p0_buildings[building][1] + p0_buildings[building][3] / 2) / level_size_math
+          100 + (p0_buildings[building][0] + p0_buildings[building][2] / 2) / math[0],
+          height - 100 + (p0_buildings[building][1] + p0_buildings[building][3] / 2) / math[0]
         );
         buffer.lineTo(
-          100 + p0_buildings[building][6] / level_size_math,
-          height - 100 + p0_buildings[building][7] / level_size_math
+          100 + p0_buildings[building][6] / math[0],
+          height - 100 + p0_buildings[building][7] / math[0]
         );
         buffer.closePath();
         buffer.stroke();
@@ -474,12 +468,12 @@ function draw(){
           || p0_units[unit][1] != p0_units[unit][4]){
             buffer.beginPath();
             buffer.moveTo(
-              100 + p0_units[unit][0] / level_size_math,
-              height - 100 + p0_units[unit][1] / level_size_math
+              100 + p0_units[unit][0] / math[0],
+              height - 100 + p0_units[unit][1] / math[0]
             );
             buffer.lineTo(
-              100 + p0_units[unit][3] / level_size_math,
-              height - 100 + p0_units[unit][4] / level_size_math
+              100 + p0_units[unit][3] / math[0],
+              height - 100 + p0_units[unit][4] / math[0]
             );
             buffer.closePath();
             buffer.stroke();
@@ -488,9 +482,9 @@ function draw(){
         // Draw range circle.
         buffer.beginPath();
         buffer.arc(
-          100 + p0_units[unit][0] / level_size_math,
-          height - 100 + p0_units[unit][1] / level_size_math,
-          120 / (settings['level-size'] / 200),
+          100 + p0_units[unit][0] / math[0],
+          height - 100 + p0_units[unit][1] / math[0],
+          math[3],
           0,
           pi_times_two,
           false
@@ -507,16 +501,16 @@ function draw(){
     // Draw selection box on minimap.
     if(mouse_hold == 1){
         // Make sure box cannot go past right edge.
-        temp_x = 100 - (x + camera_x - mouse_lock_x) / level_size_math;
-        temp_width = (mouse_x - mouse_lock_x) / level_size_math;
+        temp_x = 100 - (x + camera_x - mouse_lock_x) / math[0];
+        temp_width = (mouse_x - mouse_lock_x) / math[0];
         // Box past right edge? Decrease width to fix.
         if(temp_x > 200 - temp_width){
             temp_width = 200 - temp_x;
         }
 
         // Make sure box can't go past top edge.
-        temp_y = height - 100 - (y + camera_y - mouse_lock_y) / level_size_math;
-        temp_height = (mouse_y - mouse_lock_y) / level_size_math;
+        temp_y = height - 100 - (y + camera_y - mouse_lock_y) / math[0];
+        temp_height = (mouse_y - mouse_lock_y) / math[0];
 
         // Box past top edge? Decrease height and make sure height isn't negative.
         if(temp_y < height - 200){
@@ -542,16 +536,16 @@ function draw(){
 
     // Draw camera boundaries on minimap.
     // Make sure box cannot go past right edge.
-    temp_x = 100 - x / level_size_math - camera_x / level_size_math;
-    temp_width = width / level_size_math;
+    temp_x = 100 - x / math[0] - camera_x / math[0];
+    temp_width = width / math[0];
     // Box past right edge? Decrease width to fix.
     if(temp_x > 200 - temp_width){
         temp_width = 200 - temp_x;
     }
 
     // Make sure box can't go past top edge.
-    temp_y = height - 100 - y / level_size_math - camera_y / level_size_math;
-    temp_height = height / level_size_math;
+    temp_y = height - 100 - y / math[0] - camera_y / math[0];
+    temp_height = height / math[0];
     // Box past top edge? decrease height and make sure height isn't negative.
     if(temp_y < height - 200){
         temp_height -= height - 200 - temp_y;
@@ -848,50 +842,51 @@ function logic(){
         // If reloading, decrease reload,...
         if(p0_units[unit][5] > 0){
             p0_units[unit][5] -= 1;
+            continue;
+        }
 
-        // ...else look for nearby p1 units to fire at.
-        }else{
-            var check_for_buildings = true;
-            for(var p1_unit in p1_units){
-                if(distance(
-                  p0_units[unit][0],
-                  p0_units[unit][1],
-                  p1_units[p1_unit][0],
-                  p1_units[p1_unit][1]
-                ) < 240){
-                    p0_units[unit][5] = 75;
-                    bullets.push([
-                      p0_units[unit][0],// X
-                      p0_units[unit][1],// Y
-                      p1_units[p1_unit][0],// destination X
-                      p1_units[p1_unit][1],// destination Y
-                      0// Player
-                    ]);
-                    check_for_buildings = false;
-                    break;
-                }
+        var check_for_buildings = true;
+        for(var p1_unit in p1_units){
+            if(distance(
+              p0_units[unit][0],
+              p0_units[unit][1],
+              p1_units[p1_unit][0],
+              p1_units[p1_unit][1]
+            ) < 240){
+                p0_units[unit][5] = 75;
+                bullets.push([
+                  p0_units[unit][0],// X
+                  p0_units[unit][1],// Y
+                  p1_units[p1_unit][0],// destination X
+                  p1_units[p1_unit][1],// destination Y
+                  0,// Player
+                ]);
+                check_for_buildings = false;
+                break;
             }
+        }
 
-            // If no units in range, look for buildings to fire at.
-            if(check_for_buildings){
-                for(var building in p1_buildings){
-                    if(distance(
-                      p0_units[unit][0],
-                      p0_units[unit][1],
-                      p1_buildings[building][0] + 50,
-                      p1_buildings[building][1] + 50
-                    ) < 240){
-                        p0_units[unit][5] = 75;
-                        bullets.push([
-                          p0_units[unit][0],// X
-                          p0_units[unit][1],// Y
-                          p1_buildings[building][0] + 50,// Destination X
-                          p1_buildings[building][1] + 50,// Destination Y
-                          0// Player
-                        ]);
-                        break;
-                    }
-                }
+        // If not checking for buildings, continue;
+        if(!check_for_buildings){
+            continue;
+        }
+
+        for(var building in p1_buildings){
+            if(distance(
+              p0_units[unit][0],
+              p0_units[unit][1],
+              p1_buildings[building][0] + 50,
+              p1_buildings[building][1] + 50
+            ) < 240){
+                p0_units[unit][5] = 75;
+                bullets.push([
+                  p0_units[unit][0],// X
+                  p0_units[unit][1],// Y
+                  p1_buildings[building][0] + 50,// Destination X
+                  p1_buildings[building][1] + 50,// Destination Y
+                  0,// Player
+                ]);
+                break;
             }
         }
     }
@@ -1056,8 +1051,8 @@ function resize(){
     x = width / 2;
 }
 
+// Save settings into window.localStorage if they differ from default.
 function save(){
-    // Save audio-volume setting.
     if(document.getElementById('audio-volume').value === 1){
         window.localStorage.removeItem('RTS-2D.htm-audio-volume');
         settings['audio-volume'] = 1;
@@ -1070,7 +1065,6 @@ function save(){
         );
     }
 
-    // Save camera-keys setting.
     if(document.getElementById('camera-keys').value == 'WASD'){
         window.localStorage.removeItem('RTS-2D.htm-camera-keys');
         settings['camera-keys'] = 'WASD';
@@ -1083,7 +1077,6 @@ function save(){
         );
     }
 
-    // Save fog-of-war setting.
     if(document.getElementById('fog-of-war').checked){
         window.localStorage.removeItem('RTS-2D.htm-fog-of-war');
         settings['fog-of-war'] = true;
@@ -1096,12 +1089,10 @@ function save(){
         );
     }
 
-    // Save level-size setting.
     if(document.getElementById('level-size').value == 1600
       || isNaN(document.getElementById('level-size').value)
       || document.getElementById('level-size').value < 200){
         window.localStorage.removeItem('RTS-2D.htm-level-size');
-        document.getElementById('level-size').value = 1600;
         settings['level-size'] = 1600;
 
     }else{
@@ -1112,12 +1103,10 @@ function save(){
         );
     }
 
-    // Save ms-per-frame setting.
     if(document.getElementById('ms-per-frame').value == 25
       || isNaN(document.getElementById('ms-per-frame').value)
       || document.getElementById('ms-per-frame').value < 1){
         window.localStorage.removeItem('RTS-2D.htm-ms-per-frame');
-        document.getElementById('ms-per-frame').value = 25;
         settings['ms-per-frame'] = 25;
 
     }else{
@@ -1128,12 +1117,10 @@ function save(){
         );
     }
 
-    // Save scroll-speed setting.
     if(document.getElementById('scroll-speed').value == 10
       || isNaN(document.getElementById('scroll-speed').value)
       || document.getElementById('scroll-speed').value < 1){
         window.localStorage.removeItem('RTS-2D.htm-scroll-speed');
-        document.getElementById('scroll-speed').value = 10;
         settings['scroll-speed'] = 10;
 
     }else{
@@ -1201,11 +1188,11 @@ function setdestination(on_minimap){
             }
 
             p0_units[unit][3] = on_minimap
-              ? level_size_math * (mouse_x - 100)
+              ? math[0] * (mouse_x - 100)
               : mouse_x - x - camera_x;
 
             p0_units[unit][4] = on_minimap
-              ? level_size_math * (mouse_y - height + 100)
+              ? math[0] * (mouse_y - height + 100)
               : mouse_y - y - camera_y;
 
             validate_destination(unit);
@@ -1218,7 +1205,7 @@ function setdestination(on_minimap){
             }
 
             p0_buildings[building][6] = on_minimap
-              ? level_size_math * (mouse_x - 100)
+              ? math[0] * (mouse_x - 100)
               : mouse_x - x - camera_x;
 
             if(p0_buildings[building][6] > settings['level-size']){
@@ -1228,7 +1215,7 @@ function setdestination(on_minimap){
             }
 
             p0_buildings[building][7] = on_minimap
-              ? level_size_math * (mouse_y - height + 100)
+              ? math[0] * (mouse_y - height + 100)
               : mouse_y - y - camera_y;
 
             if(p0_buildings[building][7] > settings['level-size']){
@@ -1245,6 +1232,13 @@ function setmode(newmode){
     window.clearInterval(interval);
 
     bullets = [];
+    fog = [];
+    p0_buildings = [];
+    p0_units = [];
+    p1_buildings = [];
+    p1_units = [];
+    world_static = [];
+
     mode = newmode;
 
     // New game mode.
@@ -1256,7 +1250,13 @@ function setmode(newmode){
         key_right = false;
         key_up = false;
 
-        level_size_math = settings['level-size'] / 100;
+        // Precalculate stuff.
+        math = [
+          settings['level-size'] / 100,
+          15 / (settings['level-size'] / 200),
+          50 / (settings['level-size'] / 200),
+          120 / (settings['level-size'] / 200),
+        ];
 
         money = [
           1000,
@@ -1328,16 +1328,11 @@ function setmode(newmode){
           ],
         ];
 
-        // Remove all units.
-        p0_units = [];
-        p1_units = [];
-
         // Set camera position to HQ location.
         camera_x = -p0_buildings[0][0] - 50;
         camera_y = -p0_buildings[0][1] - 50;
 
         // Add fog of war, if settings allow it.
-        fog = [];
         if(settings['fog-of-war']){
             var temp_x = 0;
             var temp_y = 0;
@@ -1380,7 +1375,7 @@ function setmode(newmode){
         buffer = 0;
         canvas = 0;
 
-        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>RTS-2D.htm</b></div><hr><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
+        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
           + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
           + settings['audio-volume'] + '>Audio<br><label><input '
           + (settings['fog-of-war'] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
@@ -1391,14 +1386,14 @@ function setmode(newmode){
 }
 
 function validate_camera_move(mouse_x, mouse_y){
-    camera_x = -level_size_math * (mouse_x - 100);
+    camera_x = -math[0] * (mouse_x - 100);
     if(camera_x > settings['level-size']){
         camera_x = settings['level-size'];
     }else if(camera_x < -settings['level-size']){
         camera_x = -settings['level-size'];
     }
 
-    camera_y = -level_size_math * (mouse_y - height + 100);
+    camera_y = -math[0] * (mouse_y - height + 100);
     if(camera_y > settings['level-size']){
         camera_y = settings['level-size'];
     }else if(camera_y < -settings['level-size']){
@@ -1434,7 +1429,7 @@ var key_down = false;
 var key_left = false;
 var key_right = false;
 var key_up = false;
-var level_size_math = 0;
+var math = 0;
 var mode = 0;
 var money = [];
 var money_timer = 0;
@@ -1638,18 +1633,7 @@ window.onmousemove = function(e){
     }
 
     mouse_x = e.pageX;
-    if(mouse_x < 0){
-        mouse_x = 0;
-    }else if(mouse_x > width){
-        mouse_x = width;
-    }
-
     mouse_y = e.pageY;
-    if(mouse_y < 0){
-        mouse_y = 0;
-    }else if(mouse_y > height){
-        mouse_y = height;
-    }
 
     // Dragging after click was not on minimap.
     if(mouse_hold == 1){
