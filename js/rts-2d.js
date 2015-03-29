@@ -703,18 +703,20 @@ function logic(){
                   p1_units[unit][1],
                   p0_units[p0_unit][0],
                   p0_units[p0_unit][1]
-                ) < 240){
-                    p1_units[unit][4] = 75;
-                    bullets.push([
-                      p1_units[unit][0],// X
-                      p1_units[unit][1],// Y
-                      p0_units[p0_unit][0],// destination X
-                      p0_units[p0_unit][1],// destination Y
-                      1,// Player
-                    ]);
-                    check_for_buildings = false;
-                    break;
+                ) > 240){
+                    continue;
                 }
+
+                p1_units[unit][4] = 75;
+                bullets.push([
+                  p1_units[unit][0],// X
+                  p1_units[unit][1],// Y
+                  p0_units[p0_unit][0],// destination X
+                  p0_units[p0_unit][1],// destination Y
+                  1,// Player
+                ]);
+                check_for_buildings = false;
+                break;
             }
 
             // If no units in range, look for buildings to fire at.
@@ -725,17 +727,19 @@ function logic(){
                       p1_units[unit][1],
                       p0_buildings[building][0] + 50,
                       p0_buildings[building][1] + 50
-                    ) < 240){
-                        p1_units[unit][4] = 75;
-                        bullets.push([
-                          p1_units[unit][0],// X
-                          p1_units[unit][1],// Y
-                          p0_buildings[building][0] + 50,// Destination X
-                          p0_buildings[building][1] + 50,// Destination Y
-                          1,// Player
-                        ]);
-                        break;
+                    ) > 240){
+                        continue;
                     }
+
+                    p1_units[unit][4] = 75;
+                    bullets.push([
+                      p1_units[unit][0],// X
+                      p1_units[unit][1],// Y
+                      p0_buildings[building][0] + 50,// Destination X
+                      p0_buildings[building][1] + 50,// Destination Y
+                      1,// Player
+                    ]);
+                    break;
                 }
             }
         }
@@ -852,18 +856,20 @@ function logic(){
               p0_units[unit][1],
               p1_units[p1_unit][0],
               p1_units[p1_unit][1]
-            ) < 240){
-                p0_units[unit][5] = 75;
-                bullets.push([
-                  p0_units[unit][0],// X
-                  p0_units[unit][1],// Y
-                  p1_units[p1_unit][0],// destination X
-                  p1_units[p1_unit][1],// destination Y
-                  0,// Player
-                ]);
-                check_for_buildings = false;
-                break;
+            ) > 240){
+                continue;
             }
+
+            p0_units[unit][5] = 75;
+            bullets.push([
+              p0_units[unit][0],// X
+              p0_units[unit][1],// Y
+              p1_units[p1_unit][0],// destination X
+              p1_units[p1_unit][1],// destination Y
+              0,// Player
+            ]);
+            check_for_buildings = false;
+            break;
         }
 
         // If not checking for buildings, continue;
@@ -877,17 +883,19 @@ function logic(){
               p0_units[unit][1],
               p1_buildings[building][0] + 50,
               p1_buildings[building][1] + 50
-            ) < 240){
-                p0_units[unit][5] = 75;
-                bullets.push([
-                  p0_units[unit][0],// X
-                  p0_units[unit][1],// Y
-                  p1_buildings[building][0] + 50,// Destination X
-                  p1_buildings[building][1] + 50,// Destination Y
-                  0,// Player
-                ]);
-                break;
+            ) > 240){
+                continue;
             }
+
+            p0_units[unit][5] = 75;
+            bullets.push([
+              p0_units[unit][0],// X
+              p0_units[unit][1],// Y
+              p1_buildings[building][0] + 50,// Destination X
+              p1_buildings[building][1] + 50,// Destination Y
+              0,// Player
+            ]);
+            break;
         }
     }
 
