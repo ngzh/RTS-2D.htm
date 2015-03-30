@@ -5,19 +5,19 @@ function build_robot(){
 
     money[0] -= 100;
 
-    p0_units.push([
-      p0_buildings[selected_id][0] + p0_buildings[selected_id][2] / 2,// X
-      p0_buildings[selected_id][1] + p0_buildings[selected_id][3] / 2,// Y
-      false,// Selected?
-      p0_buildings[selected_id][6] != null
-        ? p0_buildings[selected_id][6]
-        : p0_buildings[0][0],// Destination X
-      p0_buildings[selected_id][7] != null
-        ? p0_buildings[selected_id][7]
-        : p0_buildings[0][1],// Destination Y
-      0,// Weapon reload
-      100,// Health
-    ]);
+    p0_units.push({
+      'destination-x': p0_buildings[selected_id]['destination-x'] != null
+        ? p0_buildings[selected_id]['destination-x']
+        : p0_buildings[0]['x'],
+      'destination-y': p0_buildings[selected_id]['destination-y'] != null
+        ? p0_buildings[selected_id]['destination-y']
+        : p0_buildings[0]['y'],
+      'health': 100,
+      'selected': false,
+      'weapon-reload': 0,
+      'x': p0_buildings[selected_id]['x'] + p0_buildings[selected_id]['width'] / 2,
+      'y': p0_buildings[selected_id]['y'] + p0_buildings[selected_id]['height'] / 2,
+    });
 }
 
 function distance(x0, y0, x1, y1){
@@ -63,25 +63,25 @@ function draw(){
 
     // Draw visible player 1 buildings.
     for(var building in p1_buildings){
-        if(p1_buildings[building][0] + p1_buildings[building][2] + offset_x <= 0
-          || p1_buildings[building][0] + offset_x >= width
-          || p1_buildings[building][1] + p1_buildings[building][3] + offset_y <= 0
-          || p1_buildings[building][1] + offset_y >= height){
+        if(p1_buildings[building]['x'] + p1_buildings[building]['width'] + offset_x <= 0
+          || p1_buildings[building]['x'] + offset_x >= width
+          || p1_buildings[building]['y'] + p1_buildings[building]['height'] + offset_y <= 0
+          || p1_buildings[building]['y'] + offset_y >= height){
             continue;
         }
 
         buffer.fillStyle = '#600';
         buffer.fillRect(
-          p1_buildings[building][0],
-          p1_buildings[building][1],
-          p1_buildings[building][2],
-          p1_buildings[building][3]
+          p1_buildings[building]['x'],
+          p1_buildings[building]['y'],
+          p1_buildings[building]['width'],
+          p1_buildings[building]['height']
         );
         buffer.fillStyle = '#0f0';
         buffer.fillRect(
-          p1_buildings[building][0],
-          p1_buildings[building][1] - 10,
-          p1_buildings[building][2] * (p1_buildings[building][4] / 1000),
+          p1_buildings[building]['x'],
+          p1_buildings[building]['y'] - 10,
+          p1_buildings[building]['width'] * (p1_buildings[building]['health'] / 1000),
           5
         );
 
@@ -90,36 +90,36 @@ function draw(){
           [
             'HQ',
             'F',
-          ][p1_buildings[building][5] - 1],
-          p1_buildings[building][0] + 50,
-          p1_buildings[building][1] + 50
+          ][p1_buildings[building]['type'] - 1],
+          p1_buildings[building]['x'] + 50,
+          p1_buildings[building]['y'] + 50
         );
     }
 
     // Draw visible player 0 buildings.
     buffer.strokeStyle = '#ddd';
     for(building in p0_buildings){
-        if(p0_buildings[building][0] + p0_buildings[building][2] + offset_x <= 0
-          || p0_buildings[building][0] + offset_x >= width
-          || p0_buildings[building][1] + p0_buildings[building][3] + offset_y <= 0
-          || p0_buildings[building][1] + offset_y >= height){
+        if(p0_buildings[building]['x'] + p0_buildings[building]['width'] + offset_x <= 0
+          || p0_buildings[building]['x'] + offset_x >= width
+          || p0_buildings[building]['y'] + p0_buildings[building]['height'] + offset_y <= 0
+          || p0_buildings[building]['y'] + offset_y >= height){
             continue;
         }
 
-        buffer.fillStyle = p0_buildings[building][5]
+        buffer.fillStyle = p0_buildings[building]['selected']
           ? '#1f1'
           : '#060';
         buffer.fillRect(
-          p0_buildings[building][0],
-          p0_buildings[building][1],
-          p0_buildings[building][2],
-          p0_buildings[building][3]
+          p0_buildings[building]['x'],
+          p0_buildings[building]['y'],
+          p0_buildings[building]['width'],
+          p0_buildings[building]['height']
         );
         buffer.fillStyle = '#0f0';
         buffer.fillRect(
-          p0_buildings[building][0],
-          p0_buildings[building][1] - 10,
-          p0_buildings[building][2] * (p0_buildings[building][4] / 1000),
+          p0_buildings[building]['x'],
+          p0_buildings[building]['y'] - 10,
+          p0_buildings[building]['width'] * (p0_buildings[building]['health'] / 1000),
           5
         );
 
@@ -128,72 +128,68 @@ function draw(){
           [
             'HQ',
             'F',
-          ][p0_buildings[building][8] - 1],
-          p0_buildings[building][0] + 50,
-          p0_buildings[building][1] + 50
+          ][p0_buildings[building]['type'] - 1],
+          p0_buildings[building]['x'] + 50,
+          p0_buildings[building]['y'] + 50
         );
     }
 
     // Draw visible player 1 units.
     for(var unit in p1_units){
-        if(p1_units[unit][0] + 15 + x + camera_x <= 0
-          || p1_units[unit][0] - 15 + x + camera_x >= width
-          || p1_units[unit][1] + 15 + y + camera_y <= 0
-          || p1_units[unit][1] - 15 + y + camera_y >= height){
+        if(p1_units[unit]['x'] + 15 + x + camera_x <= 0
+          || p1_units[unit]['x'] - 15 + x + camera_x >= width
+          || p1_units[unit]['y'] + 15 + y + camera_y <= 0
+          || p1_units[unit]['y'] - 15 + y + camera_y >= height){
             continue;
         }
 
         buffer.fillStyle = '#b00';
         buffer.fillRect(
-          p1_units[unit][0] - 15,
-          p1_units[unit][1] - 15,
+          p1_units[unit]['x'] - 15,
+          p1_units[unit]['y'] - 15,
           30,
           30
         );
         buffer.fillStyle = '#0f0';
         buffer.fillRect(
-          p1_units[unit][0] - 15,
-          p1_units[unit][1] - 25,
-          30 * (p1_units[unit][5] / 100),
+          p1_units[unit]['x'] - 15,
+          p1_units[unit]['y'] - 25,
+          30 * (p1_units[unit]['health'] / 100),
           5
         );
     }
 
     // Draw visible player 0 units.
     for(unit in p0_units){
-        if(p0_units[unit][0] + 15 + x + camera_x <= 0
-          || p0_units[unit][0] - 15 + x + camera_x >= width
-          || p0_units[unit][1] + 15 + y + camera_y <= 0
-          || p0_units[unit][1] - 15 + y + camera_y >= height){
+        if(p0_units[unit]['x'] + 15 + x + camera_x <= 0
+          || p0_units[unit]['x'] - 15 + x + camera_x >= width
+          || p0_units[unit]['y'] + 15 + y + camera_y <= 0
+          || p0_units[unit]['y'] - 15 + y + camera_y >= height){
             continue;
         }
 
-        buffer.fillStyle = p0_units[unit][2] ? '#1f1' : '#0b0';
+        buffer.fillStyle = p0_units[unit]['selected'] ? '#1f1' : '#0b0';
         buffer.fillRect(
-          p0_units[unit][0] - 15,
-          p0_units[unit][1] - 15,
+          p0_units[unit]['x'] - 15,
+          p0_units[unit]['y'] - 15,
           30,
           30
         );
         buffer.fillStyle = '#0f0';
         buffer.fillRect(
-          p0_units[unit][0] - 15,
-          p0_units[unit][1] - 25,
-          30 * (p0_units[unit][6] / 100),
+          p0_units[unit]['x'] - 15,
+          p0_units[unit]['y'] - 25,
+          30 * (p0_units[unit]['health'] / 100),
           5
         );
     }
 
     // Draw bullets.
     for(var bullet in bullets){
-        // Set bullet color to team color.
-        buffer.fillStyle = bullets[bullet][4]
-          ? '#f00'
-          : '#0f0';
-
+        buffer.fillStyle = bullets[bullet]['color'];
         buffer.fillRect(
-          Math.round(bullets[bullet][0]) - 5,
-          Math.round(bullets[bullet][1]) - 5,
+          Math.round(bullets[bullet]['x']) - 5,
+          Math.round(bullets[bullet]['y']) - 5,
           10,
           10
         );
@@ -203,8 +199,8 @@ function draw(){
     buffer.fillStyle = '#000';
     for(var id in fog){
         buffer.fillRect(
-          -settings['level-size'] + fog[id][0],
-          -settings['level-size'] + fog[id][1],
+          -settings['level-size'] + fog[id]['x'],
+          -settings['level-size'] + fog[id]['y'],
           100,
           100
         );
@@ -212,19 +208,19 @@ function draw(){
 
     // Draw selected building destination.
     for(building in p0_buildings){
-        if(!p0_buildings[building][5]
-          || p0_buildings[building][6] == null){
+        if(!p0_buildings[building]['selected']
+          || p0_buildings[building]['destination-x'] == null){
             continue;
         }
 
         buffer.beginPath();
         buffer.moveTo(
-          p0_buildings[building][0] + p0_buildings[building][2] / 2,
-          p0_buildings[building][1] + p0_buildings[building][2] / 2
+          p0_buildings[building]['x'] + p0_buildings[building]['width'] / 2,
+          p0_buildings[building]['y'] + p0_buildings[building]['height'] / 2
         );
         buffer.lineTo(
-          p0_buildings[building][6],
-          p0_buildings[building][7]
+          p0_buildings[building]['destination-x'],
+          p0_buildings[building]['destination-y']
         );
         buffer.closePath();
         buffer.stroke();
@@ -232,20 +228,20 @@ function draw(){
 
     // Draw selected unit destinations and range.
     for(unit in p0_units){
-        if(!p0_units[unit][2]){
+        if(!p0_units[unit]['selected']){
             continue;
         }
 
-        if(p0_units[unit][0] != p0_units[unit][3]
-          || p0_units[unit][1] != p0_units[unit][4]){
+        if(p0_units[unit]['x'] != p0_units[unit]['destination-x']
+          || p0_units[unit]['y'] != p0_units[unit]['destination-y']){
             buffer.beginPath();
             buffer.moveTo(
-              p0_units[unit][0],
-              p0_units[unit][1]
+              p0_units[unit]['x'],
+              p0_units[unit]['y']
             );
             buffer.lineTo(
-              p0_units[unit][3],
-              p0_units[unit][4]
+              p0_units[unit]['destination-x'],
+              p0_units[unit]['destination-y']
             );
             buffer.closePath();
             buffer.stroke();
@@ -253,8 +249,8 @@ function draw(){
 
         buffer.beginPath();
         buffer.arc(
-          p0_units[unit][0],
-          p0_units[unit][1],
+          p0_units[unit]['x'],
+          p0_units[unit]['y'],
           240,
           0,
           pi_times_two,
@@ -384,8 +380,8 @@ function draw(){
     buffer.fillStyle = '#600';
     for(building in p1_buildings){
         buffer.fillRect(
-          100 + p1_buildings[building][0] / math[0],
-          height - 100 + p1_buildings[building][1] / math[0],
+          100 + p1_buildings[building]['x'] / math[0],
+          height - 100 + p1_buildings[building]['y'] / math[0],
           math[2],
           math[2]
         );
@@ -393,10 +389,10 @@ function draw(){
 
     // Draw player 0 buildings on minimap.
     for(building in p0_buildings){
-        buffer.fillStyle = p0_buildings[building][5] ? '#1f1' : '#060';
+        buffer.fillStyle = p0_buildings[building]['selected'] ? '#1f1' : '#060';
         buffer.fillRect(
-          100 + p0_buildings[building][0] / math[0],
-          height - 100 + p0_buildings[building][1] / math[0],
+          100 + p0_buildings[building]['x'] / math[0],
+          height - 100 + p0_buildings[building]['y'] / math[0],
           math[2],
           math[2]
         );
@@ -406,8 +402,8 @@ function draw(){
     buffer.fillStyle = '#b00';
     for(unit in p1_units){
         buffer.fillRect(
-          100 + (p1_units[unit][0] - 15) / math[0],
-          height - 100 + (p1_units[unit][1] - 15) / math[0],
+          100 + (p1_units[unit]['x'] - 15) / math[0],
+          height - 100 + (p1_units[unit]['y'] - 15) / math[0],
           math[1],
           math[1]
         );
@@ -415,10 +411,10 @@ function draw(){
 
     // Draw player 0 units on minimap.
     for(unit in p0_units){
-        buffer.fillStyle = p0_units[unit][2] ? '#1f1' : '#0b0';
+        buffer.fillStyle = p0_units[unit]['selected'] ? '#1f1' : '#0b0';
         buffer.fillRect(
-          100 + (p0_units[unit][0] - 15) / math[0],
-          height - 100 + (p0_units[unit][1] - 15) / math[0],
+          100 + (p0_units[unit]['x'] - 15) / math[0],
+          height - 100 + (p0_units[unit]['y'] - 15) / math[0],
           math[1],
           math[1]
         );
@@ -428,8 +424,8 @@ function draw(){
     buffer.fillStyle = '#000';
     for(id in fog){
         buffer.fillRect(
-          fog[id][0] / math[0],
-          height - 200 + fog[id][1] / math[0],
+          fog[id]['x'] / math[0],
+          height - 200 + fog[id]['y'] / math[0],
           math[2],
           math[2]
         );
@@ -438,42 +434,41 @@ function draw(){
     // Draw building destination on minimap.
     for(building in p0_buildings){
         // Only draw if building is selected.
-        if(!p0_buildings[building][5]
-          || p0_buildings[building][6] == null){
+        if(!p0_buildings[building]['selected']
+          || p0_buildings[building]['destination-x'] == null){
             continue;
         }
 
         buffer.beginPath();
         buffer.moveTo(
-          100 + (p0_buildings[building][0] + p0_buildings[building][2] / 2) / math[0],
-          height - 100 + (p0_buildings[building][1] + p0_buildings[building][3] / 2) / math[0]
+          100 + (p0_buildings[building]['x'] + p0_buildings[building]['width'] / 2) / math[0],
+          height - 100 + (p0_buildings[building]['y'] + p0_buildings[building]['height'] / 2) / math[0]
         );
         buffer.lineTo(
-          100 + p0_buildings[building][6] / math[0],
-          height - 100 + p0_buildings[building][7] / math[0]
+          100 + p0_buildings[building]['destination-x'] / math[0],
+          height - 100 + p0_buildings[building]['destination-y'] / math[0]
         );
         buffer.closePath();
         buffer.stroke();
     }
 
-    // Draw unit destination and range on minimap.
+    // Draw selected unit destination and range on minimap.
     for(unit in p0_units){
-        // Only draw if unit is selected.
-        if(!p0_units[unit][2]){
+        if(!p0_units[unit]['selected']){
             continue;
         }
 
         // Draw destination if the unit has one.
-        if(p0_units[unit][0] != p0_units[unit][3]
-          || p0_units[unit][1] != p0_units[unit][4]){
+        if(p0_units[unit]['x'] != p0_units[unit]['destination-x']
+          || p0_units[unit]['y'] != p0_units[unit]['destination-y']){
             buffer.beginPath();
             buffer.moveTo(
-              100 + p0_units[unit][0] / math[0],
-              height - 100 + p0_units[unit][1] / math[0]
+              100 + p0_units[unit]['x'] / math[0],
+              height - 100 + p0_units[unit]['y'] / math[0]
             );
             buffer.lineTo(
-              100 + p0_units[unit][3] / math[0],
-              height - 100 + p0_units[unit][4] / math[0]
+              100 + p0_units[unit]['destination-x'] / math[0],
+              height - 100 + p0_units[unit]['destination-y'] / math[0]
             );
             buffer.closePath();
             buffer.stroke();
@@ -482,8 +477,8 @@ function draw(){
         // Draw range circle.
         buffer.beginPath();
         buffer.arc(
-          100 + p0_units[unit][0] / math[0],
-          height - 100 + p0_units[unit][1] / math[0],
+          100 + p0_units[unit]['x'] / math[0],
+          height - 100 + p0_units[unit]['y'] / math[0],
           math[3],
           0,
           pi_times_two,
@@ -614,13 +609,13 @@ function draw(){
 
 function fog_update_building(){
     for(var building in p0_buildings){
-        // Check if each fog unit is within 390px of a building.
+        // Check if fog is within 390px of a building.
         for(var id in fog){
             if(distance(
-              p0_buildings[building][0],
-              p0_buildings[building][1],
-              fog[id][0] - settings['level-size'],
-              fog[id][1] - settings['level-size']
+              p0_buildings[building]['x'],
+              p0_buildings[building]['y'],
+              fog[id]['x'] - settings['level-size'],
+              fog[id]['y'] - settings['level-size']
             ) < 390){
                 delete fog[id];
             }
@@ -679,42 +674,43 @@ function logic(){
     if(p1_buildings.length > 1
       && money[1] >= 100){
         money[1] -= 100;
-        p1_units.push([
-          p1_buildings[1][0] + p1_buildings[1][2] / 2,// X
-          p1_buildings[1][1] + p1_buildings[1][3] / 2,// Y
-          Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination X
-          Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],// Destination Y
-          0,// Weapon reload
-          100,// Health
-        ]);
+        p1_units.push({
+          'destination-x': Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
+          'destination-y': Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
+          'health': 100,
+          'weapon-reload': 0,
+          'x': p1_buildings[1]['x'] + p1_buildings[1]['width'] / 2,
+          'y': p1_buildings[1]['y'] + p1_buildings[1]['height'] / 2,
+        });
     }
 
     for(var unit in p1_units){
         // If reloading, decrease reload,...
-        if(p1_units[unit][4] > 0){
-            p1_units[unit][4] -= 1;
+        if(p1_units[unit]['weapon-reload'] > 0){
+            p1_units[unit]['weapon-reload'] -= 1;
 
         // ...else look for nearby p0 units to fire at.
         }else{
             var check_for_buildings = true;
             for(var p0_unit in p0_units){
                 if(distance(
-                  p1_units[unit][0],
-                  p1_units[unit][1],
-                  p0_units[p0_unit][0],
-                  p0_units[p0_unit][1]
+                  p1_units[unit]['x'],
+                  p1_units[unit]['y'],
+                  p0_units[p0_unit]['x'],
+                  p0_units[p0_unit]['y']
                 ) > 240){
                     continue;
                 }
 
-                p1_units[unit][4] = 75;
-                bullets.push([
-                  p1_units[unit][0],// X
-                  p1_units[unit][1],// Y
-                  p0_units[p0_unit][0],// destination X
-                  p0_units[p0_unit][1],// destination Y
-                  1,// Player
-                ]);
+                p1_units[unit]['weapon-reload'] = 75;
+                bullets.push({
+                  'color': '#f66',
+                  'destination-x': p0_units[p0_unit]['x'],
+                  'destination-y': p0_units[p0_unit]['y'],
+                  'player': 1,
+                  'x': p1_units[unit]['x'],
+                  'y': p1_units[unit]['y'],
+                });
                 check_for_buildings = false;
                 break;
             }
@@ -723,85 +719,86 @@ function logic(){
             if(check_for_buildings){
                 for(var building in p0_buildings){
                     if(distance(
-                      p1_units[unit][0],
-                      p1_units[unit][1],
-                      p0_buildings[building][0] + 50,
-                      p0_buildings[building][1] + 50
+                      p1_units[unit]['x'],
+                      p1_units[unit]['y'],
+                      p0_buildings[building]['x'] + 50,
+                      p0_buildings[building]['y'] + 50
                     ) > 240){
                         continue;
                     }
 
-                    p1_units[unit][4] = 75;
-                    bullets.push([
-                      p1_units[unit][0],// X
-                      p1_units[unit][1],// Y
-                      p0_buildings[building][0] + 50,// Destination X
-                      p0_buildings[building][1] + 50,// Destination Y
-                      1,// Player
-                    ]);
+                    p1_units[unit]['weapon-reload'] = 75;
+                    bullets.push({
+                      'color': '#f66',
+                      'destination-x': p0_buildings[building]['x'] + 50,
+                      'destination-y': p0_buildings[building]['y'] + 50,
+                      'player': 1,
+                      'x': p1_units[unit]['x'],
+                      'y': p1_units[unit]['y'],
+                    });
                     break;
                 }
             }
         }
 
         // Movement "AI", pick new destination once destination is reached.
-        if(p1_units[unit][0] != p1_units[unit][2]
-          || p1_units[unit][1] != p1_units[unit][3]){
+        if(p1_units[unit]['x'] != p1_units[unit]['destination-x']
+          || p1_units[unit]['y'] != p1_units[unit]['destination-y']){
             var j = m(
-              p1_units[unit][0],
-              p1_units[unit][1],
-              p1_units[unit][2],
-              p1_units[unit][3]
+              p1_units[unit]['x'],
+              p1_units[unit]['y'],
+              p1_units[unit]['destination-x'],
+              p1_units[unit]['destination-y']
             );
 
-            if(p1_units[unit][0] != p1_units[unit][2]){
-                p1_units[unit][0] += 
-                  (p1_units[unit][0] > p1_units[unit][2]
+            if(p1_units[unit]['x'] != p1_units[unit]['destination-x']){
+                p1_units[unit]['x'] += 
+                  (p1_units[unit]['x'] > p1_units[unit]['destination-x']
                     ? -j[0]
                     : j[0]
                   ) * .7;
             }
 
-            if(p1_units[unit][1] != p1_units[unit][3]){
-                p1_units[unit][1] +=
-                  (p1_units[unit][1] > p1_units[unit][3]
+            if(p1_units[unit]['y'] != p1_units[unit]['destination-y']){
+                p1_units[unit]['y'] +=
+                  (p1_units[unit]['y'] > p1_units[unit]['destination-y']
                     ? -j[1]
                     : j[1]
                   ) * .7;
             }
 
-            if(p1_units[unit][0] > p1_units[unit][2] - 5
-              && p1_units[unit][0] < p1_units[unit][2] + 5
-              && p1_units[unit][1] > p1_units[unit][3] - 5
-              && p1_units[unit][1] < p1_units[unit][3] + 5){
-                p1_units[unit][2] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
-                p1_units[unit][3] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
+            if(p1_units[unit]['x'] > p1_units[unit]['destination-x'] - 5
+              && p1_units[unit]['x'] < p1_units[unit]['destination-x'] + 5
+              && p1_units[unit]['y'] > p1_units[unit]['destination-y'] - 5
+              && p1_units[unit]['y'] < p1_units[unit]['destination-y'] + 5){
+                p1_units[unit]['destination-x'] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
+                p1_units[unit]['destination-y'] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
             }
         }
     }
 
     for(unit in p0_units){
         // If not yet reached destination, move and update fog.
-        if(Math.abs(p0_units[unit][0] - p0_units[unit][3]) > 1
-          && Math.abs(p0_units[unit][1] - p0_units[unit][4]) > 1){
+        if(Math.abs(p0_units[unit]['x'] - p0_units[unit]['destination-x']) > 1
+          && Math.abs(p0_units[unit]['y'] - p0_units[unit]['destination-y']) > 1){
             var j = m(
-              p0_units[unit][0],
-              p0_units[unit][1],
-              p0_units[unit][3],
-              p0_units[unit][4]
+              p0_units[unit]['x'],
+              p0_units[unit]['y'],
+              p0_units[unit]['destination-x'],
+              p0_units[unit]['destination-y']
             );
 
-            if(p0_units[unit][0] != p0_units[unit][3]){
-                p0_units[unit][0] +=
-                  (p0_units[unit][0] > p0_units[unit][3]
+            if(p0_units[unit]['x'] != p0_units[unit]['destination-x']){
+                p0_units[unit]['x'] +=
+                  (p0_units[unit]['x'] > p0_units[unit]['destination-x']
                     ? -j[0]
                     : j[0]
                   ) * .7;
             }
 
-            if(p0_units[unit][1] != p0_units[unit][4]){
-                p0_units[unit][1] +=
-                  (p0_units[unit][1] > p0_units[unit][4] 
+            if(p0_units[unit]['y'] != p0_units[unit]['destination-y']){
+                p0_units[unit]['y'] +=
+                  (p0_units[unit]['y'] > p0_units[unit]['destination-y'] 
                     ? -j[1]
                     : j[1]
                   ) * .7;
@@ -809,10 +806,10 @@ function logic(){
 
             for(var id in fog){
                 if(distance(
-                  p0_units[unit][0],
-                  p0_units[unit][1],
-                  fog[id][0] - settings['level-size'] + 50,
-                  fog[id][1] - settings['level-size'] + 50
+                  p0_units[unit]['x'],
+                  p0_units[unit]['y'],
+                  fog[id]['x'] - settings['level-size'] + 50,
+                  fog[id]['y'] - settings['level-size'] + 50
                 ) < 290){
                     delete fog[id];
                 }
@@ -826,14 +823,14 @@ function logic(){
                 }
 
                 if(distance(
-                  p0_units[unit][0],
-                  p0_units[unit][1],
-                  p0_units[other_unit][0],
-                  p0_units[other_unit][1]
+                  p0_units[unit]['x'],
+                  p0_units[unit]['y'],
+                  p0_units[other_unit]['x'],
+                  p0_units[other_unit]['y']
                 ) < 20){
-                    p0_units[unit][3] = p0_units[unit][0]
+                    p0_units[unit]['destination-x'] = p0_units[unit]['x']
                       + Math.floor(Math.random() * 40) - 20;
-                    p0_units[unit][4] = p0_units[unit][1]
+                    p0_units[unit]['destination-y'] = p0_units[unit]['y']
                       + Math.floor(Math.random() * 40) - 20;
 
                     validate_destination(unit);
@@ -844,30 +841,31 @@ function logic(){
         }
 
         // If reloading, decrease reload,...
-        if(p0_units[unit][5] > 0){
-            p0_units[unit][5] -= 1;
+        if(p0_units[unit]['weapon-reload'] > 0){
+            p0_units[unit]['weapon-reload'] -= 1;
             continue;
         }
 
         var check_for_buildings = true;
         for(var p1_unit in p1_units){
             if(distance(
-              p0_units[unit][0],
-              p0_units[unit][1],
-              p1_units[p1_unit][0],
-              p1_units[p1_unit][1]
+              p0_units[unit]['x'],
+              p0_units[unit]['y'],
+              p1_units[p1_unit]['x'],
+              p1_units[p1_unit]['y']
             ) > 240){
                 continue;
             }
 
-            p0_units[unit][5] = 75;
-            bullets.push([
-              p0_units[unit][0],// X
-              p0_units[unit][1],// Y
-              p1_units[p1_unit][0],// destination X
-              p1_units[p1_unit][1],// destination Y
-              0,// Player
-            ]);
+            p0_units[unit]['weapon-reload'] = 75;
+            bullets.push({
+              'color': '#090',
+              'destination-x': p1_units[p1_unit]['x'],
+              'destination-y': p1_units[p1_unit]['y'],
+              'player': 0,
+              'x': p0_units[unit]['x'],
+              'y': p0_units[unit]['y'],
+            });
             check_for_buildings = false;
             break;
         }
@@ -879,22 +877,23 @@ function logic(){
 
         for(var building in p1_buildings){
             if(distance(
-              p0_units[unit][0],
-              p0_units[unit][1],
-              p1_buildings[building][0] + 50,
-              p1_buildings[building][1] + 50
+              p0_units[unit]['x'],
+              p0_units[unit]['y'],
+              p1_buildings[building]['x'] + 50,
+              p1_buildings[building]['y'] + 50
             ) > 240){
                 continue;
             }
 
-            p0_units[unit][5] = 75;
-            bullets.push([
-              p0_units[unit][0],// X
-              p0_units[unit][1],// Y
-              p1_buildings[building][0] + 50,// Destination X
-              p1_buildings[building][1] + 50,// Destination Y
-              0,// Player
-            ]);
+            p0_units[unit]['weapon-reload'] = 75;
+            bullets.push({
+              'color': '#090',
+              'destination-x': p1_buildings[building]['x'] + 50,
+              'destination-y': p1_buildings[building]['y'] + 50,
+              'player': 0,
+              'x': p0_units[unit]['x'],
+              'y': p0_units[unit]['y'],
+            });
             break;
         }
     }
@@ -902,51 +901,51 @@ function logic(){
     for(var bullet in bullets){
         // Calculate bullet movement.
         var j = m(
-          bullets[bullet][0],
-          bullets[bullet][1],
-          bullets[bullet][2],
-          bullets[bullet][3]
+          bullets[bullet]['x'],
+          bullets[bullet]['y'],
+          bullets[bullet]['destination-x'],
+          bullets[bullet]['destination-y']
         );
 
         // Move bullet x.
-        if(bullets[bullet][0] != bullets[bullet][2]){
-            bullets[bullet][0] +=
+        if(bullets[bullet]['x'] != bullets[bullet]['destination-x']){
+            bullets[bullet]['x'] +=
               10
-              * (bullets[bullet][0] > bullets[bullet][2]
+              * (bullets[bullet]['x'] > bullets[bullet]['destination-x']
                 ? -j[0]
                 : j[0]
               );
         }
 
         // Move bullet y.
-        if(bullets[bullet][1] != bullets[bullet][3]){
-            bullets[bullet][1] +=
+        if(bullets[bullet]['y'] != bullets[bullet]['destination-y']){
+            bullets[bullet]['y'] +=
               10
-              * (bullets[bullet][1] > bullets[bullet][3]
+              * (bullets[bullet]['y'] > bullets[bullet]['destination-y']
                 ? -j[1]
                 : j[1]
               );
         }
 
         // If bullet reaches destination, check for collisions.
-        if(bullets[bullet][0] <= bullets[bullet][2] - 10
-          || bullets[bullet][0] >= bullets[bullet][2] + 10
-          || bullets[bullet][1] <= bullets[bullet][3] - 10
-          || bullets[bullet][1] >= bullets[bullet][3] + 10){
+        if(bullets[bullet]['x'] <= bullets[bullet]['destination-x'] - 10
+          || bullets[bullet]['x'] >= bullets[bullet]['destination-x'] + 10
+          || bullets[bullet]['y'] <= bullets[bullet]['destination-y'] - 10
+          || bullets[bullet]['y'] >= bullets[bullet]['destination-y'] + 10){
             continue;
         }
 
-        if(bullets[bullet][4]){
+        if(bullets[bullet]['player'] == 0){
             for(var unit in p0_units){
-                if(bullets[bullet][0] <= p0_units[unit][0] - 15
-                  || bullets[bullet][0] >= p0_units[unit][0] + 15
-                  || bullets[bullet][1] <= p0_units[unit][1] - 15
-                  || bullets[bullet][1] >= p0_units[unit][1] + 15){
+                if(bullets[bullet]['x'] <= p0_units[unit]['x'] - 15
+                  || bullets[bullet]['x'] >= p0_units[unit]['x'] + 15
+                  || bullets[bullet]['y'] <= p0_units[unit]['y'] - 15
+                  || bullets[bullet]['y'] >= p0_units[unit]['y'] + 15){
                     continue;
                 }
 
-                p0_units[unit][6] -= 25;
-                if(p0_units[unit][6] <= 0){
+                p0_units[unit]['health'] -= 25;
+                if(p0_units[unit]['health'] <= 0){
                     delete p0_units[unit];
                 }
 
@@ -954,15 +953,15 @@ function logic(){
             }
 
             for(var building in p0_buildings){
-                if(bullets[bullet][0] <= p0_buildings[building][0]
-                  || bullets[bullet][0] >= p0_buildings[building][0] + 100
-                  || bullets[bullet][1] <= p0_buildings[building][1]
-                  || bullets[bullet][1] >= p0_buildings[building][1] + 100){
+                if(bullets[bullet]['x'] <= p0_buildings[building]['x']
+                  || bullets[bullet]['x'] >= p0_buildings[building]['x'] + 100
+                  || bullets[bullet]['y'] <= p0_buildings[building]['y']
+                  || bullets[bullet]['y'] >= p0_buildings[building]['y'] + 100){
                     continue;
                 }
 
-                p0_buildings[building][4] -= 25;
-                if(p0_buildings[building][4] <= 0){
+                p0_buildings[building]['health'] -= 25;
+                if(p0_buildings[building]['health'] <= 0){
                     delete p0_buildings[building];
                 }
 
@@ -971,15 +970,15 @@ function logic(){
 
         }else{
             for(var unit in p1_units){
-                if(bullets[bullet][0] <= p1_units[unit][0] - 15
-                  || bullets[bullet][0] >= p1_units[unit][0] + 15
-                  || bullets[bullet][1] <= p1_units[unit][1] - 15
-                  || bullets[bullet][1] >= p1_units[unit][1] + 15){
+                if(bullets[bullet]['x'] <= p1_units[unit]['x'] - 15
+                  || bullets[bullet]['x'] >= p1_units[unit]['x'] + 15
+                  || bullets[bullet]['y'] <= p1_units[unit]['y'] - 15
+                  || bullets[bullet]['y'] >= p1_units[unit]['y'] + 15){
                     continue;
                 }
 
-                p1_units[unit][5] -= 25;
-                if(p1_units[unit][5] <= 0){
+                p1_units[unit]['health'] -= 25;
+                if(p1_units[unit]['health'] <= 0){
                     delete p1_units[unit];
                 }
 
@@ -987,15 +986,15 @@ function logic(){
             }
 
             for(var building in p1_buildings){
-                if(bullets[bullet][0] <= p1_buildings[building][0]
-                  || bullets[bullet][0] >= p1_buildings[building][0] + 100
-                  || bullets[bullet][1] <= p1_buildings[building][1]
-                  || bullets[bullet][1] >= p1_buildings[building][1] + 100){
+                if(bullets[bullet]['x'] <= p1_buildings[building]['x']
+                  || bullets[bullet]['x'] >= p1_buildings[building]['x'] + 100
+                  || bullets[bullet]['y'] <= p1_buildings[building]['y']
+                  || bullets[bullet]['y'] >= p1_buildings[building]['y'] + 100){
                     continue;
                 }
 
-                p1_buildings[building][4] -= 25;
-                if(p1_buildings[building][4] <= 0){
+                p1_buildings[building]['health'] -= 25;
+                if(p1_buildings[building]['health'] <= 0){
                     delete p1_buildings[building];
                 }
 
@@ -1145,19 +1144,19 @@ function select(){
     selected_type = -1;
 
     for(var unit in p0_units){
-        p0_units[unit][2] = (
-            (mouse_lock_x < x + p0_units[unit][0] + camera_x + 15
-              && mouse_x > x + p0_units[unit][0] + camera_x - 15)
-            || (mouse_lock_x > x + p0_units[unit][0] + camera_x - 15
-              && mouse_x < x + p0_units[unit][0] + camera_x + 15)
+        p0_units[unit]['selected'] = (
+            (mouse_lock_x < x + p0_units[unit]['x'] + camera_x + 15
+              && mouse_x > x + p0_units[unit]['x'] + camera_x - 15)
+            || (mouse_lock_x > x + p0_units[unit]['x'] + camera_x - 15
+              && mouse_x < x + p0_units[unit]['x'] + camera_x + 15)
           ) && (
-            (mouse_lock_y < y + p0_units[unit][1] + camera_y + 15
-              && mouse_y > y + p0_units[unit][1] + camera_y - 15)
-            || (mouse_lock_y > y + p0_units[unit][1] + camera_y - 15
-              && mouse_y < y + p0_units[unit][1] + camera_y + 15)
+            (mouse_lock_y < y + p0_units[unit]['y'] + camera_y + 15
+              && mouse_y > y + p0_units[unit]['y'] + camera_y - 15)
+            || (mouse_lock_y > y + p0_units[unit]['y'] + camera_y - 15
+              && mouse_y < y + p0_units[unit]['y'] + camera_y + 15)
           );
 
-        if(p0_units[unit][2]){
+        if(p0_units[unit]['selected']){
             selected_id = unit;
             selected_type = 0;
         }
@@ -1165,25 +1164,25 @@ function select(){
 
     for(var building in p0_buildings){
         if(selected_type != -1){
-            p0_buildings[building][5] = 0;
+            p0_buildings[building]['selected'] = 0;
             continue;
         }
 
-        p0_buildings[building][5] = (
-            (mouse_lock_x < x + p0_buildings[building][0] + camera_x + p0_buildings[building][2]
-              && mouse_x > x + p0_buildings[building][0] + camera_x)
-            || (mouse_lock_x > x + p0_buildings[building][0] + camera_x
-              && mouse_x < x + p0_buildings[building][0] + camera_x + p0_buildings[building][2])
+        p0_buildings[building]['selected'] = (
+            (mouse_lock_x < x + p0_buildings[building]['x'] + camera_x + p0_buildings[building]['width']
+              && mouse_x > x + p0_buildings[building]['x'] + camera_x)
+            || (mouse_lock_x > x + p0_buildings[building]['x'] + camera_x
+              && mouse_x < x + p0_buildings[building]['x'] + camera_x + p0_buildings[building]['width'])
           ) && (
-            (mouse_lock_y < y + p0_buildings[building][1] + camera_y + p0_buildings[building][3]
-              && mouse_y > y + p0_buildings[building][1] + camera_y)
-            || (mouse_lock_y > y + p0_buildings[building][1] + camera_y
-              && mouse_y < y + p0_buildings[building][1] + camera_y + p0_buildings[building][3])
+            (mouse_lock_y < y + p0_buildings[building]['y'] + camera_y + p0_buildings[building]['height']
+              && mouse_y > y + p0_buildings[building]['y'] + camera_y)
+            || (mouse_lock_y > y + p0_buildings[building]['y'] + camera_y
+              && mouse_y < y + p0_buildings[building]['y'] + camera_y + p0_buildings[building]['height'])
           );
 
-        if(p0_buildings[building][5]){
+        if(p0_buildings[building]['selected']){
             selected_id = building;
-            selected_type = p0_buildings[building][8];
+            selected_type = p0_buildings[building]['type'];
         }
     }
 }
@@ -1191,15 +1190,15 @@ function select(){
 function setdestination(on_minimap){
     if(selected_type == 0){
         for(var unit in p0_units){
-            if(!p0_units[unit][2]){
+            if(!p0_units[unit]['selected']){
                 continue;
             }
 
-            p0_units[unit][3] = on_minimap
+            p0_units[unit]['destination-x'] = on_minimap
               ? math[0] * (mouse_x - 100)
               : mouse_x - x - camera_x;
 
-            p0_units[unit][4] = on_minimap
+            p0_units[unit]['destination-y'] = on_minimap
               ? math[0] * (mouse_y - height + 100)
               : mouse_y - y - camera_y;
 
@@ -1208,28 +1207,28 @@ function setdestination(on_minimap){
 
     }else if(selected_type > 1){
         for(var building in p0_buildings){
-            if(!p0_buildings[building][5]){
+            if(!p0_buildings[building]['selected']){
                 continue;
             }
 
-            p0_buildings[building][6] = on_minimap
+            p0_buildings[building]['destination-x'] = on_minimap
               ? math[0] * (mouse_x - 100)
               : mouse_x - x - camera_x;
 
-            if(p0_buildings[building][6] > settings['level-size']){
-                p0_buildings[building][6] = settings['level-size'];
-            }else if(p0_buildings[building][6] < -settings['level-size']){
-                p0_buildings[building][6] = -settings['level-size'];
+            if(p0_buildings[building]['destination-x'] > settings['level-size']){
+                p0_buildings[building]['destination-x'] = settings['level-size'];
+            }else if(p0_buildings[building]['destination-x'] < -settings['level-size']){
+                p0_buildings[building]['destination-x'] = -settings['level-size'];
             }
 
-            p0_buildings[building][7] = on_minimap
+            p0_buildings[building]['destination-y'] = on_minimap
               ? math[0] * (mouse_y - height + 100)
               : mouse_y - y - camera_y;
 
-            if(p0_buildings[building][7] > settings['level-size']){
-                p0_buildings[building][7] = settings['level-size'];
-            }else if(p0_buildings[building][7] < -settings['level-size']){
-                p0_buildings[building][7] = -settings['level-size'];
+            if(p0_buildings[building]['destination-y'] > settings['level-size']){
+                p0_buildings[building]['destination-y'] = settings['level-size'];
+            }else if(p0_buildings[building]['destination-y'] < -settings['level-size']){
+                p0_buildings[building]['destination-y'] = -settings['level-size'];
             }
         }
     }
@@ -1304,41 +1303,42 @@ function setmode(newmode){
 
         // Create player 0 HQ.
         p0_buildings = [
-          [
-            start_x ? -settings['level-size'] + 25 : settings['level-size'] - 125,// X
-            start_y ? settings['level-size'] - 125 : -settings['level-size'] + 25,// Y
-            100,// Width
-            100,// Height
-            1000,// Health
-            0,// Selected
-            start_x ? -settings['level-size'] + 75 : settings['level-size'] - 75,// Destination X
-            start_y ? settings['level-size'] - 75  : -settings['level-size'] + 75,// Destination Y
-            1,// Type
-          ],
+          {
+            'destination-x': start_x ? -settings['level-size'] + 75 : settings['level-size'] - 75,
+            'destination-y': start_y ? settings['level-size'] - 75  : -settings['level-size'] + 75,
+            'health': 1000,
+            'height': 100,
+            'selected': false,
+            'type': 1,
+            'width': 100,
+            'x': start_x ? -settings['level-size'] + 25 : settings['level-size'] - 125,
+            'y': start_y ? settings['level-size'] - 125 : -settings['level-size'] + 25,
+          },
         ];
 
         // Create player 1 HQ and Factory.
         p1_buildings = [
-          [
-            start_x ? settings['level-size'] - 125 : -settings['level-size'] + 25,// X
-            start_y ? -settings['level-size'] + 25 : settings['level-size'] -125,// Y
-            100,// Width
-            100,// Height
-            1000,// Health
-            1,// Type
-          ],[
-            start_x ? settings['level-size'] - 250 : -settings['level-size'] + 150,// X
-            start_y ? -settings['level-size'] + 25 : settings['level-size'] -125,// Y
-            100,// Width
-            100,// Height
-            1000,// Health
-            2,// Type
-          ],
+          {
+            'health': 1000,
+            'height': 100,
+            'type': 1,
+            'width': 100,
+            'x': start_x ? settings['level-size'] - 125 : -settings['level-size'] + 25,
+            'y': start_y ? -settings['level-size'] + 25 : settings['level-size'] -125,
+          },
+          {
+            'health': 1000,
+            'height': 100,
+            'type': 2,
+            'width': 100,
+            'x': start_x ? settings['level-size'] - 250 : -settings['level-size'] + 150,
+            'y': start_y ? -settings['level-size'] + 25 : settings['level-size'] -125,
+          },
         ];
 
         // Set camera position to HQ location.
-        camera_x = -p0_buildings[0][0] - 50;
-        camera_y = -p0_buildings[0][1] - 50;
+        camera_x = -p0_buildings[0]['x'] - 50;
+        camera_y = -p0_buildings[0]['y'] - 50;
 
         // Add fog of war, if settings allow it.
         if(settings['fog-of-war']){
@@ -1348,10 +1348,10 @@ function setmode(newmode){
 
             var loop_counter = Math.pow(times, 2) - 1;// True number of fog units to add.
             do{
-                fog.push([
-                  temp_x * 100,// Fog X
-                  temp_y,// Fog Y
-                ]);
+                fog.push({
+                  'x': temp_x * 100,
+                  'y': temp_y,
+                });
 
                 // Add next fog unit one fog unit space to the right.
                 temp_x += 1;
@@ -1410,16 +1410,16 @@ function validate_camera_move(mouse_x, mouse_y){
 }
 
 function validate_destination(unit_id){
-    if(p0_units[unit_id][3] > settings['level-size']){
-        p0_units[unit_id][3] = settings['level-size'];
-    }else if(p0_units[unit_id][3] < -settings['level-size']){
-        p0_units[unit_id][3] = -settings['level-size'];
+    if(p0_units[unit_id]['destination-x'] > settings['level-size']){
+        p0_units[unit_id]['destination-x'] = settings['level-size'];
+    }else if(p0_units[unit_id]['destination-x'] < -settings['level-size']){
+        p0_units[unit_id]['destination-x'] = -settings['level-size'];
     }
 
-    if(p0_units[unit_id][4] > settings['level-size']){
-        p0_units[unit_id][4] = settings['level-size'];
-    }else if(p0_units[unit_id][4] < -settings['level-size']){
-        p0_units[unit_id][4] = -settings['level-size'];
+    if(p0_units[unit_id]['destination-y'] > settings['level-size']){
+        p0_units[unit_id]['destination-y'] = settings['level-size'];
+    }else if(p0_units[unit_id]['destination-y'] < -settings['level-size']){
+        p0_units[unit_id]['destination-y'] = -settings['level-size'];
     }
 }
 
@@ -1578,19 +1578,17 @@ window.onmousedown = function(e){
                     building_y = -settings['level-size'];
                 }
 
-                p0_buildings.push(
-                  [
-                    building_x,
-                    building_y,
-                    100,// Width
-                    100,// Height
-                    1000,// Health
-                    false,// Selected
-                    building_x + 50,// Destination X
-                    building_y + 50,// Destination Y
-                    2,// Type
-                  ]
-                );
+                p0_buildings.push({
+                  'destination-x': building_x + 50,
+                  'destination-y': building_y + 50,
+                  'health': 1000,
+                  'height': 100,
+                  'selected': false,
+                  'type': 2,
+                  'width': 100,
+                  'x': building_x,
+                  'y': building_y,
+                });
 
                 // Remove fog around buildings.
                 fog_update_building();
