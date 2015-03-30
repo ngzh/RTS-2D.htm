@@ -1122,32 +1122,24 @@ function save(){
         );
     }
 
-    if(document.getElementById('ms-per-frame').value == 25
-      || isNaN(document.getElementById('ms-per-frame').value)
-      || document.getElementById('ms-per-frame').value < 1){
-        window.localStorage.removeItem('RTS-2D.htm-ms-per-frame');
-        settings['ms-per-frame'] = 25;
+    var ids = {
+      'ms-per-frame': 25,
+      'scroll-speed': 10,
+    };
+    for(var id in ids){
+        if(document.getElementById(id).value == ids[id]
+          || isNaN(document.getElementById(id).value)
+          || document.getElementById(id).value < 1){
+            window.localStorage.removeItem('RTS-2D.htm-' + id);
+            settings[id] = ids[id];
 
-    }else{
-        settings['ms-per-frame'] = parseInt(document.getElementById('ms-per-frame').value);
-        window.localStorage.setItem(
-          'RTS-2D.htm-ms-per-frame',
-          settings['ms-per-frame']
-        );
-    }
-
-    if(document.getElementById('scroll-speed').value == 10
-      || isNaN(document.getElementById('scroll-speed').value)
-      || document.getElementById('scroll-speed').value < 1){
-        window.localStorage.removeItem('RTS-2D.htm-scroll-speed');
-        settings['scroll-speed'] = 10;
-
-    }else{
-        settings['scroll-speed'] = parseInt(document.getElementById('scroll-speed').value);
-        window.localStorage.setItem(
-          'RTS-2D.htm-scroll-speed',
-          settings['scroll-speed']
-        );
+        }else{
+            settings[id] = parseInt(document.getElementById(id).value);
+            window.localStorage.setItem(
+              'RTS-2D.htm-' + id,
+              settings[id]
+            );
+        }
     }
 }
 
