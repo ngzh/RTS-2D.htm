@@ -15,8 +15,10 @@ function build_robot(){
       'health': 100,
       'selected': false,
       'weapon-reload': 0,
-      'x': players[0]['buildings'][selected_id]['x'] + players[0]['buildings'][selected_id]['width'] / 2,
-      'y': players[0]['buildings'][selected_id]['y'] + players[0]['buildings'][selected_id]['height'] / 2,
+      'x': players[0]['buildings'][selected_id]['x']
+        + players[0]['buildings'][selected_id]['width'] / 2,
+      'y': players[0]['buildings'][selected_id]['y']
+        + players[0]['buildings'][selected_id]['height'] / 2,
     });
 }
 
@@ -63,9 +65,11 @@ function draw(){
 
     // Draw visible player 1 buildings.
     for(var building in players[1]['buildings']){
-        if(players[1]['buildings'][building]['x'] + players[1]['buildings'][building]['width'] + offset_x <= 0
+        if(players[1]['buildings'][building]['x']
+            + players[1]['buildings'][building]['width'] + offset_x <= 0
           || players[1]['buildings'][building]['x'] + offset_x >= width
-          || players[1]['buildings'][building]['y'] + players[1]['buildings'][building]['height'] + offset_y <= 0
+          || players[1]['buildings'][building]['y']
+            + players[1]['buildings'][building]['height'] + offset_y <= 0
           || players[1]['buildings'][building]['y'] + offset_y >= height){
             continue;
         }
@@ -81,7 +85,8 @@ function draw(){
         buffer.fillRect(
           players[1]['buildings'][building]['x'],
           players[1]['buildings'][building]['y'] - 10,
-          players[1]['buildings'][building]['width'] * (players[1]['buildings'][building]['health'] / 1000),
+          players[1]['buildings'][building]['width']
+            * (players[1]['buildings'][building]['health'] / 1000),
           5
         );
 
@@ -99,9 +104,11 @@ function draw(){
     // Draw visible player 0 buildings.
     buffer.strokeStyle = '#ddd';
     for(building in players[0]['buildings']){
-        if(players[0]['buildings'][building]['x'] + players[0]['buildings'][building]['width'] + offset_x <= 0
+        if(players[0]['buildings'][building]['x']
+            + players[0]['buildings'][building]['width'] + offset_x <= 0
           || players[0]['buildings'][building]['x'] + offset_x >= width
-          || players[0]['buildings'][building]['y'] + players[0]['buildings'][building]['height'] + offset_y <= 0
+          || players[0]['buildings'][building]['y']
+            + players[0]['buildings'][building]['height'] + offset_y <= 0
           || players[0]['buildings'][building]['y'] + offset_y >= height){
             continue;
         }
@@ -119,7 +126,8 @@ function draw(){
         buffer.fillRect(
           players[0]['buildings'][building]['x'],
           players[0]['buildings'][building]['y'] - 10,
-          players[0]['buildings'][building]['width'] * (players[0]['buildings'][building]['health'] / 1000),
+          players[0]['buildings'][building]['width']
+            * (players[0]['buildings'][building]['health'] / 1000),
           5
         );
 
@@ -215,8 +223,10 @@ function draw(){
 
         buffer.beginPath();
         buffer.moveTo(
-          players[0]['buildings'][building]['x'] + players[0]['buildings'][building]['width'] / 2,
-          players[0]['buildings'][building]['y'] + players[0]['buildings'][building]['height'] / 2
+          players[0]['buildings'][building]['x']
+            + players[0]['buildings'][building]['width'] / 2,
+          players[0]['buildings'][building]['y']
+            + players[0]['buildings'][building]['height'] / 2
         );
         buffer.lineTo(
           players[0]['buildings'][building]['destination-x'],
@@ -441,8 +451,10 @@ function draw(){
 
         buffer.beginPath();
         buffer.moveTo(
-          100 + (players[0]['buildings'][building]['x'] + players[0]['buildings'][building]['width'] / 2) / math[0],
-          height - 100 + (players[0]['buildings'][building]['y'] + players[0]['buildings'][building]['height'] / 2) / math[0]
+          100 + (players[0]['buildings'][building]['x']
+            + players[0]['buildings'][building]['width'] / 2) / math[0],
+          height - 100 + (players[0]['buildings'][building]['y']
+            + players[0]['buildings'][building]['height'] / 2) / math[0]
         );
         buffer.lineTo(
           100 + players[0]['buildings'][building]['destination-x'] / math[0],
@@ -675,8 +687,10 @@ function logic(){
       && players[1]['money'] >= 100){
         players[1]['money'] -= 100;
         players[1]['units'].push({
-          'destination-x': Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
-          'destination-y': Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
+          'destination-x': Math.floor(Math.random() * settings['level-size'] * 2)
+            - settings['level-size'],
+          'destination-y': Math.floor(Math.random() * settings['level-size'] * 2)
+            - settings['level-size'],
           'health': 100,
           'weapon-reload': 0,
           'x': players[1]['buildings'][1]['x'] + players[1]['buildings'][1]['width'] / 2,
@@ -771,8 +785,10 @@ function logic(){
               && players[1]['units'][unit]['x'] < players[1]['units'][unit]['destination-x'] + 5
               && players[1]['units'][unit]['y'] > players[1]['units'][unit]['destination-y'] - 5
               && players[1]['units'][unit]['y'] < players[1]['units'][unit]['destination-y'] + 5){
-                players[1]['units'][unit]['destination-x'] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
-                players[1]['units'][unit]['destination-y'] = Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'];
+                players[1]['units'][unit]['destination-x'] = Math.floor(Math.random() * settings['level-size'] * 2)
+                  - settings['level-size'];
+                players[1]['units'][unit]['destination-y'] = Math.floor(Math.random() * settings['level-size'] * 2)
+                  - settings['level-size'];
             }
         }
     }
@@ -1303,15 +1319,23 @@ function setmode(newmode){
           0: {
             'buildings': [
               {
-                'destination-x': start_x ? -settings['level-size'] + 75 : settings['level-size'] - 75,
-                'destination-y': start_y ? settings['level-size'] - 75  : -settings['level-size'] + 75,
+                'destination-x': start_x
+                  ? -settings['level-size'] + 75
+                  : settings['level-size'] - 75,
+                'destination-y': start_y
+                  ? settings['level-size'] - 75 
+                  : -settings['level-size'] + 75,
                 'health': 1000,
                 'height': 100,
                 'selected': false,
                 'type': 1,
                 'width': 100,
-                'x': start_x ? -settings['level-size'] + 25 : settings['level-size'] - 125,
-                'y': start_y ? settings['level-size'] - 125 : -settings['level-size'] + 25,
+                'x': start_x
+                  ? -settings['level-size'] + 25
+                  : settings['level-size'] - 125,
+                'y': start_y
+                  ? settings['level-size'] - 125
+                  : -settings['level-size'] + 25,
               },
             ],
             'money': 1000,
@@ -1324,16 +1348,24 @@ function setmode(newmode){
                 'height': 100,
                 'type': 1,
                 'width': 100,
-                'x': start_x ? settings['level-size'] - 125 : -settings['level-size'] + 25,
-                'y': start_y ? -settings['level-size'] + 25 : settings['level-size'] -125,
+                'x': start_x
+                  ? settings['level-size'] - 125
+                  : -settings['level-size'] + 25,
+                'y': start_y
+                  ? -settings['level-size'] + 25
+                  : settings['level-size'] -125,
               },
               {
                 'health': 1000,
                 'height': 100,
                 'type': 2,
                 'width': 100,
-                'x': start_x ? settings['level-size'] - 250 : -settings['level-size'] + 150,
-                'y': start_y ? -settings['level-size'] + 25 : settings['level-size'] -125,
+                'x': start_x
+                  ? settings['level-size'] - 250
+                  : -settings['level-size'] + 150,
+                'y': start_y
+                  ? -settings['level-size'] + 25
+                  : settings['level-size'] -125,
               },
             ],
             'money': 750,
@@ -1349,9 +1381,9 @@ function setmode(newmode){
         if(settings['fog-of-war']){
             var temp_x = 0;
             var temp_y = 0;
-            var times = Math.floor(settings['level-size'] / 50);// Half of level width divided by half of fog unit.
+            var times = Math.floor(settings['level-size'] / 50);
 
-            var loop_counter = Math.pow(times, 2) - 1;// True number of fog units to add.
+            var loop_counter = Math.pow(times, 2) - 1;
             do{
                 fog.push({
                   'x': temp_x * 100,
