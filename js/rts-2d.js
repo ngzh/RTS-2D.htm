@@ -8,7 +8,7 @@ function build_robot(){
     p0_units.push([
       p0_buildings[selected_id][0] + p0_buildings[selected_id][2] / 2,// X
       p0_buildings[selected_id][1] + p0_buildings[selected_id][3] / 2,// Y
-      0,// Selected?
+      false,// Selected?
       p0_buildings[selected_id][6] != null
         ? p0_buildings[selected_id][6]
         : p0_buildings[0][0],// Destination X
@@ -284,7 +284,7 @@ function draw(){
 
     // Draw building while in build mode.
     if(build_mode > 0){
-        buffer.fillStyle='#1f1';
+        buffer.fillStyle = '#1f1';
 
         var building_x = mouse_x - 50;
         var max_x = settings['level-size'] + camera_x + x - 100;
@@ -315,7 +315,7 @@ function draw(){
           100
         );
 
-        buffer.fillStyle='#fff';
+        buffer.fillStyle = '#fff';
         buffer.fillText(
           [
             'F',
@@ -351,7 +351,7 @@ function draw(){
           65
         );
 
-        buffer.fillStyle='#fff';
+        buffer.fillStyle = '#fff';
         buffer.fillText(
           [
             'F',
@@ -1585,7 +1585,7 @@ window.onmousedown = function(e){
                     100,// Width
                     100,// Height
                     1000,// Health
-                    0,// Selected
+                    false,// Selected
                     building_x + 50,// Destination X
                     building_y + 50,// Destination Y
                     2,// Type
