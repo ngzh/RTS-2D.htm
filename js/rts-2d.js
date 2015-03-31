@@ -34,6 +34,15 @@ function draw(){
       height
     );
 
+    buffer.font = '42pt sans-serif';
+    buffer.strokeStyle = '#ddd';
+    buffer.textBaseline = 'middle';
+    buffer.textAlign = 'center';
+
+    // Save current buffer state.
+    buffer.save();
+
+    // Translate to camera position.
     var offset_x = x + camera_x;
     var offset_y = y + camera_y;
     buffer.translate(
@@ -58,10 +67,6 @@ function draw(){
           world_static[id][3]
         );
     }
-
-    buffer.font = '42pt sans-serif';
-    buffer.textBaseline = 'middle';
-    buffer.textAlign = 'center';
 
     // Draw visible player 1 buildings.
     for(var building in players[1]['buildings']){
@@ -102,7 +107,6 @@ function draw(){
     }
 
     // Draw visible player 0 buildings.
-    buffer.strokeStyle = '#ddd';
     for(building in players[0]['buildings']){
         if(players[0]['buildings'][building]['x']
             + players[0]['buildings'][building]['width'] + offset_x <= 0
@@ -270,10 +274,8 @@ function draw(){
         buffer.stroke();
     }
 
-    buffer.translate(
-      -camera_x - x,
-      -camera_y - y
-    );
+    // Restore the buffer state.
+    buffer.restore();
 
     // Draw selection box.
     if(mouse_hold == 1){
