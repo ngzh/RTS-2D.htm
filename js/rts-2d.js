@@ -1489,22 +1489,12 @@ var pi_times_two = Math.PI * 2;
 var selected_id = -1;
 var selected_type = -1;
 var settings = {
-  'audio-volume': window.localStorage.getItem('RTS-2D.htm-audio-volume') === null
-    ? 1
-    : parseFloat(window.localStorage.getItem('RTS-2D.htm-audio-volume')),
-  'camera-keys': window.localStorage.getItem('RTS-2D.htm-camera-keys') === null
-    ? 'WASD'
-    : window.localStorage.getItem('RTS-2D.htm-camera-keys'),
+  'audio-volume': parseFloat(window.localStorage.getItem('RTS-2D.htm-audio-volume')) || 1,
+  'camera-keys': window.localStorage.getItem('RTS-2D.htm-camera-keys') || 'WASD',
   'fog-of-war': window.localStorage.getItem('RTS-2D.htm-fog-of-war') === null,
-  'level-size': window.localStorage.getItem('RTS-2D.htm-level-size') === null
-    ? 1600
-    : parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')),
-  'ms-per-frame': window.localStorage.getItem('RTS-2D.htm-ms-per-frame') === null
-    ? 25
-    : parseInt(window.localStorage.getItem('RTS-2D.htm-ms-per-frame')),
-  'scroll-speed': window.localStorage.getItem('RTS-2D.htm-scroll-speed') === null
-    ? 10
-    : parseInt(window.localStorage.getItem('RTS-2D.htm-scroll-speed')),
+  'level-size': parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')) || 1600,
+  'ms-per-frame': parseInt(window.localStorage.getItem('RTS-2D.htm-ms-per-frame')) || 25,
+  'scroll-speed': parseInt(window.localStorage.getItem('RTS-2D.htm-scroll-speed')) || 10,
 };
 var width = 0;
 var world_static = [];
