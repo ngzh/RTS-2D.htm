@@ -36,8 +36,8 @@ function draw(){
 
     buffer.font = '42pt sans-serif';
     buffer.strokeStyle = '#ddd';
-    buffer.textBaseline = 'middle';
     buffer.textAlign = 'center';
+    buffer.textBaseline = 'middle';
 
     // Save current buffer state.
     buffer.save();
