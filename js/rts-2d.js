@@ -1501,8 +1501,6 @@ var world_static = [];
 var x = 0;
 var y = 0;
 
-setmode(0);
-
 window.onkeydown = function(e){
     if(mode <= 0){
         return;
@@ -1566,6 +1564,10 @@ window.onkeyup = function(e){
     }else if(key === settings['camera-keys'][0]){
         key_up = false;
     }
+};
+
+window.onload = function(e){
+    setmode(0);
 };
 
 window.onmousedown = function(e){
