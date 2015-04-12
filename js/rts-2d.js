@@ -1417,19 +1417,20 @@ function setmode(newmode){
           settings['ms-per-frame']
         );
 
-    // Main menu mode.
-    }else{
-        buffer = 0;
-        canvas = 0;
-
-        document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
-          + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-          + settings['audio-volume'] + '>Audio<br><label><input '
-          + (settings['fog-of-war'] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
-          + settings['level-size'] + '>*2 Level Size<br><input id=ms-per-frame value='
-          + settings['ms-per-frame'] + '>ms/Frame<br><input id=scroll-speed value='
-          + settings['scroll-speed'] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
+        return;
     }
+
+    // Main menu mode.
+    buffer = 0;
+    canvas = 0;
+
+    document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
+      + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+      + settings['audio-volume'] + '>Audio<br><label><input '
+      + (settings['fog-of-war'] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
+      + settings['level-size'] + '>*2 Level Size<br><input id=ms-per-frame value='
+      + settings['ms-per-frame'] + '>ms/Frame<br><input id=scroll-speed value='
+      + settings['scroll-speed'] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
 }
 
 function validate_camera_move(mouse_x, mouse_y){
