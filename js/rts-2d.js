@@ -308,8 +308,8 @@ function draw(){
         var max_y = settings['level-size'] + camera_y + y - 100;
         var min_y = -settings['level-size'] + camera_y + y;
 
-        if(building_y > max_x){
-            building_y = max_x;
+        if(building_y > max_y){
+            building_y = max_y;
 
         }else if(building_y < min_y){
             building_y = min_y;
@@ -329,7 +329,7 @@ function draw(){
             'R'
           ][selected_type - 1],
           building_x + 50,
-          building_y + 50
+          building_y + 70
         );
     }
 
@@ -982,6 +982,12 @@ function logic(){
 
                 players[0]['buildings'][building]['health'] -= 25;
                 if(players[0]['buildings'][building]['health'] <= 0){
+                    if(selected_id == building){
+                        build_mode = 0;
+                        selected_id = -1;
+                        selected_type = -1;
+                    }
+
                     players[0]['buildings'].splice(
                       building,
                       1
