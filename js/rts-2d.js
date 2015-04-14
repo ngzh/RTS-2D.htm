@@ -37,7 +37,6 @@ function draw(){
     buffer.font = '42pt sans-serif';
     buffer.strokeStyle = '#ddd';
     buffer.textAlign = 'center';
-    buffer.textBaseline = 'middle';
 
     // Save current buffer state.
     buffer.save();
@@ -102,7 +101,7 @@ function draw(){
             'F',
           ][players[1]['buildings'][building]['type'] - 1],
           players[1]['buildings'][building]['x'] + 50,
-          players[1]['buildings'][building]['y'] + 50
+          players[1]['buildings'][building]['y'] + 70
         );
     }
 
@@ -142,7 +141,7 @@ function draw(){
             'F',
           ][players[0]['buildings'][building]['type'] - 1],
           players[0]['buildings'][building]['x'] + 50,
-          players[0]['buildings'][building]['y'] + 50
+          players[0]['buildings'][building]['y'] + 70
         );
     }
 
@@ -366,7 +365,7 @@ function draw(){
             'R',
           ][selected_type - 1],
           240,
-          height - 35
+          height - 11
         );
     }
 
@@ -376,7 +375,7 @@ function draw(){
     buffer.fillText(
       '$' + players[0]['money'],
       5,
-      height - 230
+      height - 215
     );
 
     // Draw minimap background.
