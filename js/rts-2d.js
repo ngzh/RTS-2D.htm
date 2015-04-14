@@ -1037,7 +1037,10 @@ function logic(){
             }
         }
 
-        delete bullets[bullet];
+        bullets.splice(
+          bullet,
+          1
+        );
     }
 }
 
