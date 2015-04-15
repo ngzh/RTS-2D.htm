@@ -1,25 +1,77 @@
-function build_robot(){
-    if(players[0]['money'] < 100){
+function build_building(player, building_type, x, y){
+    if(players[player]['money'] < buildings[building_type]['cost']){
         return;
     }
 
-    players[0]['money'] -= 100;
+    players[player]['money'] -= buildings[building_type]['cost'];
 
-    players[0]['units'].push({
-      'destination-x': players[0]['buildings'][selected_id]['destination-x'] != null
-        ? players[0]['buildings'][selected_id]['destination-x']
-        : players[0]['buildings'][0]['x'],
-      'destination-y': players[0]['buildings'][selected_id]['destination-y'] != null
-        ? players[0]['buildings'][selected_id]['destination-y']
-        : players[0]['buildings'][0]['y'],
+    var building = {
+      'destination-x': null,
+      'destination-y': null,
+      'selected': false,
+      'x': x,
+      'y': y,
+    };
+
+    for(var property in buildings[building_type]){
+        building[property] = buildings[building_type][property];
+    }
+
+    players[player]['buildings'].push(building);
+
+    if(player != 0
+      || fog.length < 1){
+        return;
+    }
+
+    for(var building in players[0]['buildings']){
+        // Check if fog is within 390px of a building.
+        var loop_counter = fog.length - 1;
+        do{
+            if(distance(
+              players[0]['buildings'][building]['x'],
+              players[0]['buildings'][building]['y'],
+              fog[loop_counter]['x'] - settings['level-size'],
+              fog[loop_counter]['y'] - settings['level-size']
+            ) < 390){
+                fog.splice(
+                  loop_counter,
+                  1
+                );
+            }
+        }while(loop_counter--);
+    }
+}
+
+function build_unit(player, unit_type){
+    if(players[player]['money'] < units[unit_type]['cost']){
+        return;
+    }
+
+    players[player]['money'] -= units[unit_type]['cost'];
+
+    var temp_selected_id = player > 0
+      ? 1
+      : selected_id;
+    var unit = {
+      'destination-x': players[player]['buildings'][temp_selected_id]['destination-x']
+        || Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
+      'destination-y': players[player]['buildings'][temp_selected_id]['destination-y']
+        || Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
       'health': 100,
       'selected': false,
-      'weapon-reload': 0,
-      'x': players[0]['buildings'][selected_id]['x']
-        + players[0]['buildings'][selected_id]['width'] / 2,
-      'y': players[0]['buildings'][selected_id]['y']
-        + players[0]['buildings'][selected_id]['height'] / 2,
-    });
+      'reload-current': 0,
+      'x': players[player]['buildings'][temp_selected_id]['x']
+        + players[player]['buildings'][temp_selected_id]['width'] / 2,
+      'y': players[player]['buildings'][temp_selected_id]['y']
+        + players[player]['buildings'][temp_selected_id]['height'] / 2,
+    };
+
+    for(var property in units[unit_type]){
+        unit[property] = units[unit_type][property];
+    }
+
+    players[player]['units'].push(unit);
 }
 
 function distance(x0, y0, x1, y1){
@@ -620,30 +672,6 @@ function draw(){
     animationFrame = window.requestAnimationFrame(draw);
 }
 
-function fog_update_building(){
-    if(fog.length < 1){
-        return;
-    }
-
-    for(var building in players[0]['buildings']){
-        // Check if fog is within 390px of a building.
-        var loop_counter = fog.length - 1;
-        do{
-            if(distance(
-              players[0]['buildings'][building]['x'],
-              players[0]['buildings'][building]['y'],
-              fog[loop_counter]['x'] - settings['level-size'],
-              fog[loop_counter]['y'] - settings['level-size']
-            ) < 390){
-                fog.splice(
-                  loop_counter,
-                  1
-                );
-            }
-        }while(loop_counter--);
-    }
-}
-
 function logic(){
     money_timer += 1;
     if(money_timer > 99){
@@ -692,25 +720,30 @@ function logic(){
       height
     );
 
-    if(players[1]['buildings'].length > 1
-      && players[1]['money'] >= 100){
-        players[1]['money'] -= 100;
-        players[1]['units'].push({
-          'destination-x': Math.floor(Math.random() * settings['level-size'] * 2)
-            - settings['level-size'],
-          'destination-y': Math.floor(Math.random() * settings['level-size'] * 2)
-            - settings['level-size'],
-          'health': 100,
-          'weapon-reload': 0,
-          'x': players[1]['buildings'][1]['x'] + players[1]['buildings'][1]['width'] / 2,
-          'y': players[1]['buildings'][1]['y'] + players[1]['buildings'][1]['height'] / 2,
-        });
+    // AI: attempt to build a unit if factory exists.
+    if(players[1]['buildings'].length > 1){
+        build_unit(
+          1,
+          'Robot'
+        );
+
+    // AI: attempt to build a factory if it doesn't exist.
+    }else if(players[1]['buildings'].length > 0
+      && players[1]['money'] > 250){
+        build_building(
+          1,
+          'Factory',
+          players[1]['buildings'][0]['x'] > 0
+            ? players[1]['buildings'][0]['x'] - 125
+            : players[1]['buildings'][0]['x'] + 125,
+          players[1]['buildings'][0]['y']
+        );
     }
 
     for(var unit in players[1]['units']){
         // If reloading, decrease reload,...
-        if(players[1]['units'][unit]['weapon-reload'] > 0){
-            players[1]['units'][unit]['weapon-reload'] -= 1;
+        if(players[1]['units'][unit]['reload-current'] > 0){
+            players[1]['units'][unit]['reload-current'] -= 1;
 
         // ...else look for nearby p0 units to fire at.
         }else{
@@ -725,10 +758,10 @@ function logic(){
                     continue;
                 }
 
-                players[1]['units'][unit]['weapon-reload'] = 75;
+                players[1]['units'][unit]['reload-current'] = players[1]['units'][unit]['reload'];
                 bullets.push({
                   'color': '#f66',
-                  'damage': 25,
+                  'damage': players[1]['units'][unit]['damage'],
                   'destination-x': players[0]['units'][p0_unit]['x'],
                   'destination-y': players[0]['units'][p0_unit]['y'],
                   'player': 1,
@@ -751,10 +784,10 @@ function logic(){
                         continue;
                     }
 
-                    players[1]['units'][unit]['weapon-reload'] = 75;
+                    players[1]['units'][unit]['reload-current'] = players[1]['units'][unit]['reload'];
                     bullets.push({
                       'color': '#f66',
-                      'damage': 25,
+                      'damage': players[1]['units'][unit]['damage'],
                       'destination-x': players[0]['buildings'][building]['x'] + 50,
                       'destination-y': players[0]['buildings'][building]['y'] + 50,
                       'player': 1,
@@ -877,8 +910,8 @@ function logic(){
         }
 
         // If reloading, decrease reload,...
-        if(players[0]['units'][unit]['weapon-reload'] > 0){
-            players[0]['units'][unit]['weapon-reload'] -= 1;
+        if(players[0]['units'][unit]['reload-current'] > 0){
+            players[0]['units'][unit]['reload-current'] -= 1;
             continue;
         }
 
@@ -893,10 +926,10 @@ function logic(){
                 continue;
             }
 
-            players[0]['units'][unit]['weapon-reload'] = 75;
+            players[0]['units'][unit]['reload-current'] = players[0]['units'][unit]['reload'];
             bullets.push({
               'color': '#090',
-              'damage': 25,
+              'damage': players[0]['units'][unit]['damage'],
               'destination-x': players[1]['units'][p1_unit]['x'],
               'destination-y': players[1]['units'][p1_unit]['y'],
               'player': 0,
@@ -922,10 +955,10 @@ function logic(){
                 continue;
             }
 
-            players[0]['units'][unit]['weapon-reload'] = 75;
+            players[0]['units'][unit]['reload-current'] = players[0]['units'][unit]['reload'];
             bullets.push({
               'color': '#090',
-              'damage': 25,
+              'damage': players[0]['units'][unit]['damage'],
               'destination-x': players[1]['buildings'][building]['x'] + 50,
               'destination-y': players[1]['buildings'][building]['y'] + 50,
               'player': 0,
@@ -1338,73 +1371,6 @@ function setmode(newmode){
           ],
         ];
 
-        // Choose random starting locations.
-        var start_x = Math.floor(Math.random() * 2);
-        var start_y = Math.floor(Math.random() * 2);
-
-        // Setup players.
-        players = {
-          0: {
-            'buildings': [
-              {
-                'destination-x': start_x
-                  ? -settings['level-size'] + 75
-                  : settings['level-size'] - 75,
-                'destination-y': start_y
-                  ? settings['level-size'] - 75 
-                  : -settings['level-size'] + 75,
-                'health': 1000,
-                'height': 100,
-                'selected': false,
-                'type': 1,
-                'width': 100,
-                'x': start_x
-                  ? -settings['level-size'] + 25
-                  : settings['level-size'] - 125,
-                'y': start_y
-                  ? settings['level-size'] - 125
-                  : -settings['level-size'] + 25,
-              },
-            ],
-            'money': 1000,
-            'units': [],
-          },
-          1: {
-            'buildings': [
-              {
-                'health': 1000,
-                'height': 100,
-                'type': 1,
-                'width': 100,
-                'x': start_x
-                  ? settings['level-size'] - 125
-                  : -settings['level-size'] + 25,
-                'y': start_y
-                  ? -settings['level-size'] + 25
-                  : settings['level-size'] -125,
-              },
-              {
-                'health': 1000,
-                'height': 100,
-                'type': 2,
-                'width': 100,
-                'x': start_x
-                  ? settings['level-size'] - 250
-                  : -settings['level-size'] + 150,
-                'y': start_y
-                  ? -settings['level-size'] + 25
-                  : settings['level-size'] -125,
-              },
-            ],
-            'money': 750,
-            'units': [],
-          },
-        };
-
-        // Set camera position to HQ location.
-        camera_x = -players[0]['buildings'][0]['x'] - 50;
-        camera_y = -players[0]['buildings'][0]['y'] - 50;
-
         // Add fog of war, if settings allow it.
         if(settings['fog-of-war']){
             var temp_x = 0;
@@ -1427,10 +1393,50 @@ function setmode(newmode){
                     temp_x = 0;
                 }
             }while(loop_counter--);
-
-            // Remove fog around initial buildings.
-            fog_update_building();
         }
+
+        // Choose random starting locations.
+        var start_x = Math.floor(Math.random() * 2);
+        var start_y = Math.floor(Math.random() * 2);
+
+        // Setup players.
+        players = {
+          0: {
+            'buildings': [],
+            'money': 1000,
+            'units': [],
+          },
+          1: {
+            'buildings': [],
+            'money': 1000,
+            'units': [],
+          },
+        };
+
+        build_building(
+          0,
+          'HQ',
+          start_x
+            ? -settings['level-size'] + 25
+            : settings['level-size'] - 125,
+          start_y
+            ? settings['level-size'] - 125
+            : -settings['level-size'] + 25
+        );
+        build_building(
+          1,
+          'HQ',
+          start_x
+            ? settings['level-size'] - 125
+            : -settings['level-size'] + 25,
+          start_y
+            ? -settings['level-size'] + 25
+            : settings['level-size'] - 125
+        );
+
+        // Set camera position to HQ location.
+        camera_x = -players[0]['buildings'][0]['x'] - 50;
+        camera_y = -players[0]['buildings'][0]['y'] - 50;
 
         buffer = document.getElementById('buffer').getContext('2d');
         canvas = document.getElementById('canvas').getContext('2d');
@@ -1491,6 +1497,22 @@ function validate_destination(type, id){
 
 var animationFrame = 0;
 var buffer = 0;
+var buildings = {
+  'Factory': {
+    'cost': 250,
+    'health': 1000,
+    'height': 100,
+    'type': 2,
+    'width': 100,
+  },
+  'HQ': {
+    'cost': 0,
+    'health': 1000,
+    'height': 100,
+    'type': 1,
+    'width': 100,
+  },
+};
 var build_mode = 0;
 var bullets = [];
 var camera_x = 0;
@@ -1521,6 +1543,14 @@ var settings = {
   'level-size': parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')) || 1600,
   'ms-per-frame': parseInt(window.localStorage.getItem('RTS-2D.htm-ms-per-frame')) || 25,
   'scroll-speed': parseInt(window.localStorage.getItem('RTS-2D.htm-scroll-speed')) || 10,
+};
+var units = {
+  'Robot': {
+    'cost': 100,
+    'damage': 25,
+    'health': 100,
+    'reload': 75,
+  },
 };
 var width = 0;
 var world_static = [];
@@ -1555,7 +1585,10 @@ window.onkeydown = function(e){
     // user selected factory and pressed R button
     }else if(selected_type === 2
       && key === 82){
-        build_robot();
+        build_unit(
+          0,
+          'Robot'
+        );
         return;
     }
 
@@ -1609,43 +1642,32 @@ window.onmousedown = function(e){
 
         // Check if in buildling mode.
         if(build_mode > 0){
-            // Build a factory.
-            if(players[0]['money'] >= 250){
-                build_mode = 0;
-                players[0]['money'] -= 250;
+            build_mode = 0;
 
-                // Make sure building is within buildable limit.
-                var building_x = mouse_x - camera_x - x - 50;
-                if(building_x > settings['level-size'] - 100){
-                    building_x = settings['level-size'] - 100;
+            // Make sure building is within buildable limit.
+            var building_x = mouse_x - camera_x - x - 50;
+            if(building_x > settings['level-size'] - 100){
+                building_x = settings['level-size'] - 100;
 
-                }else if(building_x < -settings['level-size']){
-                    building_x = -settings['level-size'];
-                }
-
-                var building_y = mouse_y - camera_y - y - 50;
-                if(building_y > settings['level-size'] - 100){
-                    building_y = settings['level-size'] - 100;
-
-                }else if(building_y < -settings['level-size']){
-                    building_y = -settings['level-size'];
-                }
-
-                players[0]['buildings'].push({
-                  'destination-x': building_x + 50,
-                  'destination-y': building_y + 50,
-                  'health': 1000,
-                  'height': 100,
-                  'selected': false,
-                  'type': 2,
-                  'width': 100,
-                  'x': building_x,
-                  'y': building_y,
-                });
-
-                // Remove fog around buildings.
-                fog_update_building();
+            }else if(building_x < -settings['level-size']){
+                building_x = -settings['level-size'];
             }
+
+            var building_y = mouse_y - camera_y - y - 50;
+            if(building_y > settings['level-size'] - 100){
+                building_y = settings['level-size'] - 100;
+
+            }else if(building_y < -settings['level-size']){
+                building_y = -settings['level-size'];
+            }
+
+            // Attempt to build a factory.
+            build_building(
+              0,
+              'Factory',
+              building_x,
+              building_y
+            );
 
         // If unit selected or not clicking on build robot button.
         }else if(selected_type < 1
@@ -1668,7 +1690,10 @@ window.onmousedown = function(e){
 
         // Else if factory is selected, build robot.
         }else if(selected_type == 2){
-            build_robot();
+            build_unit(
+              0,
+              'Robot'
+            );
         }
 
     // Right clicking on minimap.
