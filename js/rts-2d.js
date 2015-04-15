@@ -850,7 +850,10 @@ function logic(){
                     players[0]['units'][unit]['destination-y'] = players[0]['units'][unit]['y']
                       + Math.floor(Math.random() * 40) - 20;
 
-                    validate_destination(unit);
+                    validate_destination(
+                      'units',
+                      unit
+                    );
 
                     break;
                 }
@@ -1232,7 +1235,10 @@ function setdestination(on_minimap){
               ? math[0] * (mouse_y - height + 100)
               : mouse_y - y - camera_y;
 
-            validate_destination(unit);
+            validate_destination(
+              'units',
+              unit
+            );
         }
 
     }else if(selected_type > 1){
@@ -1245,21 +1251,14 @@ function setdestination(on_minimap){
               ? math[0] * (mouse_x - 100)
               : mouse_x - x - camera_x;
 
-            if(players[0]['buildings'][building]['destination-x'] > settings['level-size']){
-                players[0]['buildings'][building]['destination-x'] = settings['level-size'];
-            }else if(players[0]['buildings'][building]['destination-x'] < -settings['level-size']){
-                players[0]['buildings'][building]['destination-x'] = -settings['level-size'];
-            }
-
             players[0]['buildings'][building]['destination-y'] = on_minimap
               ? math[0] * (mouse_y - height + 100)
               : mouse_y - y - camera_y;
 
-            if(players[0]['buildings'][building]['destination-y'] > settings['level-size']){
-                players[0]['buildings'][building]['destination-y'] = settings['level-size'];
-            }else if(players[0]['buildings'][building]['destination-y'] < -settings['level-size']){
-                players[0]['buildings'][building]['destination-y'] = -settings['level-size'];
-            }
+            validate_destination(
+              'buildings',
+              building
+            );
         }
     }
 }
@@ -1458,17 +1457,17 @@ function validate_camera_move(mouse_x, mouse_y){
     }
 }
 
-function validate_destination(unit_id){
-    if(players[0]['units'][unit_id]['destination-x'] > settings['level-size']){
-        players[0]['units'][unit_id]['destination-x'] = settings['level-size'];
-    }else if(players[0]['units'][unit_id]['destination-x'] < -settings['level-size']){
-        players[0]['units'][unit_id]['destination-x'] = -settings['level-size'];
+function validate_destination(type, id){
+    if(players[0][type][id]['destination-x'] > settings['level-size']){
+        players[0][type][id]['destination-x'] = settings['level-size'];
+    }else if(players[0][type][id]['destination-x'] < -settings['level-size']){
+        players[0][type][id]['destination-x'] = -settings['level-size'];
     }
 
-    if(players[0]['units'][unit_id]['destination-y'] > settings['level-size']){
-        players[0]['units'][unit_id]['destination-y'] = settings['level-size'];
-    }else if(players[0]['units'][unit_id]['destination-y'] < -settings['level-size']){
-        players[0]['units'][unit_id]['destination-y'] = -settings['level-size'];
+    if(players[0][type][id]['destination-y'] > settings['level-size']){
+        players[0][type][id]['destination-y'] = settings['level-size'];
+    }else if(players[0][type][id]['destination-y'] < -settings['level-size']){
+        players[0][type][id]['destination-y'] = -settings['level-size'];
     }
 }
 
