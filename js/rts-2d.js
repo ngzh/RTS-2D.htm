@@ -1322,6 +1322,7 @@ function setmode(newmode){
 
     bullets = [];
     fog = [];
+    math = [];
     players = {};
     world_static = [];
 
@@ -1523,7 +1524,7 @@ var key_down = false;
 var key_left = false;
 var key_right = false;
 var key_up = false;
-var math = 0;
+var math = [];
 var mode = 0;
 var money_timer = 0;
 var mouse_hold = 0;
