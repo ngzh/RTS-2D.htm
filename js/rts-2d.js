@@ -148,10 +148,7 @@ function draw(){
 
         buffer.fillStyle = '#fff';
         buffer.fillText(
-          [
-            'HQ',
-            'F',
-          ][players[1]['buildings'][building]['type'] - 1],
+          players[1]['buildings'][building]['label'],
           players[1]['buildings'][building]['x'] + 50,
           players[1]['buildings'][building]['y'] + 70
         );
@@ -188,10 +185,7 @@ function draw(){
 
         buffer.fillStyle = '#fff';
         buffer.fillText(
-          [
-            'HQ',
-            'F',
-          ][players[0]['buildings'][building]['type'] - 1],
+          players[0]['buildings'][building]['label'],
           players[0]['buildings'][building]['x'] + 50,
           players[0]['buildings'][building]['y'] + 70
         );
@@ -1505,6 +1499,7 @@ var buildings = {
     'cost': 250,
     'health': 1000,
     'height': 100,
+    'label': 'F',
     'type': 2,
     'width': 100,
   },
@@ -1512,6 +1507,7 @@ var buildings = {
     'cost': 0,
     'health': 1000,
     'height': 100,
+    'label': 'HQ',
     'type': 1,
     'width': 100,
   },
