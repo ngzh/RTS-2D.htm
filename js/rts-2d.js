@@ -621,18 +621,26 @@ function draw(){
 }
 
 function fog_update_building(){
+    if(fog.length < 1){
+        return;
+    }
+
     for(var building in players[0]['buildings']){
         // Check if fog is within 390px of a building.
-        for(var id in fog){
+        var loop_counter = fog.length - 1;
+        do{
             if(distance(
               players[0]['buildings'][building]['x'],
               players[0]['buildings'][building]['y'],
-              fog[id]['x'] - settings['level-size'],
-              fog[id]['y'] - settings['level-size']
+              fog[loop_counter]['x'] - settings['level-size'],
+              fog[loop_counter]['y'] - settings['level-size']
             ) < 390){
-                delete fog[id];
+                fog.splice(
+                  loop_counter,
+                  1
+                );
             }
-        }
+        }while(loop_counter--);
     }
 }
 
@@ -823,15 +831,21 @@ function logic(){
                   ) * .7;
             }
 
-            for(var id in fog){
-                if(distance(
-                  players[0]['units'][unit]['x'],
-                  players[0]['units'][unit]['y'],
-                  fog[id]['x'] - settings['level-size'] + 50,
-                  fog[id]['y'] - settings['level-size'] + 50
-                ) < 290){
-                    delete fog[id];
-                }
+            var loop_counter = fog.length - 1;
+            if(loop_counter >= 0){
+                do{
+                    if(distance(
+                      players[0]['units'][unit]['x'],
+                      players[0]['units'][unit]['y'],
+                      fog[loop_counter]['x'] - settings['level-size'] + 50,
+                      fog[loop_counter]['y'] - settings['level-size'] + 50
+                    ) < 290){
+                        fog.splice(
+                          loop_counter,
+                          1
+                        );
+                    }
+                }while(loop_counter--);
             }
 
         // Destination reached, make sure units don't overlap.
