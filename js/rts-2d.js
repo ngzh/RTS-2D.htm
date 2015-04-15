@@ -720,6 +720,7 @@ function logic(){
                 players[1]['units'][unit]['weapon-reload'] = 75;
                 bullets.push({
                   'color': '#f66',
+                  'damage': 25,
                   'destination-x': players[0]['units'][p0_unit]['x'],
                   'destination-y': players[0]['units'][p0_unit]['y'],
                   'player': 1,
@@ -745,6 +746,7 @@ function logic(){
                     players[1]['units'][unit]['weapon-reload'] = 75;
                     bullets.push({
                       'color': '#f66',
+                      'damage': 25,
                       'destination-x': players[0]['buildings'][building]['x'] + 50,
                       'destination-y': players[0]['buildings'][building]['y'] + 50,
                       'player': 1,
@@ -880,6 +882,7 @@ function logic(){
             players[0]['units'][unit]['weapon-reload'] = 75;
             bullets.push({
               'color': '#090',
+              'damage': 25,
               'destination-x': players[1]['units'][p1_unit]['x'],
               'destination-y': players[1]['units'][p1_unit]['y'],
               'player': 0,
@@ -908,6 +911,7 @@ function logic(){
             players[0]['units'][unit]['weapon-reload'] = 75;
             bullets.push({
               'color': '#090',
+              'damage': 25,
               'destination-x': players[1]['buildings'][building]['x'] + 50,
               'destination-y': players[1]['buildings'][building]['y'] + 50,
               'player': 0,
@@ -964,7 +968,7 @@ function logic(){
                     continue;
                 }
 
-                players[0]['units'][unit]['health'] -= 25;
+                players[0]['units'][unit]['health'] -= bullets[bullet]['damage'];
                 if(players[0]['units'][unit]['health'] <= 0){
                     players[0]['units'].splice(
                       unit,
@@ -983,7 +987,7 @@ function logic(){
                     continue;
                 }
 
-                players[0]['buildings'][building]['health'] -= 25;
+                players[0]['buildings'][building]['health'] -= bullets[bullet]['damage'];
                 if(players[0]['buildings'][building]['health'] <= 0){
                     if(selected_id == building){
                         build_mode = 0;
@@ -1009,7 +1013,7 @@ function logic(){
                     continue;
                 }
 
-                players[1]['units'][unit]['health'] -= 25;
+                players[1]['units'][unit]['health'] -= bullets[bullet]['damage'];
                 if(players[1]['units'][unit]['health'] <= 0){
                     players[1]['units'].splice(
                       unit,
@@ -1028,7 +1032,7 @@ function logic(){
                     continue;
                 }
 
-                players[1]['buildings'][building]['health'] -= 25;
+                players[1]['buildings'][building]['health'] -= bullets[bullet]['damage'];
                 if(players[1]['buildings'][building]['health'] <= 0){
                     players[1]['buildings'].splice(
                       building,
