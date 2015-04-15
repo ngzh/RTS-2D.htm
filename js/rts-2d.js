@@ -266,7 +266,7 @@ function draw(){
           players[0]['units'][unit]['y'],
           240,
           0,
-          pi_times_two,
+          math[4],
           false
         );
         buffer.closePath();
@@ -494,7 +494,7 @@ function draw(){
           height - 100 + players[0]['units'][unit]['y'] / math[0],
           math[3],
           0,
-          pi_times_two,
+          math[4],
           false
         );
         buffer.closePath();
@@ -1290,6 +1290,7 @@ function setmode(newmode){
           15 / (settings['level-size'] / 200),
           50 / (settings['level-size'] / 200),
           120 / (settings['level-size'] / 200),
+          Math.PI * 2,
         ];
 
         mouse_hold = 0;
@@ -1475,9 +1476,9 @@ var animationFrame = 0;
 var buffer = 0;
 var build_mode = 0;
 var bullets = [];
-var canvas = 0;
 var camera_x = 0;
 var camera_y = 0;
+var canvas = 0;
 var fog = [];
 var height = 0;
 var interval = 0;
@@ -1494,7 +1495,6 @@ var mouse_lock_y = 0;
 var mouse_x = 0;
 var mouse_y = 0;
 var players = {};
-var pi_times_two = Math.PI * 2;
 var selected_id = -1;
 var selected_type = -1;
 var settings = {
