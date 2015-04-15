@@ -573,6 +573,9 @@ function draw(){
         temp_height = (mouse_y - mouse_lock_y) / math[0];
 
         // Box past top edge? Decrease height and make sure height isn't negative.
+        if(temp_y + temp_height < height - 200){
+            temp_height = height - 200 - temp_y;
+        }
         if(temp_y < height - 200){
             temp_height -= height - 200 - temp_y;
             if(temp_height < 0){
