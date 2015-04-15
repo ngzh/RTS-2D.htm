@@ -8,7 +8,10 @@ function build_building(player, building_type, x, y){
     var building = {
       'destination-x': null,
       'destination-y': null,
+      'health': 1000,
+      'height': 100,
       'selected': false,
+      'width': 100,
       'x': x,
       'y': y,
     };
@@ -54,12 +57,14 @@ function build_unit(player, unit_type){
       ? 1
       : selected_id;
     var unit = {
+      'damage': 25,
       'destination-x': players[player]['buildings'][temp_selected_id]['destination-x']
         || Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
       'destination-y': players[player]['buildings'][temp_selected_id]['destination-y']
         || Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
       'health': 100,
       'selected': false,
+      'reload': 75,
       'reload-current': 0,
       'x': players[player]['buildings'][temp_selected_id]['x']
         + players[player]['buildings'][temp_selected_id]['width'] / 2,
@@ -1497,19 +1502,13 @@ var buffer = 0;
 var buildings = {
   'Factory': {
     'cost': 250,
-    'health': 1000,
-    'height': 100,
     'label': 'F',
     'type': 2,
-    'width': 100,
   },
   'HQ': {
     'cost': 0,
-    'health': 1000,
-    'height': 100,
     'label': 'HQ',
     'type': 1,
-    'width': 100,
   },
 };
 var build_mode = 0;
@@ -1546,9 +1545,6 @@ var settings = {
 var units = {
   'Robot': {
     'cost': 100,
-    'damage': 25,
-    'health': 100,
-    'reload': 75,
   },
 };
 var width = 0;
