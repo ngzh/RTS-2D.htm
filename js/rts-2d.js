@@ -429,7 +429,7 @@ function draw(){
     buffer.fillStyle = '#fff';
     buffer.textAlign = 'left';
     buffer.fillText(
-      '$' + players[0]['money'],
+      players[0]['money'],
       5,
       height - 215
     );
