@@ -1571,14 +1571,15 @@ window.onkeydown = function(e){
         return;
     }
 
-    // user selected HQ
+    // If HQ selected.
     if(selected_type === 1){
+        // F: build factory.
         if(key === 70){
             build_mode = 1;
             return;
         }
 
-    // user selected factory and pressed R button
+    // R: build robot if factory selected.
     }else if(selected_type === 2
       && key === 82){
         build_unit(
@@ -1728,7 +1729,7 @@ window.onmousemove = function(e){
     }
 };
 
-window.onmouseup = function(){
+window.onmouseup = function(e){
     mouse_hold = 0;
 };
 
