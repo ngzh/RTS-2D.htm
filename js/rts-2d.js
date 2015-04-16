@@ -22,8 +22,13 @@ function build_building(player, building_type, x, y){
 
     players[player]['buildings'].push(building);
 
-    if(player != 0
-      || fog.length < 1){
+    if(player != 0){
+        return;
+    }
+
+    build_mode = 0;
+
+    if(fog.length < 1){
         return;
     }
 
@@ -1632,8 +1637,6 @@ window.onmousedown = function(e){
 
         // Check if in buildling mode.
         if(build_mode > 0){
-            build_mode = 0;
-
             // Make sure building is within buildable limit.
             var building_x = mouse_x - camera_x - x - 50;
             if(building_x > settings['level-size'] - 100){
