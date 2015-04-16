@@ -1128,6 +1128,7 @@ function reset(){
     document.getElementById('camera-keys').value = 'WASD';
     document.getElementById('fog-of-war').checked = true;
     document.getElementById('level-size').value = 1600;
+    document.getElementById('money').value = 1000;
     document.getElementById('ms-per-frame').value = 25;
     document.getElementById('scroll-speed').value = 10;
 
@@ -1203,13 +1204,13 @@ function save(){
     }
 
     var ids = {
+      'money': 1000,
       'ms-per-frame': 25,
       'scroll-speed': 10,
     };
     for(var id in ids){
         if(document.getElementById(id).value == ids[id]
-          || isNaN(document.getElementById(id).value)
-          || document.getElementById(id).value < 1){
+          || isNaN(document.getElementById(id).value)){
             window.localStorage.removeItem('RTS-2D.htm-' + id);
             settings[id] = ids[id];
 
@@ -1404,12 +1405,12 @@ function setmode(newmode){
         players = {
           0: {
             'buildings': [],
-            'money': 1000,
+            'money': settings['money'],
             'units': [],
           },
           1: {
             'buildings': [],
-            'money': 1000,
+            'money': settings['money'],
             'units': [],
           },
         };
@@ -1461,7 +1462,8 @@ function setmode(newmode){
       + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
       + settings['audio-volume'] + '>Audio<br><label><input '
       + (settings['fog-of-war'] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=level-size value='
-      + settings['level-size'] + '>*2 Level Size<br><input id=ms-per-frame value='
+      + settings['level-size'] + '>*2 Level Size<br><input id=money value='
+      + settings['money'] + '>Money<br><input id=ms-per-frame value='
       + settings['ms-per-frame'] + '>ms/Frame<br><input id=scroll-speed value='
       + settings['scroll-speed'] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
 }
@@ -1538,6 +1540,7 @@ var settings = {
   'camera-keys': window.localStorage.getItem('RTS-2D.htm-camera-keys') || 'WASD',
   'fog-of-war': window.localStorage.getItem('RTS-2D.htm-fog-of-war') === null,
   'level-size': parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')) || 1600,
+  'money': parseFloat(window.localStorage.getItem('RTS-2D.htm-money')) || 1000,
   'ms-per-frame': parseInt(window.localStorage.getItem('RTS-2D.htm-ms-per-frame')) || 25,
   'scroll-speed': parseInt(window.localStorage.getItem('RTS-2D.htm-scroll-speed')) || 10,
 };
