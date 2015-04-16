@@ -715,13 +715,6 @@ function logic(){
         select();
     }
 
-    buffer.clearRect(
-      0,
-      0,
-      width,
-      height
-    );
-
     // AI: attempt to build a unit if factory exists.
     if(players[1]['buildings'].length > 1){
         build_unit(
