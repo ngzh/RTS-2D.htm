@@ -1651,6 +1651,21 @@ window.onmousedown = function(e){
                 building_y = -settings['level-size'];
             }
 
+            // Don't allow building on fog.
+            var loop_counter = fog.length - 1;
+            if(loop_counter >= 0){
+                do{
+                    if(distance(
+                      building_x,
+                      building_y,
+                      fog[loop_counter]['x'] - settings['level-size'] + 50,
+                      fog[loop_counter]['y'] - settings['level-size'] + 50
+                    ) < 70){
+                        return;
+                    }
+                }while(loop_counter--);
+            }
+
             // Attempt to build a factory.
             build_building(
               0,
