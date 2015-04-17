@@ -874,7 +874,7 @@ function logic(){
     }
 
     for(unit in players[0]['units']){
-        // If not yet reached destination, move and update fog.
+        // If not yet reached destination, move unit.
         if(Math.abs(players[0]['units'][unit]['x'] - players[0]['units'][unit]['destination-x']) > 1
           && Math.abs(players[0]['units'][unit]['y'] - players[0]['units'][unit]['destination-y']) > 1){
             var j = m(
@@ -898,28 +898,6 @@ function logic(){
                     ? -j[1]
                     : j[1]
                   ) * .7;
-            }
-
-            var loop_counter = fog.length - 1;
-            if(loop_counter >= 0){
-                do{
-                    if(distance(
-                      players[0]['units'][unit]['x'],
-                      players[0]['units'][unit]['y'],
-                      fog[loop_counter]['x'] - settings['level-size'] + 50,
-                      fog[loop_counter]['y'] - settings['level-size'] + 50
-                    ) < 290){
-                        if(settings['fog-type'] == 2){
-                            fog[loop_counter]['display'] = false;
-
-                        }else{
-                            fog.splice(
-                              loop_counter,
-                              1
-                            );
-                        }
-                    }
-                }while(loop_counter--);
             }
 
         // Destination reached, make sure units don't overlap.
@@ -947,6 +925,33 @@ function logic(){
 
                     break;
                 }
+            }
+        }
+
+        // Update fog.
+        if(settings['fog-type'] == 2
+          || (Math.abs(players[0]['units'][unit]['x'] - players[0]['units'][unit]['destination-x']) > 1
+          && Math.abs(players[0]['units'][unit]['y'] - players[0]['units'][unit]['destination-y']) > 1)){
+            var loop_counter = fog.length - 1;
+            if(loop_counter >= 0){
+                do{
+                    if(distance(
+                      players[0]['units'][unit]['x'],
+                      players[0]['units'][unit]['y'],
+                      fog[loop_counter]['x'] - settings['level-size'] + 50,
+                      fog[loop_counter]['y'] - settings['level-size'] + 50
+                    ) < 290){
+                        if(settings['fog-type'] == 2){
+                            fog[loop_counter]['display'] = false;
+
+                        }else{
+                            fog.splice(
+                              loop_counter,
+                              1
+                            );
+                        }
+                    }
+                }while(loop_counter--);
             }
         }
 
