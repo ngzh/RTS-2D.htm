@@ -22,17 +22,13 @@ function build_building(player, building_type, x, y){
 
     players[player]['buildings'].push(building);
 
-    if(player != 0){
-        return;
+    if(player == 0){
+        build_mode = 0;
+
+        if(fog.length > 0){
+            fog_update_building();
+        }
     }
-
-    build_mode = 0;
-
-    if(fog.length < 1){
-        return;
-    }
-
-    fog_update_building();
 }
 
 function build_unit(player, unit_type){
