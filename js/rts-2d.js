@@ -413,15 +413,6 @@ function draw(){
         );
     }
 
-    // Draw player 0 money.
-    buffer.fillStyle = '#fff';
-    buffer.textAlign = 'left';
-    buffer.fillText(
-      players[0]['money'],
-      5,
-      height - 215
-    );
-
     // Draw minimap background.
     buffer.fillStyle = world_static[0][4];
     buffer.fillRect(
@@ -629,7 +620,6 @@ function draw(){
     // Draw win/lose text if win/lose conditions met.
     if((players[0]['buildings'].length < 1 && players[0]['units'].length < 1)
       || (players[1]['buildings'].length < 1 && players[1]['units'].length < 1)){
-        buffer.textAlign = 'center';
 
         if(players[0]['buildings'].length < 1){
             buffer.fillStyle = '#f00';
@@ -655,6 +645,24 @@ function draw(){
           y / 2 + 50
         );
     }
+
+    buffer.fillStyle = '#fff';
+
+    if(paused){
+        buffer.fillText(
+          'PAUSED',
+          x,
+          y / 2 + 50
+        );
+    }
+
+    // Draw player 0 money.
+    buffer.textAlign = 'left';
+    buffer.fillText(
+      players[0]['money'],
+      5,
+      height - 215
+    );
 
     canvas.clearRect(
       0,
@@ -697,6 +705,10 @@ function fog_update_building(){
 }
 
 function logic(){
+    if(paused){
+        return;
+    }
+
     // If infinite fog is selected, reset fog.
     if(settings['fog-type'] == 2){
         for(var id in fog){
@@ -1201,16 +1213,22 @@ function save(){
         );
     }
 
-    if(document.getElementById('camera-keys').value == 'WASD'){
-        window.localStorage.removeItem('RTS-2D.htm-camera-keys');
-        settings['camera-keys'] = 'WASD';
+    var ids = {
+      'camera-keys': 'WASD',
+      'pause-key': 'P',
+    };
+    for(var id in ids){
+        if(document.getElementById(id).value == ids[id]){
+            window.localStorage.removeItem('RTS-2D.htm-' + id);
+            settings[id] = ids[id];
 
-    }else{
-        settings['camera-keys'] = document.getElementById('camera-keys').value;
-        window.localStorage.setItem(
-          'RTS-2D.htm-camera-keys',
-          settings['camera-keys']
-        );
+        }else{
+            settings[id] = document.getElementById(id).value;
+            window.localStorage.setItem(
+              'RTS-2D.htm-' + id,
+              settings[id]
+            );
+        }
     }
 
     if(document.getElementById('level-size').value == 1600
@@ -1227,7 +1245,7 @@ function save(){
         );
     }
 
-    var ids = {
+    ids = {
       'fog-type': 1,
       'frames-per-income': 100,
       'money': 1000,
@@ -1376,6 +1394,7 @@ function setmode(newmode){
         mouse_lock_y = -1;
         mouse_x = -1;
         mouse_y = -1;
+        paused = false;
         selected_type = -1;
 
         document.getElementById('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer style=display:none></canvas>';
@@ -1486,7 +1505,8 @@ function setmode(newmode){
     canvas = 0;
 
     document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
-      + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
+      + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu<br><input id=pause-key maxlength=1 value='
+      + settings['pause-key'] + '>Pause</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
       + settings['audio-volume'] + '>Audio<br><select id=fog-type>'
         + '<option value=2>Infinite Fog</option>'
         + '<option value=1>Finite Fog</option>'
@@ -1565,6 +1585,7 @@ var mouse_lock_x = 0;
 var mouse_lock_y = 0;
 var mouse_x = 0;
 var mouse_y = 0;
+var paused = false;
 var players = {};
 var selected_id = -1;
 var selected_type = -1;
@@ -1576,6 +1597,7 @@ var settings = {
   'level-size': parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')) || 1600,
   'money': parseFloat(window.localStorage.getItem('RTS-2D.htm-money')) || 1000,
   'ms-per-frame': parseInt(window.localStorage.getItem('RTS-2D.htm-ms-per-frame')) || 25,
+  'pause-key': window.localStorage.getItem('RTS-2D.htm-pause-key') || 'P',
   'scroll-speed': parseInt(window.localStorage.getItem('RTS-2D.htm-scroll-speed')) || 10,
 };
 var units = {
@@ -1606,22 +1628,24 @@ window.onkeydown = function(e){
         return;
     }
 
-    // If HQ selected.
-    if(selected_type === 1){
-        // F: build factory.
-        if(key === 70){
-            build_mode = 1;
+    if(!paused){
+        // If HQ selected.
+        if(selected_type === 1){
+            // F: build factory.
+            if(key === 70){
+                build_mode = 1;
+                return;
+            }
+
+        // R: build robot if factory selected.
+        }else if(selected_type === 2
+          && key === 82){
+            build_unit(
+              0,
+              'Robot'
+            );
             return;
         }
-
-    // R: build robot if factory selected.
-    }else if(selected_type === 2
-      && key === 82){
-        build_unit(
-          0,
-          'Robot'
-        );
-        return;
     }
 
     key = String.fromCharCode(key);
@@ -1637,6 +1661,9 @@ window.onkeydown = function(e){
 
     }else if(key === settings['camera-keys'][0]){
         key_up = true;
+
+    }else if(key === settings['pause-key']){
+        paused = !paused;
     }
 };
 
@@ -1662,7 +1689,8 @@ window.onload = function(e){
 };
 
 window.onmousedown = function(e){
-    if(mode <= 0){
+    if(mode <= 0
+      || paused){
         return;
     }
 
@@ -1761,7 +1789,8 @@ window.onmousedown = function(e){
 };
 
 window.onmousemove = function(e){
-    if(mode <= 0){
+    if(mode <= 0
+      || paused){
         return;
     }
 
