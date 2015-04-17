@@ -466,7 +466,7 @@ function draw(){
         );
     }
 
-    // Draw fog of war on minimap.
+    // Draw fog on minimap.
     buffer.fillStyle = '#000';
     for(id in fog){
         if(!fog[id]['display']){
@@ -1418,7 +1418,7 @@ function setmode(newmode){
           ],
         ];
 
-        // Add fog of war, if settings allow it.
+        // Add fog, if settings allow it.
         if(settings['fog-type'] > 0){
             var temp_x = 0;
             var temp_y = 0;
@@ -1508,10 +1508,10 @@ function setmode(newmode){
       + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu<br><input id=pause-key maxlength=1 value='
       + settings['pause-key'] + '>Pause</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
       + settings['audio-volume'] + '>Audio<br><select id=fog-type>'
-        + '<option value=2>Infinite Fog</option>'
-        + '<option value=1>Finite Fog</option>'
-        + '<option value=0>No Fog</option>'
-      + '</select>Fog of War<br><input id=frames-per-income value='
+        + '<option value=2>Infinite</option>'
+        + '<option value=1>Finite</option>'
+        + '<option value=0>No</option>'
+      + '</select>Fog<br><input id=frames-per-income value='
       + settings['frames-per-income'] + '>Frames/Income<br><input id=level-size value='
       + settings['level-size'] + '>*2 Level Size<br><input id=money value='
       + settings['money'] + '>Money<br><input id=ms-per-frame value='
