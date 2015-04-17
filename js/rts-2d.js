@@ -874,6 +874,8 @@ function logic(){
     }
 
     for(unit in players[0]['units']){
+        var update_fog = false;
+
         // If not yet reached destination, move unit.
         if(Math.abs(players[0]['units'][unit]['x'] - players[0]['units'][unit]['destination-x']) > 1
           && Math.abs(players[0]['units'][unit]['y'] - players[0]['units'][unit]['destination-y']) > 1){
@@ -899,6 +901,8 @@ function logic(){
                     : j[1]
                   ) * .7;
             }
+
+            update_fog = true;
 
         // Destination reached, make sure units don't overlap.
         }else{
@@ -930,8 +934,7 @@ function logic(){
 
         // Update fog.
         if(settings['fog-type'] == 2
-          || (Math.abs(players[0]['units'][unit]['x'] - players[0]['units'][unit]['destination-x']) > 1
-          && Math.abs(players[0]['units'][unit]['y'] - players[0]['units'][unit]['destination-y']) > 1)){
+          || update_fog){
             var loop_counter = fog.length - 1;
             if(loop_counter >= 0){
                 do{
