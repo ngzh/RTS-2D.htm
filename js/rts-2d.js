@@ -32,23 +32,7 @@ function build_building(player, building_type, x, y){
         return;
     }
 
-    for(var building in players[0]['buildings']){
-        // Check if fog is within 390px of a building.
-        var loop_counter = fog.length - 1;
-        do{
-            if(distance(
-              players[0]['buildings'][building]['x'],
-              players[0]['buildings'][building]['y'],
-              fog[loop_counter]['x'] - settings['level-size'],
-              fog[loop_counter]['y'] - settings['level-size']
-            ) < 390){
-                fog.splice(
-                  loop_counter,
-                  1
-                );
-            }
-        }while(loop_counter--);
-    }
+    fog_update_building();
 }
 
 function build_unit(player, unit_type){
@@ -265,6 +249,10 @@ function draw(){
     // Draw fog.
     buffer.fillStyle = '#000';
     for(var id in fog){
+        if(!fog[id]['display']){
+            continue;
+        }
+
         buffer.fillRect(
           -settings['level-size'] + fog[id]['x'],
           -settings['level-size'] + fog[id]['y'],
@@ -490,6 +478,10 @@ function draw(){
     // Draw fog of war on minimap.
     buffer.fillStyle = '#000';
     for(id in fog){
+        if(!fog[id]['display']){
+            continue;
+        }
+
         buffer.fillRect(
           fog[id]['x'] / math[0],
           height - 200 + fog[id]['y'] / math[0],
@@ -679,7 +671,39 @@ function draw(){
     animationFrame = window.requestAnimationFrame(draw);
 }
 
+function fog_update_building(){
+    for(var building in players[0]['buildings']){
+        // Check if fog is within 390px of a building.
+        var loop_counter = fog.length - 1;
+        do{
+            if(distance(
+              players[0]['buildings'][building]['x'],
+              players[0]['buildings'][building]['y'],
+              fog[loop_counter]['x'] - settings['level-size'],
+              fog[loop_counter]['y'] - settings['level-size']
+            ) < 390){
+                if(settings['fog-type'] == 2){
+                    fog[loop_counter]['display'] = false;
+
+                }else{
+                    fog.splice(
+                      loop_counter,
+                      1
+                    );
+                }
+            }
+        }while(loop_counter--);
+    }
+}
+
 function logic(){
+    // If infinite fog is selected, reset fog.
+    if(settings['fog-type'] == 2){
+        for(var id in fog){
+            fog[id]['display'] = true;
+        }
+    }
+
     money_timer += 1;
     if(money_timer >= settings['frames-per-income']){
         money_timer = 0;
@@ -873,10 +897,15 @@ function logic(){
                       fog[loop_counter]['x'] - settings['level-size'] + 50,
                       fog[loop_counter]['y'] - settings['level-size'] + 50
                     ) < 290){
-                        fog.splice(
-                          loop_counter,
-                          1
-                        );
+                        if(settings['fog-type'] == 2){
+                            fog[loop_counter]['display'] = false;
+
+                        }else{
+                            fog.splice(
+                              loop_counter,
+                              1
+                            );
+                        }
                     }
                 }while(loop_counter--);
             }
@@ -1096,6 +1125,12 @@ function logic(){
           1
         );
     }
+
+    // Only update building fog removal
+    //   if infinite fog is selected.
+    if(settings['fog-type'] == 2){
+        fog_update_building();
+    }
 }
 
 function m(x0, y0, x1, y1){
@@ -1127,7 +1162,7 @@ function reset(){
     document.getElementById('audio-volume').value = 1;
     document.getElementById('camera-keys').value = 'WASD';
     document.getElementById('frames-per-income').value = 100;
-    document.getElementById('fog-of-war').checked = true;
+    document.getElementById('fog-type').value = 1;
     document.getElementById('level-size').value = 1600;
     document.getElementById('money').value = 1000;
     document.getElementById('ms-per-frame').value = 25;
@@ -1178,18 +1213,6 @@ function save(){
         );
     }
 
-    if(document.getElementById('fog-of-war').checked){
-        window.localStorage.removeItem('RTS-2D.htm-fog-of-war');
-        settings['fog-of-war'] = true;
-
-    }else{
-        settings['fog-of-war'] = false;
-        window.localStorage.setItem(
-          'RTS-2D.htm-fog-of-war',
-          0
-        );
-    }
-
     if(document.getElementById('level-size').value == 1600
       || isNaN(document.getElementById('level-size').value)
       || document.getElementById('level-size').value < 200){
@@ -1205,6 +1228,7 @@ function save(){
     }
 
     var ids = {
+      'fog-type': 1,
       'frames-per-income': 100,
       'money': 1000,
       'ms-per-frame': 25,
@@ -1376,7 +1400,7 @@ function setmode(newmode){
         ];
 
         // Add fog of war, if settings allow it.
-        if(settings['fog-of-war']){
+        if(settings['fog-type'] > 0){
             var temp_x = 0;
             var temp_y = 0;
             var times = Math.floor(settings['level-size'] / 50);
@@ -1384,6 +1408,7 @@ function setmode(newmode){
             var loop_counter = Math.pow(times, 2) - 1;
             do{
                 fog.push({
+                  'display': true,
                   'x': temp_x * 100,
                   'y': temp_y,
                 });
@@ -1462,13 +1487,18 @@ function setmode(newmode){
 
     document.getElementById('page').innerHTML = '<div style=display:inline-block;text-align:left;vertical-align:top><div class=c><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div style="border-left:8px solid #222;display:inline-block;text-align:left"><div class=c><input id=camera-keys maxlength=4 value='
       + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled style=border:0 value=ESC>Main Menu</div><hr><div class=c><input id=audio-volume max=1 min=0 step=.01 type=range value='
-      + settings['audio-volume'] + '>Audio<br><label><input '
-      + (settings['fog-of-war'] ? 'checked ' : '') + 'id=fog-of-war type=checkbox>Fog of War</label><br><input id=frames-per-income value='
+      + settings['audio-volume'] + '>Audio<br><select id=fog-type>'
+        + '<option value=2>Infinite Fog</option>'
+        + '<option value=1>Finite Fog</option>'
+        + '<option value=0>No Fog</option>'
+      + '</select>Fog of War<br><input id=frames-per-income value='
       + settings['frames-per-income'] + '>Frames/Income<br><input id=level-size value='
       + settings['level-size'] + '>*2 Level Size<br><input id=money value='
       + settings['money'] + '>Money<br><input id=ms-per-frame value='
       + settings['ms-per-frame'] + '>ms/Frame<br><input id=scroll-speed value='
       + settings['scroll-speed'] + '>Scroll Speed<br><a onclick=reset()>Reset Settings</a></div></div>';
+
+    document.getElementById('fog-type').value = settings['fog-type'];
 }
 
 function validate_camera_move(mouse_x, mouse_y){
@@ -1541,7 +1571,7 @@ var selected_type = -1;
 var settings = {
   'audio-volume': parseFloat(window.localStorage.getItem('RTS-2D.htm-audio-volume')) || 1,
   'camera-keys': window.localStorage.getItem('RTS-2D.htm-camera-keys') || 'WASD',
-  'fog-of-war': window.localStorage.getItem('RTS-2D.htm-fog-of-war') === null,
+  'fog-type': window.localStorage.getItem('RTS-2D.htm-fog-type') || 1,
   'frames-per-income': parseFloat(window.localStorage.getItem('RTS-2D.htm-frames-per-income')) || 100,
   'level-size': parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')) || 1600,
   'money': parseFloat(window.localStorage.getItem('RTS-2D.htm-money')) || 1000,
@@ -1665,6 +1695,10 @@ window.onmousedown = function(e){
             var loop_counter = fog.length - 1;
             if(loop_counter >= 0){
                 do{
+                    if(!fog[loop_counter]['display']){
+                        continue;
+                    }
+
                     if(distance(
                       building_x,
                       building_y,
