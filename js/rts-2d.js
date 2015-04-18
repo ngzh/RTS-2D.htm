@@ -648,7 +648,7 @@ function draw(){
         buffer.fillText(
           'PAUSED',
           x,
-          y / 2 + 50
+          y / 2 + 100
         );
     }
 
