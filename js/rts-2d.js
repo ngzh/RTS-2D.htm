@@ -685,16 +685,18 @@ function fog_update_building(){
               players[0]['buildings'][building]['y'],
               fog[loop_counter]['x'] - settings['level-size'],
               fog[loop_counter]['y'] - settings['level-size']
-            ) < 390){
-                if(settings['fog-type'] == 2){
-                    fog[loop_counter]['display'] = false;
+            ) > 390){
+                continue;
+            }
 
-                }else{
-                    fog.splice(
-                      loop_counter,
-                      1
-                    );
-                }
+            if(settings['fog-type'] == 2){
+                fog[loop_counter]['display'] = false;
+
+            }else{
+                fog.splice(
+                  loop_counter,
+                  1
+                );
             }
         }while(loop_counter--);
     }
