@@ -23,7 +23,7 @@ function build_building(player, building_type, x, y){
     players[player]['buildings'].push(building);
 
     if(player == 0){
-        build_mode = 0;
+        build_mode = false;
 
         if(fog.length > 0){
             fog_update_building();
@@ -330,7 +330,7 @@ function draw(){
     }
 
     // Draw building while in build mode.
-    if(build_mode > 0){
+    if(build_mode){
         buffer.fillStyle = '#1f1';
 
         var building_x = mouse_x - 50;
@@ -1084,7 +1084,7 @@ function logic(){
                 players[0]['buildings'][building]['health'] -= bullets[bullet]['damage'];
                 if(players[0]['buildings'][building]['health'] <= 0){
                     if(selected_id == building){
-                        build_mode = 0;
+                        build_mode = false;
                         selected_id = -1;
                         selected_type = -1;
                     }
@@ -1571,7 +1571,7 @@ var buildings = {
     'type': 1,
   },
 };
-var build_mode = 0;
+var build_mode = false;
 var bullets = [];
 var camera_x = 0;
 var camera_y = 0;
@@ -1624,8 +1624,8 @@ window.onkeydown = function(e){
     var key = e.keyCode || e.which;
 
     if(key === 27){
-        if(build_mode > 0){
-            build_mode = 0;
+        if(build_mode){
+            build_mode = false;
 
         }else{
             setmode(0);
@@ -1639,7 +1639,7 @@ window.onkeydown = function(e){
         if(selected_type === 1){
             // F: build factory.
             if(key === 70){
-                build_mode = 1;
+                build_mode = true;
                 return;
             }
 
@@ -1707,7 +1707,7 @@ window.onmousedown = function(e){
       || mouse_y < height - 200){
 
         // Check if in buildling mode.
-        if(build_mode > 0){
+        if(build_mode){
             // Make sure building is within buildable limit.
             var building_x = mouse_x - camera_x - x - 50;
             if(building_x > settings['level-size'] - 100){
@@ -1769,7 +1769,7 @@ window.onmousedown = function(e){
 
         // Else if HQ is selected, activate build mode.
         }else if(selected_type == 1){
-            build_mode = 1;
+            build_mode = true;
 
         // Else if factory is selected, build robot.
         }else if(selected_type == 2){
