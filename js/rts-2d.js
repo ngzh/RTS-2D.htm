@@ -1,6 +1,45 @@
-function build_building(player, building_type, x, y){
+function build_building(player, building_type, building_x, building_y, fog_override){
     if(players[player]['money'] < buildings[building_type]['cost']){
         return;
+    }
+
+    // Make sure building is within buildable limit.
+    if(building_x > settings['level-size'] - 100){
+        building_x = settings['level-size'] - 100;
+
+    }else if(building_x < -settings['level-size']){
+        building_x = -settings['level-size'];
+    }
+
+    if(building_y > settings['level-size'] - 100){
+        building_y = settings['level-size'] - 100;
+
+    }else if(building_y < -settings['level-size']){
+        building_y = -settings['level-size'];
+    }
+
+    fog_override = fog_override || false;
+
+    if(player == 0
+      && !fog_override){
+        // Don't allow building on fog.
+        var loop_counter = fog.length - 1;
+        if(loop_counter >= 0){
+            do{
+                if(!fog[loop_counter]['display']){
+                    continue;
+                }
+
+                if(distance(
+                  building_x,
+                  building_y,
+                  fog[loop_counter]['x'] - settings['level-size'] + 50,
+                  fog[loop_counter]['y'] - settings['level-size'] + 50
+                ) < 70){
+                    return;
+                }
+            }while(loop_counter--);
+        }
     }
 
     players[player]['money'] -= buildings[building_type]['cost'];
@@ -12,8 +51,8 @@ function build_building(player, building_type, x, y){
       'height': 100,
       'selected': false,
       'width': 100,
-      'x': x,
-      'y': y,
+      'x': building_x,
+      'y': building_y,
     };
 
     for(var property in buildings[building_type]){
@@ -1475,7 +1514,8 @@ function setmode(newmode){
             : settings['level-size'] - 125,
           start_y
             ? settings['level-size'] - 125
-            : -settings['level-size'] + 25
+            : -settings['level-size'] + 25,
+          true
         );
         build_building(
           1,
@@ -1708,48 +1748,12 @@ window.onmousedown = function(e){
 
         // Check if in buildling mode.
         if(build_mode){
-            // Make sure building is within buildable limit.
-            var building_x = mouse_x - camera_x - x - 50;
-            if(building_x > settings['level-size'] - 100){
-                building_x = settings['level-size'] - 100;
-
-            }else if(building_x < -settings['level-size']){
-                building_x = -settings['level-size'];
-            }
-
-            var building_y = mouse_y - camera_y - y - 50;
-            if(building_y > settings['level-size'] - 100){
-                building_y = settings['level-size'] - 100;
-
-            }else if(building_y < -settings['level-size']){
-                building_y = -settings['level-size'];
-            }
-
-            // Don't allow building on fog.
-            var loop_counter = fog.length - 1;
-            if(loop_counter >= 0){
-                do{
-                    if(!fog[loop_counter]['display']){
-                        continue;
-                    }
-
-                    if(distance(
-                      building_x,
-                      building_y,
-                      fog[loop_counter]['x'] - settings['level-size'] + 50,
-                      fog[loop_counter]['y'] - settings['level-size'] + 50
-                    ) < 70){
-                        return;
-                    }
-                }while(loop_counter--);
-            }
-
             // Attempt to build a factory.
             build_building(
               0,
               'Factory',
-              building_x,
-              building_y
+              mouse_x - camera_x - x - 50,
+              mouse_y - camera_y - y - 50
             );
 
         // If unit selected or not clicking on build robot button.
