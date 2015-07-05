@@ -1442,7 +1442,7 @@ function setmode(newmode){
         paused = false;
         selected_type = -1;
 
-        document.getElementById('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer style=display:none></canvas>';
+        document.getElementById('page').innerHTML = '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer></canvas>';
         document.getElementById('canvas').style.background = [
           '#277',
           '#444',
