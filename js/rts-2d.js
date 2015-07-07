@@ -1,3 +1,5 @@
+'use strict';
+
 function build_building(player, building_type, building_x, building_y, fog_override){
     if(players[player]['money'] < buildings[building_type]['cost']){
         return;
