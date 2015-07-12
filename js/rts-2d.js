@@ -743,6 +743,14 @@ function fog_update_building(){
     }
 }
 
+function get_movement_speed(x0, y0, x1, y1){
+    var angle = Math.atan(Math.abs(y0 - y1) / Math.abs(x0 - x1));
+    return [
+      Math.cos(angle),
+      Math.sin(angle),
+    ];
+}
+
 function logic(){
     if(paused){
         return;
@@ -877,7 +885,7 @@ function logic(){
         // Movement "AI", pick new destination once destination is reached.
         if(players[1]['units'][unit]['x'] != players[1]['units'][unit]['destination-x']
           || players[1]['units'][unit]['y'] != players[1]['units'][unit]['destination-y']){
-            var j = m(
+            var speeds = get_movement_speed(
               players[1]['units'][unit]['x'],
               players[1]['units'][unit]['y'],
               players[1]['units'][unit]['destination-x'],
@@ -887,16 +895,16 @@ function logic(){
             if(players[1]['units'][unit]['x'] != players[1]['units'][unit]['destination-x']){
                 players[1]['units'][unit]['x'] += 
                   (players[1]['units'][unit]['x'] > players[1]['units'][unit]['destination-x']
-                    ? -j[0]
-                    : j[0]
+                    ? -speeds[0]
+                    : speeds[0]
                   ) * .7;
             }
 
             if(players[1]['units'][unit]['y'] != players[1]['units'][unit]['destination-y']){
                 players[1]['units'][unit]['y'] +=
                   (players[1]['units'][unit]['y'] > players[1]['units'][unit]['destination-y']
-                    ? -j[1]
-                    : j[1]
+                    ? -speeds[1]
+                    : speeds[1]
                   ) * .7;
             }
 
@@ -918,7 +926,7 @@ function logic(){
         // If not yet reached destination, move unit.
         if(Math.abs(players[0]['units'][unit]['x'] - players[0]['units'][unit]['destination-x']) > 1
           && Math.abs(players[0]['units'][unit]['y'] - players[0]['units'][unit]['destination-y']) > 1){
-            var j = m(
+            var speeds = get_movement_speed(
               players[0]['units'][unit]['x'],
               players[0]['units'][unit]['y'],
               players[0]['units'][unit]['destination-x'],
@@ -928,16 +936,16 @@ function logic(){
             if(players[0]['units'][unit]['x'] != players[0]['units'][unit]['destination-x']){
                 players[0]['units'][unit]['x'] +=
                   (players[0]['units'][unit]['x'] > players[0]['units'][unit]['destination-x']
-                    ? -j[0]
-                    : j[0]
+                    ? -speeds[0]
+                    : speeds[0]
                   ) * .7;
             }
 
             if(players[0]['units'][unit]['y'] != players[0]['units'][unit]['destination-y']){
                 players[0]['units'][unit]['y'] +=
                   (players[0]['units'][unit]['y'] > players[0]['units'][unit]['destination-y'] 
-                    ? -j[1]
-                    : j[1]
+                    ? -speeds[1]
+                    : speeds[1]
                   ) * .7;
             }
 
@@ -1059,7 +1067,7 @@ function logic(){
 
     for(var bullet in bullets){
         // Calculate bullet movement.
-        var j = m(
+        var speeds = get_movement_speed(
           bullets[bullet]['x'],
           bullets[bullet]['y'],
           bullets[bullet]['destination-x'],
@@ -1071,8 +1079,8 @@ function logic(){
             bullets[bullet]['x'] +=
               10
               * (bullets[bullet]['x'] > bullets[bullet]['destination-x']
-                ? -j[0]
-                : j[0]
+                ? -speeds[0]
+                : speeds[0]
               );
         }
 
@@ -1081,8 +1089,8 @@ function logic(){
             bullets[bullet]['y'] +=
               10
               * (bullets[bullet]['y'] > bullets[bullet]['destination-y']
-                ? -j[1]
-                : j[1]
+                ? -speeds[1]
+                : speeds[1]
               );
         }
 
@@ -1189,18 +1197,6 @@ function logic(){
     //   if infinite fog is selected.
     if(settings['fog-type'] == 2){
         fog_update_building();
-    }
-}
-
-function m(x0, y0, x1, y1){
-    var j0 = Math.abs(x0 - x1);
-    var j1 = Math.abs(y0 - y1);
-
-    if(j0 > j1){
-        return [1, j1 / j0];
-
-    }else{
-        return j1 > j0 ? [j0 / j1, 1] : [.5, .5];
     }
 }
 
