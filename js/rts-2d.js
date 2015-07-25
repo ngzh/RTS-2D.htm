@@ -22,7 +22,7 @@ function build_building(player, building_type, building_x, building_y, fog_overr
 
     fog_override = fog_override || false;
 
-    if(player == 0
+    if(player === 0
       && !fog_override){
         // Don't allow building on fog.
         var loop_counter = fog.length - 1;
@@ -63,7 +63,7 @@ function build_building(player, building_type, building_x, building_y, fog_overr
 
     players[player]['buildings'].push(building);
 
-    if(player == 0){
+    if(player === 0){
         build_mode = false;
 
         if(fog.length > 0){
@@ -358,7 +358,7 @@ function draw(){
     buffer.restore();
 
     // Draw selection box.
-    if(mouse_hold == 1){
+    if(mouse_hold === 1){
         buffer.beginPath();
         buffer.rect(
           mouse_lock_x,
@@ -583,7 +583,7 @@ function draw(){
     var temp_y = 0;
 
     // Draw selection box on minimap.
-    if(mouse_hold == 1){
+    if(mouse_hold === 1){
         // Make sure box cannot go past right edge.
         temp_x = 100 - (x + camera_x - mouse_lock_x) / math[0];
         temp_width = (mouse_x - mouse_lock_x) / math[0];
@@ -730,7 +730,7 @@ function fog_update_building(){
                 continue;
             }
 
-            if(settings['fog-type'] == 2){
+            if(settings['fog-type'] === 2){
                 fog[loop_counter]['display'] = false;
 
             }else{
@@ -757,7 +757,7 @@ function logic(){
     }
 
     // If infinite fog is selected, reset fog.
-    if(settings['fog-type'] == 2){
+    if(settings['fog-type'] === 2){
         for(var id in fog){
             fog[id]['display'] = true;
         }
@@ -799,7 +799,7 @@ function logic(){
     }
 
     // Handle selection box.
-    if(mouse_hold == 1){
+    if(mouse_hold === 1){
         select();
     }
 
@@ -954,7 +954,7 @@ function logic(){
         // Destination reached, make sure units don't overlap.
         }else{
             for(var other_unit in players[0]['units']){
-                if(unit == other_unit){
+                if(unit === other_unit){
                     continue;
                 }
 
@@ -980,7 +980,7 @@ function logic(){
         }
 
         // Update fog.
-        if(settings['fog-type'] == 2
+        if(settings['fog-type'] === 2
           || update_fog){
             var loop_counter = fog.length - 1;
             if(loop_counter >= 0){
@@ -991,7 +991,7 @@ function logic(){
                       fog[loop_counter]['x'] - settings['level-size'] + 50,
                       fog[loop_counter]['y'] - settings['level-size'] + 50
                     ) < 290){
-                        if(settings['fog-type'] == 2){
+                        if(settings['fog-type'] === 2){
                             fog[loop_counter]['display'] = false;
 
                         }else{
@@ -1102,7 +1102,7 @@ function logic(){
             continue;
         }
 
-        if(bullets[bullet]['player'] == 1){
+        if(bullets[bullet]['player'] === 1){
             for(var unit in players[0]['units']){
                 if(bullets[bullet]['x'] <= players[0]['units'][unit]['x'] - 15
                   || bullets[bullet]['x'] >= players[0]['units'][unit]['x'] + 15
@@ -1132,7 +1132,7 @@ function logic(){
 
                 players[0]['buildings'][building]['health'] -= bullets[bullet]['damage'];
                 if(players[0]['buildings'][building]['health'] <= 0){
-                    if(selected_id == building){
+                    if(selected_id === building){
                         build_mode = false;
                         selected_id = -1;
                         selected_type = -1;
@@ -1195,7 +1195,7 @@ function logic(){
 
     // Only update building fog removal
     //   if infinite fog is selected.
-    if(settings['fog-type'] == 2){
+    if(settings['fog-type'] === 2){
         fog_update_building();
     }
 }
@@ -1261,7 +1261,7 @@ function save(){
       'pause-key': 'P',
     };
     for(var id in ids){
-        if(document.getElementById(id).value == ids[id]){
+        if(document.getElementById(id).value === ids[id]){
             window.localStorage.removeItem('RTS-2D.htm-' + id);
             settings[id] = ids[id];
 
@@ -1360,7 +1360,7 @@ function select(){
 }
 
 function setdestination(on_minimap){
-    if(selected_type == 0){
+    if(selected_type === 0){
         for(var unit in players[0]['units']){
             if(!players[0]['units'][unit]['selected']){
                 continue;
@@ -1479,7 +1479,7 @@ function setmode(newmode){
                 temp_x += 1;
 
                 // Done with this row, move on to the next.
-                if(loop_counter % times == 0){
+                if(loop_counter % times === 0){
                     temp_y += 100;
                     temp_x = 0;
                 }
@@ -1763,22 +1763,22 @@ window.onmousedown = function(e){
           || (mouse_y < height - 65
           || mouse_x > 270)){
             // Left click: start dragging.
-            if(e.button == 0){
+            if(e.button === 0){
                 mouse_hold = 1;
                 mouse_lock_x = mouse_x;
                 mouse_lock_y = mouse_y;
 
             // Right click: try to set selected building/unit destination.
-            }else if(e.button == 2){
+            }else if(e.button === 2){
                 setdestination(false);
             }
 
         // Else if HQ is selected, activate build mode.
-        }else if(selected_type == 1){
+        }else if(selected_type === 1){
             build_mode = true;
 
         // Else if factory is selected, build robot.
-        }else if(selected_type == 2){
+        }else if(selected_type === 2){
             build_unit(
               0,
               'Robot'
@@ -1786,7 +1786,7 @@ window.onmousedown = function(e){
         }
 
     // Right clicking on minimap.
-    }else if(e.button == 2){
+    }else if(e.button === 2){
         setdestination(true);
 
     // Other clicks: move camera.
@@ -1810,11 +1810,11 @@ window.onmousemove = function(e){
     mouse_y = e.pageY;
 
     // Dragging after click was not on minimap.
-    if(mouse_hold == 1){
+    if(mouse_hold === 1){
         select();
 
     // Dragging after click was on minimap.
-    }else if(mouse_hold == 2){
+    }else if(mouse_hold === 2){
         validate_camera_move(
           mouse_x,
           mouse_y
