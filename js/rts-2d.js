@@ -375,26 +375,24 @@ function draw(){
         buffer.fillStyle = '#1f1';
 
         var building_x = mouse_x - 50;
-        var max_x = settings['level-size'] + camera_x + x - 100;
-        var min_x = -settings['level-size'] + camera_x + x;
-
-        if(building_x > max_x){
-            building_x = max_x;
-
-        }else if(building_x < min_x){
-            building_x = min_x;
-        }
+        building_x = Math.min(
+          building_x,
+          settings['level-size'] + camera_x + x - 100
+        );
+        building_x = Math.max(
+          building_x,
+          -settings['level-size'] + camera_x + x
+        );
 
         var building_y = mouse_y - 50;
-        var max_y = settings['level-size'] + camera_y + y - 100;
-        var min_y = -settings['level-size'] + camera_y + y;
-
-        if(building_y > max_y){
-            building_y = max_y;
-
-        }else if(building_y < min_y){
-            building_y = min_y;
-        }
+        building_y = Math.min(
+          building_y,
+          settings['level-size'] + camera_y + y - 100
+        );
+        building_y = Math.max(
+          building_y,
+          -settings['level-size'] + camera_y + y
+        );
 
         buffer.fillRect(
           building_x,
