@@ -1528,7 +1528,9 @@ function setmode(newmode){
         camera_x = -players[0]['buildings'][0]['x'] - 50;
         camera_y = -players[0]['buildings'][0]['y'] - 50;
 
-        buffer = document.getElementById('buffer').getContext('2d');
+        buffer = document.getElementById('buffer').getContext('2d', {
+          'alpha': false,
+        });
         canvas = document.getElementById('canvas').getContext('2d');
 
         resize();
