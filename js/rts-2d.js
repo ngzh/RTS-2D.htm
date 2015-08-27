@@ -117,7 +117,6 @@ function draw(){
       height
     );
 
-    buffer.font = '42pt sans-serif';
     buffer.strokeStyle = '#ddd';
     buffer.textAlign = 'center';
 
@@ -1238,6 +1237,8 @@ function resize(){
     document.getElementById('buffer').width = width;
     document.getElementById('canvas').width = width;
     x = width / 2;
+
+    buffer.font = '42pt sans-serif';
 }
 
 // Save settings into window.localStorage if they differ from default.
