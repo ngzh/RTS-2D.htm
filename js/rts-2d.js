@@ -223,10 +223,10 @@ function draw(){
 
     // Draw visible player 1 units.
     for(var unit in players[1]['units']){
-        if(players[1]['units'][unit]['x'] + 15 + x + camera_x <= 0
-          || players[1]['units'][unit]['x'] - 15 + x + camera_x >= width
-          || players[1]['units'][unit]['y'] + 15 + y + camera_y <= 0
-          || players[1]['units'][unit]['y'] - 15 + y + camera_y >= height){
+        if(players[1]['units'][unit]['x'] + 15 + offset_x <= 0
+          || players[1]['units'][unit]['x'] - 15 + offset_x >= width
+          || players[1]['units'][unit]['y'] + 15 + offset_y <= 0
+          || players[1]['units'][unit]['y'] - 15 + offset_y >= height){
             continue;
         }
 
@@ -248,10 +248,10 @@ function draw(){
 
     // Draw visible player 0 units.
     for(unit in players[0]['units']){
-        if(players[0]['units'][unit]['x'] + 15 + x + camera_x <= 0
-          || players[0]['units'][unit]['x'] - 15 + x + camera_x >= width
-          || players[0]['units'][unit]['y'] + 15 + y + camera_y <= 0
-          || players[0]['units'][unit]['y'] - 15 + y + camera_y >= height){
+        if(players[0]['units'][unit]['x'] + 15 + offset_x <= 0
+          || players[0]['units'][unit]['x'] - 15 + offset_x >= width
+          || players[0]['units'][unit]['y'] + 15 + offset_y <= 0
+          || players[0]['units'][unit]['y'] - 15 + offset_y >= height){
             continue;
         }
 
@@ -582,7 +582,7 @@ function draw(){
     // Draw selection box on minimap.
     if(mouse_hold === 1){
         // Make sure box cannot go past right edge.
-        temp_x = 100 - (x + camera_x - mouse_lock_x) / math[0];
+        temp_x = 100 - (offset_x - mouse_lock_x) / math[0];
         temp_width = (mouse_x - mouse_lock_x) / math[0];
         // Box past right edge? Decrease width to fix.
         if(temp_x > 200 - temp_width){
@@ -590,7 +590,7 @@ function draw(){
         }
 
         // Make sure box can't go past top edge.
-        temp_y = height - 100 - (y + camera_y - mouse_lock_y) / math[0];
+        temp_y = height - 100 - (offset_y - mouse_lock_y) / math[0];
         temp_height = (mouse_y - mouse_lock_y) / math[0];
 
         // Box past top edge? Decrease height and make sure height isn't negative.
