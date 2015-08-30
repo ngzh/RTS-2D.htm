@@ -117,7 +117,6 @@ function draw(){
       height
     );
 
-    buffer.strokeStyle = '#ddd';
     buffer.textAlign = 'center';
 
     // Save current buffer state.
@@ -1239,6 +1238,7 @@ function resize(){
     x = width / 2;
 
     buffer.font = '42pt sans-serif';
+    buffer.strokeStyle = '#ddd';
 }
 
 // Save settings into window.localStorage if they differ from default.
