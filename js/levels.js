@@ -1,5 +1,7 @@
+'use strict';
+
 function load_level(id){
-    load_tech(id);
+    load_tech();
 
     document.getElementById('canvas').style.background = [
       '#277',
