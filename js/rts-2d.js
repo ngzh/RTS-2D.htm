@@ -1603,6 +1603,7 @@ var buffer = 0;
 var buildings = {
   'Factory': {
     'cost': 250,
+    'key': 70,
     'label': 'F',
     'type': 2,
   },
@@ -1654,6 +1655,7 @@ var settings = {
 var units = {
   'Robot': {
     'cost': 100,
+    'key': 82,
   },
 };
 var width = 0;
@@ -1682,20 +1684,26 @@ window.onkeydown = function(e){
     if(!paused){
         // If HQ selected.
         if(selected_type === 1){
-            // F: build factory.
-            if(key === 70){
-                build_mode = true;
-                return;
+            // Check if building build hotkey pressed.
+            for(var building in buildings){
+                if(key === buildings[building]['key']){
+                    build_mode = true;
+                    return;
+                }
             }
 
-        // R: build robot if factory selected.
-        }else if(selected_type === 2
-          && key === 82){
-            build_unit(
-              0,
-              'Robot'
-            );
-            return;
+        // If Factory selected.
+        }else if(selected_type === 2){
+            // Check if unit build hotkey pressed.
+            for(var unit in units){
+                if(key === units[unit]['key']){
+                    build_unit(
+                      0,
+                      unit
+                    );
+                    return;
+                }
+            }
         }
     }
 
