@@ -1442,26 +1442,6 @@ function setmode(newmode){
         document.body.innerHTML =
           '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer></canvas>';
 
-        document.getElementById('canvas').style.background = [
-          '#277',
-          '#444',
-          '#321',
-        ][mode - 1];
-
-        world_static = [
-          [
-            -settings['level-size'],
-            -settings['level-size'],
-            settings['level-size'] * 2,
-            settings['level-size'] * 2,
-            [
-              '#765',
-              '#333',
-              '#432',
-            ][mode - 1],
-          ],
-        ];
-
         // Add fog, if settings allow it.
         if(settings['fog-type'] > 0){
             var temp_x = 0;
@@ -1487,45 +1467,7 @@ function setmode(newmode){
             }while(loop_counter--);
         }
 
-        // Choose random starting locations.
-        var start_x = Math.floor(Math.random() * 2);
-        var start_y = Math.floor(Math.random() * 2);
-
-        // Setup players.
-        players = {
-          0: {
-            'buildings': [],
-            'money': settings['money'],
-            'units': [],
-          },
-          1: {
-            'buildings': [],
-            'money': settings['money'],
-            'units': [],
-          },
-        };
-
-        build_building(
-          0,
-          'HQ',
-          start_x
-            ? -settings['level-size'] + 25
-            : settings['level-size'] - 125,
-          start_y
-            ? settings['level-size'] - 125
-            : -settings['level-size'] + 25,
-          true
-        );
-        build_building(
-          1,
-          'HQ',
-          start_x
-            ? settings['level-size'] - 125
-            : -settings['level-size'] + 25,
-          start_y
-            ? -settings['level-size'] + 25
-            : settings['level-size'] - 125
-        );
+        load_level(mode - 1);
 
         // Set camera position to HQ location.
         camera_x = -players[0]['buildings'][0]['x'] - 50;
@@ -1600,19 +1542,7 @@ function validate_destination(type, id){
 
 var animationFrame = 0;
 var buffer = 0;
-var buildings = {
-  'Factory': {
-    'cost': 250,
-    'key': 70,
-    'label': 'F',
-    'type': 2,
-  },
-  'HQ': {
-    'cost': 0,
-    'label': 'HQ',
-    'type': 1,
-  },
-};
+var buildings = {};
 var build_mode = false;
 var bullets = [];
 var camera_x = 0;
@@ -1652,12 +1582,7 @@ var settings = {
   'pause-key': window.localStorage.getItem('RTS-2D.htm-pause-key') || 'P',
   'scroll-speed': parseInt(window.localStorage.getItem('RTS-2D.htm-scroll-speed')) || 10,
 };
-var units = {
-  'Robot': {
-    'cost': 100,
-    'key': 82,
-  },
-};
+var units = {};
 var width = 0;
 var world_static = [];
 var x = 0;
