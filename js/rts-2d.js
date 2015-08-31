@@ -282,7 +282,7 @@ function draw(){
     }
 
     // Draw fog.
-    buffer.fillStyle = '#000';
+    buffer.fillStyle = settings['fog-color'];
     for(var id in fog){
         if(!fog[id]['display']){
             continue;
@@ -500,7 +500,7 @@ function draw(){
     }
 
     // Draw fog on minimap.
-    buffer.fillStyle = '#000';
+    buffer.fillStyle = settings['fog-color'];
     for(id in fog){
         if(!fog[id]['display']){
             continue;
@@ -1213,6 +1213,7 @@ function reset(){
     document.getElementById('audio-volume').value = 1;
     document.getElementById('camera-keys').value = 'WASD';
     document.getElementById('frames-per-income').value = 100;
+    document.getElementById('fog-color').value = '#000000';
     document.getElementById('fog-type').value = 1;
     document.getElementById('level-size').value = 1600;
     document.getElementById('money').value = 1000;
@@ -1257,6 +1258,7 @@ function save(){
 
     var ids = {
       'camera-keys': 'WASD',
+      'fog-color': '#000000',
       'pause-key': 'P',
     };
     for(var id in ids){
@@ -1500,7 +1502,8 @@ function setmode(newmode){
         + '<option value=2>Infinite</option>'
         + '<option value=1>Finite</option>'
         + '<option value=0>No</option>'
-      + '</select>Fog<br><input id=frames-per-income value='
+      + '</select>Fog<br><input id=fog-color value='
+      + settings['fog-color'] + ' type=color>Fog Color<br><input id=frames-per-income value='
       + settings['frames-per-income'] + '>Frames/Income<br><input id=level-size value='
       + settings['level-size'] + '>*2 Level Size<br><input id=money value='
       + settings['money'] + '>Money<br><input id=ms-per-frame value='
@@ -1572,6 +1575,7 @@ var settings = {
     ? parseFloat(window.localStorage.getItem('RTS-2D.htm-audio-volume'))
     : 1,
   'camera-keys': window.localStorage.getItem('RTS-2D.htm-camera-keys') || 'WASD',
+  'fog-color': window.localStorage.getItem('RTS-2D.htm-fog-color') || '#000000',
   'fog-type': window.localStorage.getItem('RTS-2D.htm-fog-type') || 1,
   'frames-per-income': parseFloat(window.localStorage.getItem('RTS-2D.htm-frames-per-income')) || 100,
   'level-size': parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')) || 1600,
