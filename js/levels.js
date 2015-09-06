@@ -10,17 +10,17 @@ function load_level(id){
     ][id];
 
     world_static = [
-      [
-        -settings['level-size'],
-        -settings['level-size'],
-        settings['level-size'] * 2,
-        settings['level-size'] * 2,
-        [
+      {
+        'color': [
           '#765',
           '#333',
           '#432',
         ][id],
-      ],
+        'height': settings['level-size'] * 2,
+        'width': settings['level-size'] * 2,
+        'x': -settings['level-size'],
+        'y': -settings['level-size'],
+      },
     ];
 
     // Choose random starting locations.

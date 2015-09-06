@@ -132,19 +132,19 @@ function draw(){
 
     // Draw visible static world objects.
     for(var id in world_static){
-        if(world_static[id][0] + world_static[id][2] + offset_x <= 0
-          || world_static[id][0] + offset_x >= width
-          || world_static[id][1] + world_static[id][3] + offset_y <= 0
-          || world_static[id][1] + offset_y >= height){
+        if(world_static[id]['x'] + world_static[id]['width'] + offset_x <= 0
+          || world_static[id]['x'] + offset_x >= width
+          || world_static[id]['y'] + world_static[id]['height'] + offset_y <= 0
+          || world_static[id]['y'] + offset_y >= height){
             continue;
         }
 
-        buffer.fillStyle = world_static[id][4];
+        buffer.fillStyle = world_static[id]['color'];
         buffer.fillRect(
-          world_static[id][0],
-          world_static[id][1],
-          world_static[id][2],
-          world_static[id][3]
+          world_static[id]['x'],
+          world_static[id]['y'],
+          world_static[id]['width'],
+          world_static[id]['height']
         );
     }
 
@@ -447,7 +447,7 @@ function draw(){
     }
 
     // Draw minimap background.
-    buffer.fillStyle = world_static[0][4];
+    buffer.fillStyle = world_static[0]['color'];
     buffer.fillRect(
       0,
       height - 200,
