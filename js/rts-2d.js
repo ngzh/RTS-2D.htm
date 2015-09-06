@@ -299,7 +299,7 @@ function draw(){
     // Draw selected building destination.
     for(building in players[0]['buildings']){
         if(!players[0]['buildings'][building]['selected']
-          || players[0]['buildings'][building]['destination-x'] == null){
+          || players[0]['buildings'][building]['destination-x'] === null){
             continue;
         }
 
@@ -518,7 +518,7 @@ function draw(){
     for(building in players[0]['buildings']){
         // Only draw if building is selected.
         if(!players[0]['buildings'][building]['selected']
-          || players[0]['buildings'][building]['destination-x'] == null){
+          || players[0]['buildings'][building]['destination-x'] === null){
             continue;
         }
 
