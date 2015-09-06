@@ -1571,7 +1571,7 @@ var players = {};
 var selected_id = -1;
 var selected_type = -1;
 var settings = {
-  'audio-volume': window.localStorage.getItem('RTS-2D.htm-audio-volume') != null
+  'audio-volume': window.localStorage.getItem('RTS-2D.htm-audio-volume') !== null
     ? parseFloat(window.localStorage.getItem('RTS-2D.htm-audio-volume'))
     : 1,
   'camera-keys': window.localStorage.getItem('RTS-2D.htm-camera-keys') || 'WASD',
@@ -1579,7 +1579,7 @@ var settings = {
   'fog-type': window.localStorage.getItem('RTS-2D.htm-fog-type') || 1,
   'frames-per-income': parseFloat(window.localStorage.getItem('RTS-2D.htm-frames-per-income')) || 100,
   'level-size': parseFloat(window.localStorage.getItem('RTS-2D.htm-level-size')) || 1600,
-  'money': window.localStorage.getItem('RTS-2D.htm-money') != null
+  'money': window.localStorage.getItem('RTS-2D.htm-money') !== null
     ? parseFloat(window.localStorage.getItem('RTS-2D.htm-money'))
     : 1000,
   'ms-per-frame': parseInt(window.localStorage.getItem('RTS-2D.htm-ms-per-frame')) || 25,
