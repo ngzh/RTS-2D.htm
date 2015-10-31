@@ -1357,7 +1357,7 @@ function select(){
 }
 
 function setdestination(on_minimap){
-    if(selected_type === ''){
+    if(selected_type === 'Unit'){
         for(var unit in players[0]['units']){
             if(!players[0]['units'][unit]['selected']){
                 continue;
@@ -1377,7 +1377,7 @@ function setdestination(on_minimap){
             );
         }
 
-    }else if(selected_type !== 'Unit'){
+    }else{
         for(var building in players[0]['buildings']){
             if(!players[0]['buildings'][building]['selected']){
                 continue;
