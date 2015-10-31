@@ -71,15 +71,19 @@ function load_tech(id){
       'default': {
         'buildings': {
           'Factory': {
+            'children': [
+              'R',
+            ],
             'cost': 250,
             'key': 70,
             'label': 'F',
-            'type': 2,
           },
           'HQ': {
+            'children': [
+              'F',
+            ],
             'cost': 0,
             'label': 'HQ',
-            'type': 1,
           },
         },
         'units': {

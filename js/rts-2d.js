@@ -47,11 +47,12 @@ function build_building(player, building_type, building_x, building_y, fog_overr
     players[player]['money'] -= buildings[building_type]['cost'];
 
     var building = {
-      'destination-x': null,
-      'destination-y': null,
+      'destination-x': building_x,
+      'destination-y': building_y,
       'health': 1000,
       'height': 100,
       'selected': false,
+      'type': building_type,
       'width': 100,
       'x': building_x,
       'y': building_y,
@@ -401,10 +402,7 @@ function draw(){
 
         buffer.fillStyle = '#fff';
         buffer.fillText(
-          [
-            'F',
-            'R'
-          ][selected_type - 1],
+          buildings[selected_type]['children'][0],
           building_x + 50,
           building_y + 70
         );
@@ -419,7 +417,8 @@ function draw(){
       205
     );
 
-    if(selected_type > 0){
+    if(selected_type !== ''
+      && selected_type !== 'Unit'){
         buffer.fillRect(
           205,
           height - 70,
@@ -437,10 +436,7 @@ function draw(){
 
         buffer.fillStyle = '#fff';
         buffer.fillText(
-          [
-            'F',
-            'R',
-          ][selected_type - 1],
+          buildings[selected_type]['children'][0],
           240,
           height - 11
         );
@@ -1131,7 +1127,7 @@ function logic(){
                     if(selected_id === building){
                         build_mode = false;
                         selected_id = -1;
-                        selected_type = -1;
+                        selected_type = '';
                     }
 
                     players[0]['buildings'].splice(
@@ -1314,7 +1310,7 @@ function save(){
 
 function select(){
     selected_id = -1;
-    selected_type = -1;
+    selected_type = '';
 
     for(var unit in players[0]['units']){
         players[0]['units'][unit]['selected'] = (
@@ -1331,12 +1327,12 @@ function select(){
 
         if(players[0]['units'][unit]['selected']){
             selected_id = unit;
-            selected_type = 0;
+            selected_type = 'Unit';
         }
     }
 
     for(var building in players[0]['buildings']){
-        if(selected_type != -1){
+        if(selected_type !== ''){
             players[0]['buildings'][building]['selected'] = 0;
             continue;
         }
@@ -1361,7 +1357,7 @@ function select(){
 }
 
 function setdestination(on_minimap){
-    if(selected_type === 0){
+    if(selected_type === ''){
         for(var unit in players[0]['units']){
             if(!players[0]['units'][unit]['selected']){
                 continue;
@@ -1381,7 +1377,8 @@ function setdestination(on_minimap){
             );
         }
 
-    }else if(selected_type > 1){
+    }else if(selected_type !== ''
+      && selected_type !== 'Unit'){
         for(var building in players[0]['buildings']){
             if(!players[0]['buildings'][building]['selected']){
                 continue;
@@ -1439,7 +1436,7 @@ function setmode(newmode){
         mouse_x = -1;
         mouse_y = -1;
         paused = false;
-        selected_type = -1;
+        selected_type = '';
 
         document.body.innerHTML =
           '<canvas id=canvas oncontextmenu="return false"></canvas><canvas id=buffer></canvas>';
@@ -1569,7 +1566,7 @@ var mouse_y = 0;
 var paused = false;
 var players = {};
 var selected_id = -1;
-var selected_type = -1;
+var selected_type = '';
 var settings = {
   'audio-volume': window.localStorage.getItem('RTS-2D.htm-audio-volume') !== null
     ? parseFloat(window.localStorage.getItem('RTS-2D.htm-audio-volume'))
@@ -1612,7 +1609,7 @@ window.onkeydown = function(e){
 
     if(!paused){
         // If HQ selected.
-        if(selected_type === 1){
+        if(selected_type === 'HQ'){
             // Check if building build hotkey pressed.
             for(var building in buildings){
                 if(key === buildings[building]['key']){
@@ -1622,7 +1619,7 @@ window.onkeydown = function(e){
             }
 
         // If Factory selected.
-        }else if(selected_type === 2){
+        }else if(selected_type === 'Factory'){
             // Check if unit build hotkey pressed.
             for(var unit in units){
                 if(key === units[unit]['key']){
@@ -1699,7 +1696,8 @@ window.onmousedown = function(e){
             );
 
         // If unit selected or not clicking on build robot button.
-        }else if(selected_type < 1
+        }else if(selected_type === ''
+          || selected_type === 'Unit'
           || (mouse_y < height - 65
           || mouse_x > 270)){
             // Left click: start dragging.
@@ -1714,11 +1712,11 @@ window.onmousedown = function(e){
             }
 
         // Else if HQ is selected, activate build mode.
-        }else if(selected_type === 1){
+        }else if(selected_type === 'HQ'){
             build_mode = true;
 
         // Else if factory is selected, build robot.
-        }else if(selected_type === 2){
+        }else if(selected_type === 'Factory'){
             build_unit(
               0,
               'Robot'
