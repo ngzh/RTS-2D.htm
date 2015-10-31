@@ -1377,8 +1377,7 @@ function setdestination(on_minimap){
             );
         }
 
-    }else if(selected_type !== ''
-      && selected_type !== 'Unit'){
+    }else if(selected_type !== 'Unit'){
         for(var building in players[0]['buildings']){
             if(!players[0]['buildings'][building]['selected']){
                 continue;
