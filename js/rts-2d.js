@@ -1746,6 +1746,13 @@ window.onmousemove = function(e){
     mouse_x = e.pageX;
     mouse_y = e.pageY;
 
+    if(e.button === 2){
+        setdestination(
+          mouse_x <= 200
+          && mouse_y >= height - 200
+        );
+    }
+
     // Dragging after click was not on minimap.
     if(mouse_hold === 1){
         select();
