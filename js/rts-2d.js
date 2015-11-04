@@ -1697,8 +1697,8 @@ window.onmousedown = function(e){
         // If unit selected or not clicking on build robot button.
         }else if(selected_type === ''
           || selected_type === 'Unit'
-          || (mouse_y < height - 65
-          || mouse_x > 270)){
+          || mouse_y < height - 65
+          || mouse_x > 270){
             // Left click: start dragging.
             if(e.button === 0){
                 mouse_hold = 1;
