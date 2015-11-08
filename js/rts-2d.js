@@ -836,6 +836,7 @@ function logic(){
 
     // AI: attempt to build a factory if it doesn't exist.
     }else if(players[1]['buildings'].length > 0
+      && players[1]['buildings'][0]['type'] === 'HQ'
       && players[1]['money'] > 250){
         build_building(
           1,
