@@ -101,6 +101,7 @@ function load_tech(id){
           'T': {
             'children': [],
             'cost': 150,
+            'damage': 50,
             'health': 250,
             'height': 25,
             'key': 84,
@@ -108,6 +109,8 @@ function load_tech(id){
             'labelSize': 18,
             'name': 'Turret',
             'minimap': 1,
+            'range': 300,
+            'reload': 100,
             'width': 25,
           },
         },

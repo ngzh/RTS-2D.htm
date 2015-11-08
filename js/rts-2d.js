@@ -47,8 +47,12 @@ function build_building(player, building_type, building_x, building_y, fog_overr
     players[player]['money'] -= buildings[building_type]['cost'];
 
     var building = {
+      'damage': 0,
       'destination-x': building_x + buildings[building_type]['width'] / 2,
       'destination-y': building_y + buildings[building_type]['height'] / 2,
+      'range': 0,
+      'reload': 0,
+      'reload-current': 0,
       'selected': false,
       'type': building_type,
       'x': building_x,
@@ -299,7 +303,7 @@ function draw(){
         );
     }
 
-    // Draw selected building destination.
+    // Draw selected building destination and range.
     for(building in players[0]['buildings']){
         if(!players[0]['buildings'][building]['selected']
           || players[0]['buildings'][building]['destination-x'] === null){
@@ -319,6 +323,20 @@ function draw(){
         );
         buffer.closePath();
         buffer.stroke();
+
+        if(players[0]['buildings'][building]['range'] > 0){
+            buffer.beginPath();
+            buffer.arc(
+              players[0]['buildings'][building]['x'],
+              players[0]['buildings'][building]['y'],
+              players[0]['buildings'][building]['range'],
+              0,
+              math[4],
+              false
+            );
+            buffer.closePath();
+            buffer.stroke();
+        }
     }
 
     // Draw selected unit destinations and range.
@@ -829,6 +847,150 @@ function logic(){
         );
     }
 
+    for(var building in players[1]['buildings']){
+        if(players[1]['buildings'][building]['range'] <= 0){
+            continue;
+        }
+
+        // If reloading, decrease reload,...
+        if(players[1]['buildings'][building]['reload-current'] > 0){
+            players[1]['buildings'][building]['reload-current'] -= 1;
+
+        // ...else look for nearby p0 units to fire at.
+        }else{
+            var check_for_buildings = true;
+            for(var p0_unit in players[0]['units']){
+                if(distance(
+                  players[1]['buildings'][building]['x'],
+                  players[1]['buildings'][building]['y'],
+                  players[0]['units'][p0_unit]['x'],
+                  players[0]['units'][p0_unit]['y']
+                ) > players[1]['buildings'][building]['range']){
+                    continue;
+                }
+
+                players[1]['buildings'][building]['reload-current'] = players[1]['buildings'][building]['reload'];
+                bullets.push({
+                  'color': '#f66',
+                  'damage': players[1]['buildings'][building]['damage'],
+                  'destination-x': players[0]['units'][p0_unit]['x'],
+                  'destination-y': players[0]['units'][p0_unit]['y'],
+                  'player': 1,
+                  'x': players[1]['buildings'][building]['x']
+                    + buildings[players[1]['buildings'][building]['type']]['width'] / 2,
+                  'y': players[1]['buildings'][building]['y']
+                    + buildings[players[1]['buildings'][building]['type']]['height'] / 2,
+                });
+                check_for_buildings = false;
+                break;
+            }
+
+            // If no units in range, look for buildings to fire at.
+            if(check_for_buildings){
+                for(var p0_building in players[0]['buildings']){
+                    if(distance(
+                      players[1]['buildings'][building]['x'],
+                      players[1]['buildings'][building]['y'],
+                      players[0]['buildings'][p0_building]['x']
+                        + buildings[players[0]['buildings'][p0_building]['type']]['width'] / 2,
+                      players[0]['buildings'][p0_building]['y']
+                        + buildings[players[0]['buildings'][p0_building]['type']]['height'] / 2
+                    ) > players[1]['buildings'][building]['range']){
+                        continue;
+                    }
+
+                    players[1]['buildings'][building]['reload-current'] = players[1]['buildings'][building]['reload'];
+                    bullets.push({
+                      'color': '#f66',
+                      'damage': players[1]['buildings'][building]['damage'],
+                      'destination-x': players[0]['buildings'][p0_building]['x']
+                        + buildings[players[0]['buildings'][p0_building]['type']]['width'] / 2,
+                      'destination-y': players[0]['buildings'][p0_building]['y']
+                        + buildings[players[0]['buildings'][p0_building]['type']]['height'] / 2,
+                      'player': 1,
+                      'x': players[1]['buildings'][building]['x']
+                        + buildings[players[1]['buildings'][building]['type']]['width'] / 2,
+                      'y': players[1]['buildings'][building]['y']
+                        + buildings[players[1]['buildings'][building]['type']]['height'] / 2,
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
+    for(building in players[0]['buildings']){
+        if(players[0]['buildings'][building]['range'] <= 0){
+            continue;
+        }
+
+        // If reloading, decrease reload,...
+        if(players[0]['buildings'][building]['reload-current'] > 0){
+            players[0]['buildings'][building]['reload-current'] -= 1;
+
+        // ...else look for nearby p0 units to fire at.
+        }else{
+            var check_for_buildings = true;
+            for(var p1_unit in players[1]['units']){
+                if(distance(
+                  players[0]['buildings'][building]['x'],
+                  players[0]['buildings'][building]['y'],
+                  players[1]['units'][p1_unit]['x'],
+                  players[1]['units'][p1_unit]['y']
+                ) > players[0]['buildings'][building]['range']){
+                    continue;
+                }
+
+                players[0]['buildings'][building]['reload-current'] = players[0]['buildings'][building]['reload'];
+                bullets.push({
+                  'color': '#f66',
+                  'damage': players[0]['buildings'][building]['damage'],
+                  'destination-x': players[1]['units'][p1_unit]['x'],
+                  'destination-y': players[1]['units'][p1_unit]['y'],
+                  'player': 0,
+                  'x': players[0]['buildings'][building]['x']
+                    + buildings[players[0]['buildings'][building]['type']]['width'] / 2,
+                  'y': players[0]['buildings'][building]['y']
+                    + buildings[players[0]['buildings'][building]['type']]['height'] / 2,
+                });
+                check_for_buildings = false;
+                break;
+            }
+
+            // If no units in range, look for buildings to fire at.
+            if(check_for_buildings){
+                for(var p1_building in players[1]['buildings']){
+                    if(distance(
+                      players[0]['buildings'][building]['x'],
+                      players[0]['buildings'][building]['y'],
+                      players[1]['buildings'][p1_building]['x']
+                        + buildings[players[1]['buildings'][p1_building]['type']]['width'] / 2,
+                      players[1]['buildings'][p1_building]['y']
+                        + buildings[players[1]['buildings'][p1_building]['type']]['height'] / 2
+                    ) > players[0]['buildings'][building]['range']){
+                        continue;
+                    }
+
+                    players[0]['buildings'][building]['reload-current'] = players[0]['buildings'][building]['reload'];
+                    bullets.push({
+                      'color': '#f66',
+                      'damage': players[0]['buildings'][building]['damage'],
+                      'destination-x': players[1]['buildings'][p1_building]['x']
+                        + buildings[players[1]['buildings'][p1_building]['type']]['width'] / 2,
+                      'destination-y': players[1]['buildings'][p1_building]['y']
+                        + buildings[players[1]['buildings'][p1_building]['type']]['height'] / 2,
+                      'player': 0,
+                      'x': players[0]['buildings'][building]['x']
+                        + buildings[players[0]['buildings'][building]['type']]['width'] / 2,
+                      'y': players[0]['buildings'][building]['y']
+                        + buildings[players[0]['buildings'][building]['type']]['height'] / 2,
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
     for(var unit in players[1]['units']){
         // If reloading, decrease reload,...
         if(players[1]['units'][unit]['reload-current'] > 0){
@@ -881,7 +1043,7 @@ function logic(){
                       'damage': players[1]['units'][unit]['damage'],
                       'destination-x': players[0]['buildings'][building]['x']
                         + buildings[players[0]['buildings'][building]['type']]['width'] / 2,
-                      'destination-y': players[0]['buildings'][building]['y'] + 
+                      'destination-y': players[0]['buildings'][building]['y']
                         + buildings[players[0]['buildings'][building]['type']]['height'] / 2,
                       'player': 1,
                       'x': players[1]['units'][unit]['x'],
