@@ -70,20 +70,45 @@ function load_tech(id){
     var tech = {
       'default': {
         'buildings': {
-          'Factory': {
+          'F': {
             'children': [
               'R',
             ],
             'cost': 250,
+            'health': 500,
+            'height': 100,
             'key': 70,
             'label': 'F',
+            'labelSize': 42,
+            'minimap': 2,
+            'name': 'Factory',
+            'width': 100,
           },
           'HQ': {
             'children': [
               'F',
+              'T',
             ],
             'cost': 0,
+            'health': 1000,
+            'height': 100,
             'label': 'HQ',
+            'labelSize': 42,
+            'minimap': 2,
+            'name': 'HQ',
+            'width': 100,
+          },
+          'T': {
+            'children': [],
+            'cost': 150,
+            'health': 250,
+            'height': 25,
+            'key': 84,
+            'label': 'T',
+            'labelSize': 18,
+            'name': 'Turret',
+            'minimap': 1,
+            'width': 25,
           },
         },
         'units': {

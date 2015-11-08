@@ -6,15 +6,15 @@ function build_building(player, building_type, building_x, building_y, fog_overr
     }
 
     // Make sure building is within buildable limit.
-    if(building_x > settings['level-size'] - 100){
-        building_x = settings['level-size'] - 100;
+    if(building_x > settings['level-size'] - buildings[building_type]['width']){
+        building_x = settings['level-size'] - buildings[building_type]['width'];
 
     }else if(building_x < -settings['level-size']){
         building_x = -settings['level-size'];
     }
 
-    if(building_y > settings['level-size'] - 100){
-        building_y = settings['level-size'] - 100;
+    if(building_y > settings['level-size'] - buildings[building_type]['height']){
+        building_y = settings['level-size'] - buildings[building_type]['height'];
 
     }else if(building_y < -settings['level-size']){
         building_y = -settings['level-size'];
@@ -35,8 +35,8 @@ function build_building(player, building_type, building_x, building_y, fog_overr
                 if(distance(
                   building_x,
                   building_y,
-                  fog[loop_counter]['x'] - settings['level-size'] + 50,
-                  fog[loop_counter]['y'] - settings['level-size'] + 50
+                  fog[loop_counter]['x'] - settings['level-size'] + buildings[building_type]['width'] / 2,
+                  fog[loop_counter]['y'] - settings['level-size'] + buildings[building_type]['height'] / 2
                 ) < 70){
                     return;
                 }
@@ -47,13 +47,10 @@ function build_building(player, building_type, building_x, building_y, fog_overr
     players[player]['money'] -= buildings[building_type]['cost'];
 
     var building = {
-      'destination-x': building_x,
-      'destination-y': building_y,
-      'health': 1000,
-      'height': 100,
+      'destination-x': building_x + buildings[building_type]['width'] / 2,
+      'destination-y': building_y + buildings[building_type]['height'] / 2,
       'selected': false,
       'type': building_type,
-      'width': 100,
       'x': building_x,
       'y': building_y,
     };
@@ -65,7 +62,7 @@ function build_building(player, building_type, building_x, building_y, fog_overr
     players[player]['buildings'].push(building);
 
     if(player === 0){
-        build_mode = false;
+        build_mode = '';
 
         if(fog.length > 0){
             fog_update_building();
@@ -93,10 +90,8 @@ function build_unit(player, unit_type){
       'selected': false,
       'reload': 75,
       'reload-current': 0,
-      'x': players[player]['buildings'][temp_selected_id]['x']
-        + players[player]['buildings'][temp_selected_id]['width'] / 2,
-      'y': players[player]['buildings'][temp_selected_id]['y']
-        + players[player]['buildings'][temp_selected_id]['height'] / 2,
+      'x': players[player]['buildings'][temp_selected_id]['destination-x'],
+      'y': players[player]['buildings'][temp_selected_id]['destination-y'],
     };
 
     for(var property in units[unit_type]){
@@ -118,7 +113,9 @@ function draw(){
       height
     );
 
+    buffer.font = '42pt sans-serif';
     buffer.textAlign = 'center';
+    buffer.textBaseline = 'middle';
 
     // Save current buffer state.
     buffer.save();
@@ -172,15 +169,16 @@ function draw(){
           players[1]['buildings'][building]['x'],
           players[1]['buildings'][building]['y'] - 10,
           players[1]['buildings'][building]['width']
-            * (players[1]['buildings'][building]['health'] / 1000),
+            * (players[1]['buildings'][building]['health'] / buildings[players[1]['buildings'][building]['type']]['health']),
           5
         );
 
         buffer.fillStyle = '#fff';
+        buffer.font = players[1]['buildings'][building]['labelSize'] + 'pt sans-serif';
         buffer.fillText(
           players[1]['buildings'][building]['label'],
-          players[1]['buildings'][building]['x'] + 50,
-          players[1]['buildings'][building]['y'] + 70
+          players[1]['buildings'][building]['x'] + players[1]['buildings'][building]['width'] / 2,
+          players[1]['buildings'][building]['y'] + players[1]['buildings'][building]['height'] / 2
         );
     }
 
@@ -209,15 +207,16 @@ function draw(){
           players[0]['buildings'][building]['x'],
           players[0]['buildings'][building]['y'] - 10,
           players[0]['buildings'][building]['width']
-            * (players[0]['buildings'][building]['health'] / 1000),
+            * (players[0]['buildings'][building]['health'] / buildings[players[0]['buildings'][building]['type']]['health']),
           5
         );
 
         buffer.fillStyle = '#fff';
+        buffer.font = players[0]['buildings'][building]['labelSize'] + 'pt sans-serif';
         buffer.fillText(
           players[0]['buildings'][building]['label'],
-          players[0]['buildings'][building]['x'] + 50,
-          players[0]['buildings'][building]['y'] + 70
+          players[0]['buildings'][building]['x'] + players[0]['buildings'][building]['width'] / 2,
+          players[0]['buildings'][building]['y'] + players[0]['buildings'][building]['height'] / 2
         );
     }
 
@@ -370,23 +369,23 @@ function draw(){
     }
 
     // Draw building while in build mode.
-    if(build_mode){
+    if(build_mode.length > 0){
         buffer.fillStyle = '#1f1';
 
-        var building_x = mouse_x - 50;
+        var building_x = mouse_x - buildings[build_mode]['width'] / 2;
         building_x = Math.min(
           building_x,
-          settings['level-size'] + camera_x + x - 100
+          settings['level-size'] + camera_x + x - buildings[build_mode]['width']
         );
         building_x = Math.max(
           building_x,
           -settings['level-size'] + camera_x + x
         );
 
-        var building_y = mouse_y - 50;
+        var building_y = mouse_y - buildings[build_mode]['height'] / 2;
         building_y = Math.min(
           building_y,
-          settings['level-size'] + camera_y + y - 100
+          settings['level-size'] + camera_y + y - buildings[build_mode]['height']
         );
         building_y = Math.max(
           building_y,
@@ -396,15 +395,17 @@ function draw(){
         buffer.fillRect(
           building_x,
           building_y,
-          100,
-          100
+          buildings[build_mode]['width'],
+          buildings[build_mode]['height']
         );
 
+
         buffer.fillStyle = '#fff';
+        buffer.font = buildings[build_mode]['labelSize'] + 'pt sans-serif';
         buffer.fillText(
-          buildings[selected_type]['children'][0],
-          building_x + 50,
-          building_y + 70
+          build_mode,
+          building_x + buildings[build_mode]['width'] / 2,
+          building_y + buildings[build_mode]['height'] / 2
         );
     }
 
@@ -419,27 +420,34 @@ function draw(){
 
     if(selected_type !== ''
       && selected_type !== 'Unit'){
-        buffer.fillRect(
-          205,
-          height - 70,
-          70,
-          70
-        );
+        var offset = 0;
+        for(var label in buildings[selected_type]['children']){
+            buffer.fillStyle = '#222';
+            buffer.fillRect(
+              205 + offset,
+              height - 70,
+              70,
+              70
+            );
 
-        buffer.fillStyle = '#111';
-        buffer.fillRect(
-          205,
-          height - 65,
-          65,
-          65
-        );
+            buffer.fillStyle = '#111';
+            buffer.fillRect(
+              205 + offset,
+              height - 65,
+              65,
+              65
+            );
 
-        buffer.fillStyle = '#fff';
-        buffer.fillText(
-          buildings[selected_type]['children'][0],
-          240,
-          height - 11
-        );
+            buffer.fillStyle = '#fff';
+            buffer.font = '42pt sans-serif';
+            buffer.fillText(
+              buildings[selected_type]['children'][label],
+              240 + offset,
+              height - 25
+            );
+
+            offset += 70;
+        }
     }
 
     // Draw minimap background.
@@ -454,22 +462,24 @@ function draw(){
     // Draw player 1 buildings on minimap.
     buffer.fillStyle = '#600';
     for(building in players[1]['buildings']){
+        var minimap = math[buildings[players[1]['buildings'][building]['type']]['minimap']];
         buffer.fillRect(
           100 + players[1]['buildings'][building]['x'] / math[0],
           height - 100 + players[1]['buildings'][building]['y'] / math[0],
-          math[2],
-          math[2]
+          minimap,
+          minimap
         );
     }
 
     // Draw player 0 buildings on minimap.
     for(building in players[0]['buildings']){
+        var minimap = math[buildings[players[0]['buildings'][building]['type']]['minimap']];
         buffer.fillStyle = players[0]['buildings'][building]['selected'] ? '#1f1' : '#060';
         buffer.fillRect(
           100 + players[0]['buildings'][building]['x'] / math[0],
           height - 100 + players[0]['buildings'][building]['y'] / math[0],
-          math[2],
-          math[2]
+          minimap,
+          minimap
         );
     }
 
@@ -687,6 +697,7 @@ function draw(){
 
     // Draw player 0 money.
     buffer.textAlign = 'left';
+    buffer.textBaseline = 'alphabetic';
     buffer.fillText(
       players[0]['money'],
       5,
@@ -807,7 +818,7 @@ function logic(){
       && players[1]['money'] > 250){
         build_building(
           1,
-          'Factory',
+          'F',
           players[1]['buildings'][0]['x'] > 0
             ? players[1]['buildings'][0]['x'] - 125
             : players[1]['buildings'][0]['x'] + 125,
@@ -853,8 +864,10 @@ function logic(){
                     if(distance(
                       players[1]['units'][unit]['x'],
                       players[1]['units'][unit]['y'],
-                      players[0]['buildings'][building]['x'] + 50,
-                      players[0]['buildings'][building]['y'] + 50
+                      players[0]['buildings'][building]['x']
+                        + buildings[players[0]['buildings'][building]['type']]['width'] / 2,
+                      players[0]['buildings'][building]['y']
+                        + buildings[players[0]['buildings'][building]['type']]['height'] / 2
                     ) > 240){
                         continue;
                     }
@@ -863,8 +876,10 @@ function logic(){
                     bullets.push({
                       'color': '#f66',
                       'damage': players[1]['units'][unit]['damage'],
-                      'destination-x': players[0]['buildings'][building]['x'] + 50,
-                      'destination-y': players[0]['buildings'][building]['y'] + 50,
+                      'destination-x': players[0]['buildings'][building]['x']
+                        + buildings[players[0]['buildings'][building]['type']]['width'] / 2,
+                      'destination-y': players[0]['buildings'][building]['y'] + 
+                        + buildings[players[0]['buildings'][building]['type']]['height'] / 2,
                       'player': 1,
                       'x': players[1]['units'][unit]['x'],
                       'y': players[1]['units'][unit]['y'],
@@ -1037,8 +1052,10 @@ function logic(){
             if(distance(
               players[0]['units'][unit]['x'],
               players[0]['units'][unit]['y'],
-              players[1]['buildings'][building]['x'] + 50,
-              players[1]['buildings'][building]['y'] + 50
+              players[1]['buildings'][building]['x']
+                + buildings[players[1]['buildings'][building]['type']]['width'] / 2,
+              players[1]['buildings'][building]['y']
+                + buildings[players[1]['buildings'][building]['type']]['width'] / 2
             ) > 240){
                 continue;
             }
@@ -1047,8 +1064,10 @@ function logic(){
             bullets.push({
               'color': '#090',
               'damage': players[0]['units'][unit]['damage'],
-              'destination-x': players[1]['buildings'][building]['x'] + 50,
-              'destination-y': players[1]['buildings'][building]['y'] + 50,
+              'destination-x': players[1]['buildings'][building]['x']
+                + buildings[players[1]['buildings'][building]['type']]['width'] / 2,
+              'destination-y': players[1]['buildings'][building]['y']
+                + buildings[players[1]['buildings'][building]['type']]['height'] / 2,
               'player': 0,
               'x': players[0]['units'][unit]['x'],
               'y': players[0]['units'][unit]['y'],
@@ -1125,7 +1144,7 @@ function logic(){
                 players[0]['buildings'][building]['health'] -= bullets[bullet]['damage'];
                 if(players[0]['buildings'][building]['health'] <= 0){
                     if(selected_id === building){
-                        build_mode = false;
+                        build_mode = '';
                         selected_id = -1;
                         selected_type = '';
                     }
@@ -1468,8 +1487,8 @@ function setmode(newmode){
         load_level(mode - 1);
 
         // Set camera position to HQ location.
-        camera_x = -players[0]['buildings'][0]['x'] - 50;
-        camera_y = -players[0]['buildings'][0]['y'] - 50;
+        camera_x = -players[0]['buildings'][0]['x'] - players[0]['buildings'][0]['width'] / 2;
+        camera_y = -players[0]['buildings'][0]['y'] - players[0]['buildings'][0]['height'] / 2;
 
         buffer = document.getElementById('buffer').getContext('2d', {
           'alpha': false,
@@ -1542,7 +1561,7 @@ function validate_destination(type, id){
 var animationFrame = 0;
 var buffer = 0;
 var buildings = {};
-var build_mode = false;
+var build_mode = '';
 var bullets = [];
 var camera_x = 0;
 var camera_y = 0;
@@ -1596,8 +1615,8 @@ window.onkeydown = function(e){
     var key = e.keyCode || e.which;
 
     if(key === 27){
-        if(build_mode){
-            build_mode = false;
+        if(build_mode.length > 0){
+            build_mode = '';
 
         }else{
             setmode(0);
@@ -1612,7 +1631,7 @@ window.onkeydown = function(e){
             // Check if building build hotkey pressed.
             for(var building in buildings){
                 if(key === buildings[building]['key']){
-                    build_mode = true;
+                    build_mode = buildings[building]['label'];
                     return;
                 }
             }
@@ -1685,13 +1704,13 @@ window.onmousedown = function(e){
       || mouse_y < height - 200){
 
         // Check if in buildling mode.
-        if(build_mode){
-            // Attempt to build a factory.
+        if(build_mode.length > 0){
+            // Attempt to build a building.
             build_building(
               0,
-              'Factory',
-              mouse_x - camera_x - x - 50,
-              mouse_y - camera_y - y - 50
+              build_mode,
+              mouse_x - camera_x - x - buildings[build_mode]['width'] / 2,
+              mouse_y - camera_y - y - buildings[build_mode]['height'] / 2
             );
 
         // If unit selected or not clicking on build robot button.
@@ -1712,7 +1731,7 @@ window.onmousedown = function(e){
 
         // Else if HQ is selected, activate build mode.
         }else if(selected_type === 'HQ'){
-            build_mode = true;
+            build_mode = 'F';
 
         // Else if factory is selected, build robot.
         }else if(selected_type === 'Factory'){
