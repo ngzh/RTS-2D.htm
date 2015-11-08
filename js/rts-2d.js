@@ -1737,7 +1737,7 @@ window.onmousedown = function(e){
             build_mode = 'F';
 
         // Else if factory is selected, build robot.
-        }else if(selected_type === 'Factory'){
+        }else if(selected_type === 'F'){
             build_unit(
               0,
               'Robot'
