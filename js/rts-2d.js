@@ -86,10 +86,12 @@ function build_unit(player, unit_type){
       : selected_id;
     var unit = {
       'damage': 25,
-      'destination-x': players[player]['buildings'][temp_selected_id]['destination-x']
-        || Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
-      'destination-y': players[player]['buildings'][temp_selected_id]['destination-y']
-        || Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
+      'destination-x': player > 0
+        ? Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size']
+        : players[player]['buildings'][temp_selected_id]['destination-x'],
+      'destination-y': player > 0
+        ? Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size']
+        : players[player]['buildings'][temp_selected_id]['destination-y'],
       'health': 100,
       'selected': false,
       'range': 240,
