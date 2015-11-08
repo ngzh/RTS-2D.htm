@@ -88,10 +88,13 @@ function build_unit(player, unit_type){
         || Math.floor(Math.random() * settings['level-size'] * 2) - settings['level-size'],
       'health': 100,
       'selected': false,
+      'range': 240,
       'reload': 75,
       'reload-current': 0,
-      'x': players[player]['buildings'][temp_selected_id]['destination-x'],
-      'y': players[player]['buildings'][temp_selected_id]['destination-y'],
+      'x': players[player]['buildings'][temp_selected_id]['x']
+        + buildings[players[player]['buildings'][temp_selected_id]['type']]['width'] / 2,
+      'y': players[player]['buildings'][temp_selected_id]['y']
+        + buildings[players[player]['buildings'][temp_selected_id]['type']]['height'] / 2,
     };
 
     for(var property in units[unit_type]){
@@ -343,7 +346,7 @@ function draw(){
         buffer.arc(
           players[0]['units'][unit]['x'],
           players[0]['units'][unit]['y'],
-          240,
+          players[0]['units'][unit]['range'],
           0,
           math[4],
           false
@@ -840,7 +843,7 @@ function logic(){
                   players[1]['units'][unit]['y'],
                   players[0]['units'][p0_unit]['x'],
                   players[0]['units'][p0_unit]['y']
-                ) > 240){
+                ) > players[1]['units'][unit]['range']){
                     continue;
                 }
 
@@ -868,7 +871,7 @@ function logic(){
                         + buildings[players[0]['buildings'][building]['type']]['width'] / 2,
                       players[0]['buildings'][building]['y']
                         + buildings[players[0]['buildings'][building]['type']]['height'] / 2
-                    ) > 240){
+                    ) > players[1]['units'][unit]['range']){
                         continue;
                     }
 
@@ -1025,7 +1028,7 @@ function logic(){
               players[0]['units'][unit]['y'],
               players[1]['units'][p1_unit]['x'],
               players[1]['units'][p1_unit]['y']
-            ) > 240){
+            ) > players[0]['units'][unit]['range']){
                 continue;
             }
 
@@ -1056,7 +1059,7 @@ function logic(){
                 + buildings[players[1]['buildings'][building]['type']]['width'] / 2,
               players[1]['buildings'][building]['y']
                 + buildings[players[1]['buildings'][building]['type']]['width'] / 2
-            ) > 240){
+            ) > players[0]['units'][unit]['range']){
                 continue;
             }
 
@@ -1637,7 +1640,7 @@ window.onkeydown = function(e){
             }
 
         // If Factory selected.
-        }else if(selected_type === 'Factory'){
+        }else if(selected_type === 'F'){
             // Check if unit build hotkey pressed.
             for(var unit in units){
                 if(key === units[unit]['key']){
