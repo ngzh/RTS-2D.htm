@@ -1680,7 +1680,7 @@ function setmode(newmode){
 
     document.body.innerHTML = '<div><div><b>Skirmish vs AI:</b><ul><li><a onclick=setmode(1)>Island</a><li><a onclick=setmode(2)>Urban</a><li><a onclick=setmode(3)>Wasteland</a></ul></div></div><div class=right><div><input id=camera-keys maxlength=4 value='
       + settings['camera-keys'] + '>Camera ↑←↓→<br><input disabled value=ESC>Main Menu<br><input id=pause-key maxlength=1 value='
-      + settings['pause-key'] + '>Pause</div><hr><div><input id=audio-volume max=1 min=0 step=.01 type=range value='
+      + settings['pause-key'] + '>Pause</div><hr><div><input id=audio-volume max=1 min=0 step=".01" type=range value='
       + settings['audio-volume'] + '>Audio<br><select id=fog-type>'
         + '<option value=2>Infinite</option>'
         + '<option value=1>Finite</option>'
