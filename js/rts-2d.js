@@ -1427,12 +1427,13 @@ function resize(){
 
 // Save settings into window.localStorage if they differ from default.
 function save(){
-    if(document.getElementById('audio-volume').value == 1){
+    var audio_volume = document.getElementById('audio-volume').value;
+    if(audio_volume == 1){
         window.localStorage.removeItem('RTS-2D.htm-audio-volume');
         settings['audio-volume'] = 1;
 
     }else{
-        settings['audio-volume'] = parseFloat(document.getElementById('audio-volume').value);
+        settings['audio-volume'] = parseFloat(audio_volume);
         window.localStorage.setItem(
           'RTS-2D.htm-audio-volume',
           settings['audio-volume']
@@ -1445,12 +1446,13 @@ function save(){
       'pause-key': 'P',
     };
     for(var id in ids){
-        if(document.getElementById(id).value === ids[id]){
+        var value = document.getElementById(id).value;
+        if(value === ids[id]){
             window.localStorage.removeItem('RTS-2D.htm-' + id);
             settings[id] = ids[id];
 
         }else{
-            settings[id] = document.getElementById(id).value;
+            settings[id] = value;
             window.localStorage.setItem(
               'RTS-2D.htm-' + id,
               settings[id]
@@ -1458,14 +1460,15 @@ function save(){
         }
     }
 
-    if(document.getElementById('level-size').value == 1600
-      || isNaN(document.getElementById('level-size').value)
-      || document.getElementById('level-size').value < 200){
+    var level_size = document.getElementById('level-size').value;
+    if(level_size == 1600
+      || isNaN(level_size)
+      || level_size < 200){
         window.localStorage.removeItem('RTS-2D.htm-level-size');
         settings['level-size'] = 1600;
 
     }else{
-        settings['level-size'] = parseInt(document.getElementById('level-size').value);
+        settings['level-size'] = parseInt(level_size);
         window.localStorage.setItem(
           'RTS-2D.htm-level-size',
           settings['level-size']
@@ -1480,13 +1483,14 @@ function save(){
       'scroll-speed': 10,
     };
     for(var id in ids){
-        if(document.getElementById(id).value == ids[id]
-          || isNaN(document.getElementById(id).value)){
+        value = document.getElementById(id).value
+        if(value == ids[id]
+          || isNaN(value)){
             window.localStorage.removeItem('RTS-2D.htm-' + id);
             settings[id] = ids[id];
 
         }else{
-            settings[id] = parseInt(document.getElementById(id).value);
+            settings[id] = parseInt(value);
             window.localStorage.setItem(
               'RTS-2D.htm-' + id,
               settings[id]
