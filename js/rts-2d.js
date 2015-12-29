@@ -1393,15 +1393,20 @@ function reset(){
         return;
     }
 
-    document.getElementById('audio-volume').value = 1;
-    document.getElementById('camera-keys').value = 'WASD';
-    document.getElementById('frames-per-income').value = 100;
-    document.getElementById('fog-color').value = '#000000';
-    document.getElementById('fog-type').value = 1;
-    document.getElementById('level-size').value = 1600;
-    document.getElementById('money').value = 1000;
-    document.getElementById('ms-per-frame').value = 25;
-    document.getElementById('scroll-speed').value = 10;
+    var ids = {
+      'audio-volume': 1,
+      'camera-keys': 'WASD',
+      'frames-per-income': 100,
+      'fog-color': '#000000',
+      'fog-type': 1,
+      'level-size': 1600,
+      'money': 1000,
+      'ms-per-frame': 25,
+      'scroll-speed': 10,
+    };
+    for(var id in ids){
+        document.getElementById(id).value = ids[id];
+    }
 
     save();
 }
@@ -1427,27 +1432,15 @@ function resize(){
 
 // Save settings into window.localStorage if they differ from default.
 function save(){
-    var audio_volume = document.getElementById('audio-volume').value;
-    if(audio_volume == 1){
-        window.localStorage.removeItem('RTS-2D.htm-audio-volume');
-        settings['audio-volume'] = 1;
-
-    }else{
-        settings['audio-volume'] = parseFloat(audio_volume);
-        window.localStorage.setItem(
-          'RTS-2D.htm-audio-volume',
-          settings['audio-volume']
-        );
-    }
-
     var ids = {
+      'audio-volume': 1,
       'camera-keys': 'WASD',
       'fog-color': '#000000',
       'pause-key': 'P',
     };
     for(var id in ids){
         var value = document.getElementById(id).value;
-        if(value === ids[id]){
+        if(value == ids[id]){
             window.localStorage.removeItem('RTS-2D.htm-' + id);
             settings[id] = ids[id];
 
@@ -1460,24 +1453,10 @@ function save(){
         }
     }
 
-    var level_size = document.getElementById('level-size').value;
-    if(level_size == 1600
-      || isNaN(level_size)
-      || level_size < 200){
-        window.localStorage.removeItem('RTS-2D.htm-level-size');
-        settings['level-size'] = 1600;
-
-    }else{
-        settings['level-size'] = parseInt(level_size);
-        window.localStorage.setItem(
-          'RTS-2D.htm-level-size',
-          settings['level-size']
-        );
-    }
-
     ids = {
       'fog-type': 1,
       'frames-per-income': 100,
+      'level-size': 1600,
       'money': 1000,
       'ms-per-frame': 25,
       'scroll-speed': 10,
