@@ -1439,10 +1439,9 @@ function save(){
       'pause-key': 'P',
     };
     for(var id in ids){
-        var value = document.getElementById(id).value;
-        settings[id] = value;
+        settings[id] = document.getElementById(id).value;
 
-        if(value == ids[id]){
+        if(settings[id] == ids[id]){
             window.localStorage.removeItem('RTS-2D.htm-' + id);
 
         }else{
@@ -1462,11 +1461,10 @@ function save(){
       'scroll-speed': 10,
     };
     for(var id in ids){
-        value = document.getElementById(id).value;
-        settings[id] = parseInt(value);
+        settings[id] = parseInt(document.getElementById(id).value);
 
-        if(value == ids[id]
-          || isNaN(value)){
+        if(settings[id] == ids[id]
+          || isNaN(settings[id])){
             window.localStorage.removeItem('RTS-2D.htm-' + id);
 
         }else{
